@@ -1,0 +1,83 @@
+{
+    "DEFAULT_SIGN_CONFIG": {
+        "software": {
+            "content": "default.js",
+            "behavior": "dev.js",
+            "controller": "controller.js"
+        },
+        "sign": "sign.html",
+        "style": "style.css"
+    },
+    "ashmont": {
+        "software": {
+            "content": "ashmont.js",
+            "behavior": "dev.js",
+            "controller": "controller.js"
+        },
+        "sign": "sign.html",
+        "style": "style.css"
+    },
+    "central": {
+        "software": {
+            "content": "central.js",
+            "behavior": "dev.js",
+            "controller": "controller.js"
+        },
+        "sign": "sign.html",
+        "style": "style.css"
+    },
+    "foresthills": {
+        "software": {
+            "content": "foresthills.js",
+            "behavior": "dev.js",
+            "controller": "controller.js"
+        },
+        "sign": "sign.html",
+        "style": "style.css"
+    },
+    "foresthills_nobanner": {
+        "software": {
+            "content": "foresthills_nobanner.js",
+            "behavior": "dev.js",
+            "controller": "controller.js"
+        },
+        "sign": "sign.html",
+        "style": "style.css"
+    },
+    "harvard": {
+        "software": {
+            "content": "harvard.js",
+            "behavior": "dev.js",
+            "controller": "controller.js"
+        },
+        "sign": "sign.html",
+        "style": "style.css"
+    },
+    "maverick": {
+        "software": {
+            "content": "maverick.js",
+            "behavior": "dev.js",
+            "controller": "controller.js"
+        },
+        "sign": "sign.html",
+        "style": "style.css"
+    },
+    "ruggles": {
+        "software": {
+            "content": "ruggles.js",
+            "behavior": "dev.js",
+            "controller": "controller.js"
+        },
+        "sign": "sign.html",
+        "style": "style.css"
+    },
+    "sullivan": {
+        "software": {
+            "content": "sullivan.js",
+            "behavior": "dev.js",
+            "controller": "controller.js"
+        },
+        "sign": "sign.html",
+        "style": "style.css"
+    }
+}
