@@ -17,6 +17,15 @@
         "sign": "sign.html",
         "style": "style.css"
     },
+    "ashmont_nobanner": {
+        "software": {
+            "content": "ashmont_nobanner.js",
+            "behavior": "dev.js",
+            "controller": "controller.js"
+        },
+        "sign": "sign.html",
+        "style": "style.css"
+    },
     "central": {
         "software": {
             "content": "central.js",

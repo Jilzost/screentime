@@ -2414,8 +2414,9 @@ VisualElement.prototype = {
                 fontSize -= 1;
                 document.getElementById(this.div_render).style.fontSize = fontSize + '%';
             }
-
-            this.height = document.getElementById(this.div_render).offsetHeight;
+            //FUTURE WORK: Find a better way to account for the true height of each item. (See chooseBestCarousel.)
+            this.height = document.getElementById(this.div_render).offsetHeight; //Does not include 56 pixels of buffer
+            //this.height = document.getElementById(this.div_render).scrollHeight; //Does include 56 pixels of buffer
             this.fontSize = fontSize;
             this.hasContent = (this.content !== '');
             document.getElementById(this.div_render).style.display = 'none';
@@ -2619,7 +2620,7 @@ var chooseBestCarousel = function (heights) {
             try {
                 for (j = 0; j < carousels[i].conditions.length; j += 1) {
                     //set height to 0
-                    height = 0;
+                    height = -26; //WORKAROUND: see height += 26 below. 
                     //iterate through visualElements, in order. 
                     //for each visualElement:
                     for (k = 0;
@@ -2627,6 +2628,8 @@ var chooseBestCarousel = function (heights) {
                                 k += 1) {
                     //add height to total. 
                         height += heights[carousels[i].conditions[j].visualElements[k]];
+                        height += 26; //FUTURE WORK: this adds margin for every element
+                                      // but 1. It should not be hard-coded in future. 
                     }
                     //check against areEmpty, if exists.
                     if (carousels[i].conditions[j].hasOwnProperty('areEmpty')) {
