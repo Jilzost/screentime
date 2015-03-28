@@ -2,13 +2,13 @@
 /*global XMLHttpRequest, SpeechSynthesisUtterance, speechSynthesis, document, window */
 
 var c = {
-    file: 'central.js', //Name of this file
+    file: 'haymarket.js', //Name of this file
     visualElements: {
         welcome: {
             visualizer: 'static',
             div: 'welcome',
             parameters: {
-                text: '<span style="font-size: 250%">Welcome to Central Square</span>'
+                text: '<span style="font-size: 250%">Welcome to Haymarket</span>'
             }
         },
         featuredAlerts: {
@@ -155,7 +155,7 @@ var c = {
                 routes: 'mbtaAgencyRoutes'
             },
             parameters: {
-                destinationFilter: /^Central\sSquare/ //Used to filter out predictions going to this station. Optional.
+                destinationFilter: /^Haymarket/ //Used to filter out predictions going to this station. Optional.
             }
         },
         mbtaAllDepartures2: {
@@ -168,7 +168,7 @@ var c = {
                 routes: 'mbtaAgencyRoutes'
             },
             parameters: {
-                destinationFilter: /^Central\sSquare/ //Used to filter out predictions going to this station. Optional.
+                destinationFilter: /^Haymarket/ //Used to filter out predictions going to this station. Optional.
             }
         },
         mbtaAllDepartures3: {
@@ -181,20 +181,7 @@ var c = {
                 routes: 'mbtaAgencyRoutes'
             },
             parameters: {
-                destinationFilter: /^Central\sSquare/ //Used to filter out predictions going to this station. Optional.
-            }
-        },
-        mbtaAllDepartures4: {
-            generatorFunction: 'departuresFromMBTARealtime',
-            alwaysUpdate: true,
-            requiredDatasources: {
-                MBTARealtimeTimes: 'source_localPredictionsMBTA4'
-            },
-            requiredFacets: {
-                routes: 'mbtaAgencyRoutes'
-            },
-            parameters: {
-                destinationFilter: /^Central\sSquare/ //Used to filter out predictions going to this station. Optional.
+                destinationFilter: /^Haymarket/ //Used to filter out predictions going to this station. Optional.
             }
         },
         mbtaAllDepartures: {
@@ -204,8 +191,7 @@ var c = {
             requiredFacets: {
                 one: 'mbtaAllDepartures1',
                 two: 'mbtaAllDepartures2',
-                three: 'mbtaAllDepartures3',
-                four: 'mbtaAllDepartures4'
+                three: 'mbtaAllDepartures3'
             }
         },
         mbtaNextDepartures: {
@@ -234,31 +220,25 @@ var c = {
             id: 'source_localPredictionsMBTA1',
             format: 'MBTA_realtime',
             maxAge: 29000,
-            URL: 'http://realtime.mbta.com/developer/api/v2/predictionsbystop?api_key=17xKel6QtUOSVDtGlCgjlg&stop=place-cntsq&include_service_alerts=false&format=json'
+            URL: 'http://realtime.mbta.com/developer/api/v2/predictionsbystop?api_key=17xKel6QtUOSVDtGlCgjlg&stop=place-haecl&include_service_alerts=false&format=json'
         },
         localPredictions2: {
             id: 'source_localPredictionsMBTA2',
             format: 'MBTA_realtime',
             maxAge: 29000,
-            URL: 'http://realtime.mbta.com/developer/api/v2/predictionsbystop?api_key=17xKel6QtUOSVDtGlCgjlg&stop=1060&include_service_alerts=false&format=json'
+            URL: 'http://realtime.mbta.com/developer/api/v2/predictionsbystop?api_key=17xKel6QtUOSVDtGlCgjlg&stop=4511&include_service_alerts=false&format=json'
         },
         localPredictions3: {
             id: 'source_localPredictionsMBTA3',
             format: 'MBTA_realtime',
             maxAge: 29000,
-            URL: 'http://realtime.mbta.com/developer/api/v2/predictionsbystop?api_key=17xKel6QtUOSVDtGlCgjlg&stop=1123&include_service_alerts=false&format=json'
-        },
-        localPredictions4: {
-            id: 'source_localPredictionsMBTA4',
-            format: 'MBTA_realtime',
-            maxAge: 29000,
-            URL: 'http://realtime.mbta.com/developer/api/v2/predictionsbystop?api_key=17xKel6QtUOSVDtGlCgjlg&stop=72&include_service_alerts=false&format=json'
+            URL: 'http://realtime.mbta.com/developer/api/v2/predictionsbystop?api_key=17xKel6QtUOSVDtGlCgjlg&stop=117&include_service_alerts=false&format=json'
         },
         localRoutes: {
             id: 'source_localRoutesMBTA',
             format: 'MBTA_realtime',
             maxAge: 86400000,
-            URL: 'http://realtime.mbta.com/developer/api/v2/routesbystop?api_key=17xKel6QtUOSVDtGlCgjlg&stop=place-cntsq&format=json'
+            URL: 'http://realtime.mbta.com/developer/api/v2/routesbystop?api_key=17xKel6QtUOSVDtGlCgjlg&stop=place-haecl&format=json'
         }
     }
 };

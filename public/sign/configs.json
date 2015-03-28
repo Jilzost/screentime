@@ -53,7 +53,15 @@
         "sign": "sign.html",
         "style": "style.css"
     },
-    "maverick": {
+    "haymarket": {
+        "software": {
+            "content": "haymarket.js",
+            "behavior": "dev.js",
+            "controller": "controller.js"
+        },
+        "sign": "sign.html",
+        "style": "style.css"
+    },    "maverick": {
         "software": {
             "content": "maverick.js",
             "behavior": "dev.js",

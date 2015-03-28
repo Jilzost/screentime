@@ -10,8 +10,8 @@ var b = {
         level: 5, //0 = none 1 = critical errors 2 = errors 3 = warnings 5 = everything
         maxEntries: 60, // Maximum number of logs that can be recorded...
         allowedEvery: 1800000, //...every X milliseconds. 
-        heartbeatRate: 30000, // in ms
-        sendSamples: true,
-        shareSamplesEvery: 60000 //in ms; 3600000 is one hour
+        heartbeatRate: 60000, // in ms
+        sendSamples: false,
+        shareSamplesEvery: 3600000 //in ms; 3600000 is one hour
     }
 };
