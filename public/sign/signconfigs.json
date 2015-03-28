@@ -1,5 +1,5 @@
 {
-    "DEFAULT_SIGN_CONFIG": {
+    "DEFAULT_SIGN_ID": {
         "software": {
             "content": "default.js",
             "behavior": "dev.js",

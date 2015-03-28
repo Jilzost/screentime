@@ -79,7 +79,7 @@ function serveStatic(response, absPath) {
 
 /**
  * Constructs a list of all the cache items that should be returned, 
- * according to the config and path received. 
+ * according to the id and path received. 
  * Recursive: pathPiece can specify a path for a file or a group of paths
  * for a group of files.  
  * @param  {obj} configPiece The piece of the configuration requested; 
@@ -117,12 +117,12 @@ function buildCacheItemList(configPiece, pathPiece, pathSoFar) {
  * Serves files from the cache, loading if necessary, 
  * concatenating, and write one string repacement. 
  * @param  {[arr]} cacheItemList List of files to retrieve from cache
- * @param  {[type]} config        The requested configuration;
- *                                replaces DEFAULT_SIGN_CONFIG in response.
+ * @param  {[type]} id            The requested configuration;
+ *                                replaces DEFAULT_SIGN_ID in response.
  * @param  {[type]} response      response handle for web request. 
  * @return {[type]}               [description]
  */
-function buildAndSendList(cacheItemList, config, response) {
+function buildAndSendList(cacheItemList, id, response) {
     var i, path, fileToReturn = '', neededPath = false;
     for (i = 0; i < cacheItemList.length; i += 1) {
         path = cacheItemList[i];
@@ -143,7 +143,7 @@ function buildAndSendList(cacheItemList, config, response) {
                         send500(response);
                     } else {
                         cache[neededPath] = data;
-                        buildAndSendList(cacheItemList, config, response);
+                        buildAndSendList(cacheItemList, id, response);
                     }
                 });
             } else {
@@ -158,53 +158,53 @@ function buildAndSendList(cacheItemList, config, response) {
         for (i = 0; i < cacheItemList.length; i += 1) {
             fileToReturn += cache[cacheItemList[i]];
         }
-        fileToReturn = fileToReturn.replace(/DEFAULT_SIGN_CONFIG/g, config);
+        fileToReturn = fileToReturn.replace(/DEFAULT_SIGN_ID/g, id);
         returnFile(response, cacheItemList[i - 1], fileToReturn);
     }
 }
 
 /**
- * Handles a request with a config parameter. 
+ * Handles a request with a id parameter. 
  * Loads configs if necessary, uses them to identify what files to return, 
  * and returns them. 
  * @param  {str} path     path requested. 
- * @param  {str} config   config parameter in request. 
+ * @param  {str} id       id parameter in request. 
  * @param  {[type]} response web request response handler. 
  */
-function buildAndSendRequest(path, config, response) {
+function buildAndSendRequest(path, id, response) {
     var cacheItemList;
-    logger.log('server', config, 5, 'fileRequestHandlers.buildAndSendRequest',
-        'Request for path ' + path + ' config ' + config, new Date(),
+    logger.log('server', id, 5, 'fileRequestHandlers.buildAndSendRequest',
+        'Request for path ' + path + ' id ' + id, new Date(),
         new Date(), false);
     if (!configs) {
-        fs.exists('./public/sign/configs.json', function (exists) {
+        fs.exists('./public/sign/signconfigs.json', function (exists) {
             if (exists) {
-                fs.readFile('./public/sign/configs.json', function (err, data) {
+                fs.readFile('./public/sign/signconfigs.json', function (err, data) {
                     if (err) {
-                        logger.log('server', config, 1,
+                        logger.log('server', id, 1,
                             'fileRequestHandlers.buildAndSendRequest',
-                            'Error loading configs', new Date(), new Date(),
+                            'Error loading signconfigs', new Date(), new Date(),
                             true);
                         send500(response);
                     } else {
                         configs = JSON.parse(data);
-                        buildAndSendRequest(path, config, response);
+                        buildAndSendRequest(path, id, response);
                     }
                 });
             } else {
-                logger.log('server', config, 1,
+                logger.log('server', id, 1,
                     'fileRequestHandlers.buildAndSendRequest',
-                    'Could not find configs', new Date(), new Date(), true);
+                    'Could not find signconfigs', new Date(), new Date(), true);
                 send500(response);
             }
         });
     } else {
-        if (configs[config]) {
-            cacheItemList = buildCacheItemList(configs[config], path.substring(1), './public/sign');
-            buildAndSendList(cacheItemList, config, response);
+        if (configs[id]) {
+            cacheItemList = buildCacheItemList(configs[id], path.substring(1), './public/sign');
+            buildAndSendList(cacheItemList, id, response);
         } else {
-            logger.log('server', config, 3, 'fileRequestHandlers.buildAndSendRequest',
-                'Could not find config ' + config, new Date(), new Date(), false);
+            logger.log('server', id, 3, 'fileRequestHandlers.buildAndSendRequest',
+                'Could not find config id ' + id, new Date(), new Date(), false);
             send404(response);
         }
     }
@@ -213,17 +213,17 @@ function buildAndSendRequest(path, config, response) {
 /**
  * Respond to a request for a file.
  * @param  {str} path     path requested
- * @param  {str} config   config requested (if applicable)
+ * @param  {str} id       id requested (if applicable)
  * @param  {obj} response Web request response handle
  */
-function sendFile(path, config, response) {
-//TODO: "config" may no longer be necessary to handle at all. 
+function sendFile(path, id, response) {
+//TODO: "id" may no longer be necessary to handle at all. 
 //Split handling into "sendFile" and "sendSignFile" in order to use
-//DEFAULT_SIGN_CONFIG for sign-file requests where config was 
+//DEFAULT_SIGN_ID for sign-file requests where id was 
 //not specfied.
     var absPath;
-    if (config) {
-        buildAndSendRequest(path, config, response);
+    if (id) {
+        buildAndSendRequest(path, id, response);
     } else {
         if (path === '/' || path === '/index.htm') {
             absPath = './public/index.html';
@@ -234,9 +234,9 @@ function sendFile(path, config, response) {
     }
 }
 
-function sendSignFile(path, config, response) {
-    config = config || 'DEFAULT_SIGN_CONFIG';
-    buildAndSendRequest(path, config, response);
+function sendSignFile(path, id, response) {
+    id = id || 'DEFAULT_SIGN_ID';
+    buildAndSendRequest(path, id, response);
 }
 
 exports.sendFile = sendFile;

@@ -4,7 +4,7 @@
 var http = require('http');
 var logger = require('./logger');
 
-function receiveLog(pathname, config, response, postData) {
+function receiveLog(pathname, id, response, postData) {
     var entry;
 
     response.writeHead(200, {"Content-Type": "text/plain"});

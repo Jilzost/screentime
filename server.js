@@ -11,11 +11,11 @@ function start(route, handle) {
     function onRequest(request, response) {
         var postData,
             pathname,
-            config;
+            id;
         try {
             postData = '';
             pathname = url.parse(request.url).pathname;
-            config = querystring.parse(url.parse(request.url).query).config;
+            id = querystring.parse(url.parse(request.url).query).id;
 
             request.setEncoding("utf8");
 
@@ -24,10 +24,10 @@ function start(route, handle) {
             });
 
             request.addListener("end", function () {
-                route(handle, pathname, config, response, postData);
+                route(handle, pathname, id, response, postData);
             });
         } catch (err) {
-            logger.log('server', config, 1,
+            logger.log('server', id, 1,
                 'server.start.onRequest', 'Failed: ' + err);
         }
     }

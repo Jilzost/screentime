@@ -69,7 +69,7 @@ log.send = function (logLevel, sourceFunctionName, message) {
                     console.log(logLevel + ',' + sourceFunctionName + ','
                         + message);
                 } else {
-                    entry = new Entry('sign', 'DEFAULT_SIGN_CONFIG',
+                    entry = new Entry('sign', 'DEFAULT_SIGN_ID',
                             logLevel, sourceFunctionName, message);
                     xhr = new XMLHttpRequest();
                     xhr.open('POST', 'postlog', true);
@@ -508,8 +508,8 @@ log.sample = function () {
     if (index === -1) {
         log.samplepages.push(samplepage);
         index = log.samplepages.indexOf(samplepage);
-        //This default sign config string gets replaced when file is served
-        log.samplepagedata[index] = new SamplePageData('DEFAULT_SIGN_CONFIG',
+        //This default sign id string gets replaced when file is served
+        log.samplepagedata[index] = new SamplePageData('DEFAULT_SIGN_ID',
             index, -1, samplepage, new Date(), new Date(), new Date(0), 1, 1);
     } else {
         log.samplepagedata[index].lastShown = new Date();

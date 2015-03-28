@@ -81,7 +81,7 @@ function rotateFile() {
     }
 }
 
-function newSamplePage(pathname, config, response, postData) {
+function newSamplePage(pathname, id, response, postData) {
     var samplePageData, index;
 
     try {
@@ -114,12 +114,12 @@ function newSamplePage(pathname, config, response, postData) {
             setTimeout(function () {rotateFile(); }, 1000);
         }
     } catch (err) {
-        logger.log('server', config, 3,
+        logger.log('server', id, 3,
             'sampleHandlers.newSamplePage', 'Failed: ' + err);
     }
 }
 
-function newSampleStat(pathname, config, response, postData) {
+function newSampleStat(pathname, id, response, postData) {
     var sampleStat;
 
     try {
@@ -141,12 +141,12 @@ function newSampleStat(pathname, config, response, postData) {
                 new Date());
         }
     } catch (err) {
-        logger.log('server', config, 3,
+        logger.log('server', id, 3,
             'sampleHandlers.newSamplePage', 'Failed: ' + err);
     }
 }
 
-function showSamples(pathname, config, response, postData) {
+function showSamples(pathname, id, response, postData) {
     var i, responseHtml;
 
     try {
@@ -170,7 +170,7 @@ function showSamples(pathname, config, response, postData) {
             responseHtml +=
                 "<tr>" +
                 "<td>" +
-                '<a href = "/sample?config=' + samplestats[i].serverId + '">' +
+                '<a href = "/sample?id=' + samplestats[i].serverId + '">' +
                 samplestats[i].serverId + "</a>" + "</td>" +
                 "<td>" + asDate(samplestats[i].firstShown) + "</td>" +
                 "<td>" + asDate(samplestats[i].lastShown) + "</td>" +
@@ -182,16 +182,16 @@ function showSamples(pathname, config, response, postData) {
 
         fileRequestHandlers.returnFile(response, 'samples.html', responseHtml);
     } catch (err) {
-        logger.log('server', config, 3,
+        logger.log('server', id, 3,
             'sampleHandlers.showSamples', 'Failed: ' + err);
         fileRequestHandlers.send500(response);
     }
 }
 
-function showSample(pathname, config, response, postData) {
-    var index = JSON.parse(config);
+function showSample(pathname, id, response, postData) {
+    var index = JSON.parse(id);
     if (samplestats.hasOwnProperty(index)) {
-        fileRequestHandlers.returnFile(response, 'sample' + config + '.html',
+        fileRequestHandlers.returnFile(response, 'sample' + id + '.html',
             samplestats[index].content);
     } else {
         fileRequestHandlers.send404(response);

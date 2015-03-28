@@ -47,7 +47,8 @@ body {
 }
 
 .CSS_CurrentAlertsTitle {
-    background-color: red;
+    /*background-color: red;*/
+    background-color: #FF6464;
     color: black;
     border-radius: 25px;
     display: block;
@@ -64,9 +65,11 @@ body {
 
 .CSS_UpcomingAlertsTitle {
     background-color: black;
-    color: red;
+    /*color: red;*/
+    color: #FF6464;
     border-radius: 25px;
-    border-color: red;
+    /*border-color: red;*/
+    border-color: #FF6464;
     border-style: solid;
     border-width: 5px;
     display: block;
