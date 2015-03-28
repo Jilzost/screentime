@@ -87,5 +87,14 @@
         },
         "sign": "sign.html",
         "style": "style.css"
+    },
+    "wonderland": {
+        "software": {
+            "content": "wonderland.js",
+            "behavior": "dev.js",
+            "controller": "controller.js"
+        },
+        "sign": "sign.html",
+        "style": "style.css"
     }
 }
