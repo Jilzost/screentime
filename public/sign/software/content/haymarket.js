@@ -88,21 +88,18 @@ var c = {
     facets: {
         mbtaAgencyRoutes: {
             generatorFunction: 'routesFromMBTARealtime',
-            alwaysUpdate: false,
             requiredDatasources: {
                 MBTARealtimeRoutes: 'source_agencyRoutesMBTA'
             }
         },
         mbtaLocalRoutes: {
             generatorFunction: 'routesFromMBTARealtime',
-            alwaysUpdate: false,
             requiredDatasources: {
                 MBTARealtimeRoutes: 'source_localRoutesMBTA'
             }
         },
         mbtaAgencyAlerts: {
             generatorFunction: 'alertsFromMBTARealtime',
-            alwaysUpdate: false,
             requiredDatasources: {
                 mbtaRealtimeAlerts: 'source_agencyAlertsMBTA'
             },
@@ -113,7 +110,6 @@ var c = {
         },
         mbtaFeaturedAlerts: {
             generatorFunction: 'objectsMatchATemplate',
-            alwaysUpdate: false,
             requiredFacets: {
                 source: 'mbtaAgencyAlerts'
             },
@@ -123,7 +119,6 @@ var c = {
         },
         mbtaCurrentServiceAlerts: {
             generatorFunction: 'extractCurrentServiceAlertsCombiningDelaysAndSort',
-            alwaysUpdate: false,
             requiredFacets: {
                 alerts: 'mbtaAgencyAlerts',
                 routes: 'mbtaAgencyRoutes'
@@ -131,7 +126,6 @@ var c = {
         },
         mbtaUpcomingServiceAlerts: {
             generatorFunction: 'extractUpcomingServiceAlertsAndSort',
-            alwaysUpdate: false,
             requiredFacets: {
                 alerts: 'mbtaAgencyAlerts',
                 routes: 'mbtaAgencyRoutes'
@@ -139,7 +133,6 @@ var c = {
         },
         mbtaElevatorAlerts: {
             generatorFunction: 'extractElevatorAlertsAndSort',
-            alwaysUpdate: false,
             requiredFacets: {
                 alerts: 'mbtaAgencyAlerts'
             }
@@ -187,6 +180,7 @@ var c = {
         mbtaAllDepartures: {
             generatorFunction: 'append',
             alwaysUpdate: false,
+            updateIfAnythingReady: true,
             requiredDatasources: {},
             requiredFacets: {
                 one: 'mbtaAllDepartures1',

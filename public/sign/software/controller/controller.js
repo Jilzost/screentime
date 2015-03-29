@@ -1334,6 +1334,7 @@ generators.routesFromMBTARealtime = function () {
         }
     } catch (err) {
         log.error('generators.routesFromMBTARealtime', '(mode loop 2) ' + err);
+        return {};
     }
 
     for (r = 0; r < routeList.length; r += 1) {
@@ -1900,25 +1901,19 @@ generators.append = function () {
 
     try {
         for (i = 0; i < inputs.length; i += 1) {
-            console.log('i = ' + i);
             if (this.requiredFacets.hasOwnProperty(inputs[i])) {
                 source = f[this.requiredFacets[inputs[i]]].data;
-                console.log('source: ');
-                console.log(JSON.stringify(source));
-                for (j = 0; j < source.length; j += 1) {
-                    console.log('j = ' + j);
-                    combined.push(source[j]);
-                    console.log('1910');
+                if (Array.isArray(source)) {
+                    for (j = 0; j < source.length; j += 1) {
+                        combined.push(source[j]);
+                    }
                 }
-                console.log('1912');
             }
-            console.log('1914');
         }
 
         return combined;
     } catch (err) {
         log.error('generators.append', JSON.stringify(err));
-        console.log('generators.append', JSON.stringify(err));
         return [];
     }
 };
@@ -2276,10 +2271,21 @@ var Facet = function (fconfig) {
     'use strict';
     try {
         this.generatorFunction = fconfig.generatorFunction;
-        this.alwaysUpdate = fconfig.alwaysUpdate;
         this.requiredDatasources = fconfig.requiredDatasources || {};
         this.requiredFacets = fconfig.requiredFacets  || {};
         this.parameters = fconfig.parameters  || {};
+
+        if (fconfig.hasOwnProperty('alwaysUpdate')) {
+            this.alwaysUpdate = fconfig.alwaysUpdate;
+        } else {
+            this.alwaysUpdate = false;
+        }
+
+        if (fconfig.hasOwnProperty('updateIfAnythingReady')) {
+            this.updateIfAnythingReady = fconfig.updateIfAnythingReady;
+        } else {
+            this.updateIfAnythingReady = false;
+        }
 
         if (generators[this.generatorFunction] === undefined) {
             log.criticalError('Facet', 'unknown generator ' + fconfig.generatorFunction);
@@ -2305,7 +2311,8 @@ Facet.prototype = {
         'use strict';
         var i,
             willUpdate = forceUpdate || this.alwaysUpdate,
-            dependentsReady = true;
+            allDependentsReady = true,
+            someDependentsReady = false;
 
         try {
             for (i in this.requiredDatasources) {
@@ -2313,9 +2320,10 @@ Facet.prototype = {
                     if (d[this.requiredDatasources[i]].lastUpdated > this.lastUpdated) {
                         willUpdate = true;
                     }
-                    if (!d[this.requiredDatasources[i]].isReady) {
-                        dependentsReady = false;
-                        log.info('Facet.update', d[this.requiredDatasources[i]].id + ' not ready');
+                    if (d[this.requiredDatasources[i]].isReady) {
+                        someDependentsReady = true;
+                    } else {
+                        allDependentsReady = false;
                     }
                 }
             }
@@ -2325,17 +2333,20 @@ Facet.prototype = {
                     if (f[this.requiredFacets[i]].lastUpdated > this.lastUpdated) {
                         willUpdate = true;
                     }
-                    if (!f[this.requiredFacets[i]].isReady) {
-                        dependentsReady = false;
+                    if (f[this.requiredFacets[i]].isReady) {
+                        someDependentsReady = true;
+                    } else {
+                        allDependentsReady = false;
                     }
                 }
             }
         } catch (err) {
             log.warning('Facet', '(could not update) ' + err);
-            dependentsReady = false;
+            allDependentsReady = false;
         }
 
-        if (dependentsReady) {
+        if (allDependentsReady ||
+                (someDependentsReady && this.updateIfAnythingReady)) {
             if (willUpdate) {
                 try {
                     this.data = {};
@@ -2349,6 +2360,7 @@ Facet.prototype = {
                 }
             }
         } else {
+            log.info('Facet.update', 'Not all inputs ready');
             this.isReady = false;
             this.data = {};
         }
@@ -2590,10 +2602,8 @@ var reactKey = function (evt) {
     var i, textList = [];
     if (evt.keyCode === 83) {
         for (i = 0; i < allVisualElements.length; i += 1) {
-            console.log(v[allVisualElements[i]].vocalize());
             textList = textList.concat(v[allVisualElements[i]].vocalize());
         }
-        console.log(textList);
         speakTextList(textList, 0);
     }
 };
@@ -2740,7 +2750,6 @@ controller.displayOnly = function (visualElements) {
         log.sample();
     } catch (err) {
         log.error('controller.displayOnly', JSON.stringify(err));
-        console.log(err);
     }
 };
 

@@ -200,6 +200,7 @@ var c = {
         mbtaAllDepartures: {
             generatorFunction: 'append',
             alwaysUpdate: false,
+            updateIfAnythingReady: true,
             requiredDatasources: {},
             requiredFacets: {
                 one: 'mbtaAllDepartures1',
