@@ -7,7 +7,7 @@ var nodemailer = require('nodemailer');
 var cron = require('cron');
 
 var csvheader = '"serverTime","source","sign","sourceTime","logLevel","process","message"\r\n';
-var tabheader = 'source\tsign\tsourceTime\tlogLevel\tprocess\tmessage\r\n';
+var tabheader = 'sign\tsourceTime\tprocess\tmessage\r\n';
 
 var serverStartTime;
 var logThreshold = 5;
@@ -41,12 +41,10 @@ Entry.prototype = {
             this.message + '"\r\n';
     },
     tabrow: function () {
-        return this.source + '\t' +
-            this.sign + '\t' +
+        return this.sign + '\t' +
             this.sourceTime.getHours() + ':' +
             this.sourceTime.getMinutes() + ':' +
             this.sourceTime.getSeconds() + '\t' +
-            this.logLevel + '\t' +
             this.process + '\t' +
             this.message + '\r\n';
     }

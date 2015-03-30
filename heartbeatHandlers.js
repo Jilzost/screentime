@@ -27,6 +27,16 @@ function heartbeat(pathname, id, response, postData) {
 
         beat.serverTime = Date.now();
         beat.up = true;
+
+        if (!lastbeats.hasOwnProperty(beat.signId)) {
+            logger.log('server', beat.signId, 5, 'checkHeartbeat',
+                'New sign activated', true);
+        } else if (lastbeats[beat.signId].serverTime +
+                lastbeats[beat.signId].heartbeatRate < Date.now()) {
+            logger.log('server', beat.signId, 5, 'checkHeartbeat',
+                'Sign is back online', true);
+        }
+
         lastbeats[beat.signId] = beat;
 
         setTimeout(function () {checkHeartbeat(beat); }, beat.heartbeatRate);

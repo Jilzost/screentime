@@ -132,9 +132,12 @@ function newSampleStat(pathname, id, response, postData) {
                 samplestats[sampleStat.serverId].lastShown += sampleStat.lastShown;
             }
             response.writeHead(200, {"Content-Type": "text/plain"});
-            response.write('ok');
+            response.write(JSON.stringify('ok'));
             response.end();
         } else {
+            response.writeHead(200, {"Content-Type": "text/plain"});
+            response.write(JSON.stringify(-1));
+            response.end();
             logger.log('server', sampleStat.sign, 3,
                 'sampleHandlers.newSampleStat',
                 'Unrecognized serverId ' + sampleStat.serverId, new Date(),

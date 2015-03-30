@@ -160,13 +160,13 @@ log.errorPieces = function (errorMsg, url, lineNumber, column, errorObj) {
  * @param  {number} heartbeatRate How long to wait between heartbeats before
  *                                reporting a problem. Should include buffer.
  */
-log.heartbeat = function (signId, uptime, heartbeatRate) {
+log.heartbeat = function (uptime, heartbeatRate) {
     'use strict';
     if (b.logging.level !== 0) {
         if (b.logging.destination !== 'console') {
             var xhr = new XMLHttpRequest();
             xhr.open('POST', 'postheartbeat', true);
-            xhr.send(JSON.stringify({signId: signId, timestamp: Date.now(),
+            xhr.send(JSON.stringify({signId: 'DEFAULT_SIGN_ID', timestamp: Date.now(),
                 uptime: uptime, heartbeatRate: heartbeatRate }));
         }
     }
@@ -379,21 +379,54 @@ log.sampleComputeTime = 1;
 /**
  * Transmits statistcs about recent samples (which have serverId's) to server.
  */
+log.sendSampleStat = function (index) {
+    'use strict';
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', 'postsamplestat');
+    xhr.onload = (function (index) {
+        return function (e) {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    if (!isNaN(JSON.parse(xhr.responseText))) {
+                        log.samplepagedata[index].serverId =
+                            JSON.parse(xhr.responseText);
+
+                    }
+                } else {
+                    log.error('log.shareSampleStats', JSON.stringify(e));
+                }
+            }
+        };
+    }(index));
+    xhr.onerror = (function (index) {
+        return function (e) {
+            log.warning('log.shareSampleStats', 'Could not share sample number '
+                    + index + ' because ' + JSON.stringify(e));
+        };
+    }(index));
+    xhr.send(JSON.stringify(new SampleStat(log.samplepagedata[index])));
+
+};
+
 log.sendSampleStats = function () {
     'use strict';
-    var i, xhr;
+    var i; //, xhr;
     //For each sample:
     for (i = 0; i < log.samplepagedata.length; i += 1) {
         //If it has a serverid, and it has a countsincelastshared, 
         if (log.samplepagedata[i].serverId >= 0 &&
                 log.samplepagedata[i].countSinceLastShared > 0) {
+            log.sendSampleStat(i);
             //Send it and set its statistics accordingly. 
+            /*
             xhr = new XMLHttpRequest();
             xhr.open('POST', 'postsamplestat', true);
 
             xhr.send(JSON.stringify(new SampleStat(log.samplepagedata[i])));
             log.samplepagedata[i].lastShared = new Date();
             log.samplepagedata[i].countSinceLastShared = 0;
+            */
+
         }
     }
 };
@@ -443,22 +476,29 @@ log.shareSample = function (index) {
 log.shareSamplesAndStats = function () {
     'use strict';
     var i, mostShows = 0, mostShown;
-    //1. Find the most-shown sample that has never been sent.
-    for (i = 0; i < log.samplepagedata.length; i += 1) {
-        if (log.samplepagedata[i].serverId === -1 &&
-                log.samplepagedata[i].count >= mostShows) {
-            mostShown = i;
-            mostShows = log.samplepagedata[i].count;
-        }
-    }
-    //2a. If there is one, send it, then send the latest sample count.
-    if (mostShows > 0) {
-        log.shareSample(mostShown);
+    //First check to see if we should reset completely instead of sending. 
+    if (0 < b.logging.maxSamples && b.logging.maxSamples < log.samplepages.length) {
+        log.samplepages = [];
+        log.samplepagedata = [];
+        log.info('shareSamplesAndStats', 'Reached maximum sample size and reset to 0');
     } else {
-    //2b. If there isn't one, go straight to latest sample count. 
-        log.sendSampleStats();
+        //1. Find the most-shown sample that has never been sent.
+        for (i = 0; i < log.samplepagedata.length; i += 1) {
+            if (log.samplepagedata[i].serverId === -1 &&
+                    log.samplepagedata[i].count >= mostShows) {
+                mostShown = i;
+                mostShows = log.samplepagedata[i].count;
+            }
+        }
+        //2a. If there is one, send it, then send the latest sample count.
+        if (mostShows > 0) {
+            log.shareSample(mostShown);
+        } else {
+        //2b. If there isn't one, go straight to latest sample count. 
+            log.sendSampleStats();
+        }
+        log.lastSampleSent = Date.now();
     }
-    log.lastSampleSent = Date.now();
 };
 
 /**
@@ -1153,13 +1193,13 @@ Datasource.prototype = {
     handleUpdateError: function (e1, e2) {
         'use strict';
         if (this.lastUpdated + (this.maxAge * 2) < Date.now()) {
-            log.error('Datasource.handleUpdateError',
+            log.info('Datasource.handleUpdateError',
                 'Could not update. Data too old now. '
                 + this.ident + ': ' + e1 + ' ' + e2);
             this.isReady = false;
             this.data = {};
         } else {
-            log.warning('Datasource.handleUpdateError',
+            log.info('Datasource.handleUpdateError',
                 'could not update. Will use old data. '
                 + this.id + ': ' + e1 + '; ' + e2);
         }
@@ -2729,7 +2769,7 @@ controller.heartbeat = function () {
     if (this.nextHeartbeat < Date.now()) {
         this.lastHeartbeat = this.nextHeartbeat;
         this.nextHeartbeat += this.heartbeatRate;
-        log.heartbeat(c.file, this.lastHeartbeat - this.firstHeartbeat,
+        log.heartbeat(this.lastHeartbeat - this.firstHeartbeat,
                 this.heartbeatRate * 2.1);
     }
 };

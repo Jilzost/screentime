@@ -11,7 +11,8 @@ var b = {
         maxEntries: 60, // Maximum number of logs that can be recorded...
         allowedEvery: 1800000, //...every X milliseconds. 
         heartbeatRate: 60000, // in ms
-        sendSamples: false,
-        shareSamplesEvery: 3600000 //in ms; 3600000 is one hour
+        sendSamples: true,
+        shareSamplesEvery: 600000, //in ms; 3600000 is one hour
+        maxSamples: 5000 //At this point sample list will be zero'ed out. Enter a 0 here for unlimited size. 
     }
 };
