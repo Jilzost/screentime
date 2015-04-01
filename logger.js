@@ -12,7 +12,7 @@ var tabheader = 'sign\tsourceTime\tprocess\tmessage\r\n';
 var serverStartTime;
 var logThreshold = 5;
 
-var emailIsOn = false;
+var emailIsOn = true;
 var emailThreshold = 3;
 var baseEmailFrequency = 60000;
 var currentEmailFrequency = baseEmailFrequency;
@@ -101,14 +101,14 @@ function sendLogEntryEmail(includedSpan) {
     transporter = nodemailer.createTransport({
         service: 'Gmail',
         auth: {
-            user: 'shortenermonitor@gmail.com',
-            pass: 'redgreenorangeblue'
+            user: 'mbta.screentime@gmail.com',
+            pass: 'bjduek3galtuvpsjncg'
         }
     });
     mailOptions = {
-        from: 'Shortener Monitor <shortenermonitor@gmail.com>', // sender address
+        from: 'MBTA ScreenTime <mbta.screentime@gmail.com>', // sender address
         to: 'dpb@alum.mit.edu, dbarker@mbta.com', // list of receivers
-        subject: 'Screentime log entry', // Subject line
+        subject: 'Screentime log', // Subject line
         text: emailContent + '\r\nIncludes entries from last ' +
             includedSpan / 60000 + ' minute(s).\r\n' // plaintext body
     };
@@ -124,7 +124,7 @@ function sendLogEntryEmail(includedSpan) {
 }
 
 function addLogEntryToEmail(entry, forceEmail) {
-    if (entry.logLevel <= emailThreshold || forceEmail) {
+    if ((entry.logLevel <= emailThreshold) || forceEmail) {
         if (lastEmailSentAt > Date.now()) {
             emailContent += entry.tabrow();
         } else {

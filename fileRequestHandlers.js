@@ -109,7 +109,7 @@ function buildCacheItemList(configPiece, pathPiece, pathSoFar) {
     } catch (err) {
         logger.log('server', 'server', 2,
             'fileRequestHandlers.buildCacheItemList',
-            'Failure building list: ' + err, new Date(), new Date(), false);
+            'Failure building list: ' + err);
     }
 }
 
@@ -174,8 +174,7 @@ function buildAndSendList(cacheItemList, id, response) {
 function buildAndSendRequest(path, id, response) {
     var cacheItemList;
     logger.log('server', id, 5, 'fileRequestHandlers.buildAndSendRequest',
-        'Request for path ' + path + ' id ' + id, new Date(),
-        new Date(), false);
+        'Request for path ' + path + ' id ' + id);
     if (!configs) {
         fs.exists('./public/sign/signconfigs.json', function (exists) {
             if (exists) {
@@ -183,8 +182,7 @@ function buildAndSendRequest(path, id, response) {
                     if (err) {
                         logger.log('server', id, 1,
                             'fileRequestHandlers.buildAndSendRequest',
-                            'Error loading signconfigs', new Date(), new Date(),
-                            true);
+                            'Error loading signconfigs');
                         send500(response);
                     } else {
                         configs = JSON.parse(data);
@@ -194,7 +192,7 @@ function buildAndSendRequest(path, id, response) {
             } else {
                 logger.log('server', id, 1,
                     'fileRequestHandlers.buildAndSendRequest',
-                    'Could not find signconfigs', new Date(), new Date(), true);
+                    'Could not find signconfigs');
                 send500(response);
             }
         });
@@ -204,7 +202,7 @@ function buildAndSendRequest(path, id, response) {
             buildAndSendList(cacheItemList, id, response);
         } else {
             logger.log('server', id, 3, 'fileRequestHandlers.buildAndSendRequest',
-                'Could not find config id ' + id, new Date(), new Date(), false);
+                'Could not find config id ' + id);
             send404(response);
         }
     }
