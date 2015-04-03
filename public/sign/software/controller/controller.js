@@ -155,7 +155,7 @@ log.errorPieces = function (errorMsg, url, lineNumber, column, errorObj) {
 /**
  * Sends a heartbeat. 
  * Heartbeats are used to detect sign crashes (by their absence.)
- * @param  {string} signId        identifies this sign.
+ * @param  {string} sign          identifies this sign.
  * @param  {number} uptime        uptime, in ms.
  * @param  {number} heartbeatRate How long to wait between heartbeats before
  *                                reporting a problem. Should include buffer.
@@ -166,7 +166,7 @@ log.heartbeat = function (uptime, heartbeatRate) {
         if (b.logging.destination !== 'console') {
             var xhr = new XMLHttpRequest();
             xhr.open('POST', 'postheartbeat', true);
-            xhr.send(JSON.stringify({signId: 'DEFAULT_SIGN_ID', timestamp: Date.now(),
+            xhr.send(JSON.stringify({sign: 'DEFAULT_SIGN_ID', timestamp: Date.now(),
                 uptime: uptime, heartbeatRate: heartbeatRate }));
         }
     }
@@ -377,7 +377,9 @@ log.lastSampleSent = Date.now();
 log.sampleComputeTime = 1;
 
 /**
- * Transmits statistcs about recent samples (which have serverId's) to server.
+ * Sends one sampleStat to the server. 
+ * If it gets a number value back, updates serverId. 
+ * @param  {number} index Identifies sampleStat. 
  */
 log.sendSampleStat = function (index) {
     'use strict';
@@ -408,25 +410,18 @@ log.sendSampleStat = function (index) {
 
 };
 
+/**
+ * Transmits statistcs about recent samples (which have serverId's) to server.
+ */
 log.sendSampleStats = function () {
     'use strict';
-    var i; //, xhr;
+    var i;
     //For each sample:
     for (i = 0; i < log.samplepagedata.length; i += 1) {
-        //If it has a serverid, and it has a countsincelastshared, 
+        //If it has a serverid, and it has a countsincelastshared, send.
         if (log.samplepagedata[i].serverId >= 0 &&
                 log.samplepagedata[i].countSinceLastShared > 0) {
             log.sendSampleStat(i);
-            //Send it and set its statistics accordingly. 
-            /*
-            xhr = new XMLHttpRequest();
-            xhr.open('POST', 'postsamplestat', true);
-
-            xhr.send(JSON.stringify(new SampleStat(log.samplepagedata[i])));
-            log.samplepagedata[i].lastShared = new Date();
-            log.samplepagedata[i].countSinceLastShared = 0;
-            */
-
         }
     }
 };

@@ -8,11 +8,11 @@ var lastbeats = {};
 
 function checkHeartbeat(beat) {
 
-    if (beat.serverTime === lastbeats[beat.signId].serverTime) {
-        logger.log('server', beat.signId, 2, 'checkHeartbeat',
+    if (beat.serverTime === lastbeats[beat.sign].serverTime) {
+        logger.log('server', beat.sign, 2, 'checkHeartbeat',
             'No heartbeat (uptime was ' +
-                logger.formatDuration(lastbeats[beat.signId].uptime) + ')');
-        lastbeats[beat.signId].up = false;
+                logger.formatDuration(lastbeats[beat.sign].uptime) + ')');
+        lastbeats[beat.sign].up = false;
     }
 }
 
@@ -23,26 +23,26 @@ function heartbeat(pathname, id, response, postData) {
         beat.serverTime = Date.now();
         beat.up = true;
 
-        if (!lastbeats.hasOwnProperty(beat.signId)) {
+        if (!lastbeats.hasOwnProperty(beat.sign)) {
             if (beat.uptime < 1000) {
-                logger.log('server', beat.signId, 5, 'checkHeartbeat',
+                logger.log('server', beat.sign, 5, 'checkHeartbeat',
                     'New sign activated', true);
             } else {
-                logger.log('server', beat.signId, 5, 'checkHeartbeat',
+                logger.log('server', beat.sign, 5, 'checkHeartbeat',
                     'First heartbeat from existing sign');
             }
-        } else if (lastbeats[beat.signId].serverTime +
-                lastbeats[beat.signId].heartbeatRate < Date.now()) {
-            logger.log('server', beat.signId, 5, 'checkHeartbeat',
+        } else if (lastbeats[beat.sign].serverTime +
+                lastbeats[beat.sign].heartbeatRate < Date.now()) {
+            logger.log('server', beat.sign, 5, 'checkHeartbeat',
                 'Sign is back online', true);
-        } else if (lastbeats[beat.signId].uptime > beat.uptime) {
-            logger.log('server', beat.signId, 2, 'checkHeartbeat',
+        } else if (lastbeats[beat.sign].uptime > beat.uptime) {
+            logger.log('server', beat.sign, 2, 'checkHeartbeat',
                 'Sign has reset (uptime was '
-                    + logger.formatDuration(lastbeats[beat.signId].uptime)
+                    + logger.formatDuration(lastbeats[beat.sign].uptime)
                     + ')', true);
         }
 
-        lastbeats[beat.signId] = beat;
+        lastbeats[beat.sign] = beat;
 
         setTimeout(function () {checkHeartbeat(beat); }, beat.heartbeatRate);
 
@@ -64,14 +64,14 @@ function getUptimes(maximumDowntime) {
             if (lastbeats.hasOwnProperty(i)) {
                 if (lastbeats[i].up) {
                     times.push({
-                        sign: lastbeats[i].signId,
+                        sign: lastbeats[i].sign,
                         up: true,
                         time: lastbeats[i].uptime
                     });
                 } else if (maximumDowntime === 0 ||
                         new Date() - lastbeats[i].timestamp < maximumDowntime) {
                     times.push({
-                        sign: lastbeats[i].signId,
+                        sign: lastbeats[i].sign,
                         up: false,
                         time: Date.now() - lastbeats[i].timestamp
                     });
@@ -79,8 +79,8 @@ function getUptimes(maximumDowntime) {
             }
         }
         times.sort(function (a, b) {
-            if (a.signId < b.signId) {return -1; }
-            if (a.signId > b.signId) {return 1; }
+            if (a.sign < b.sign) {return -1; }
+            if (a.sign > b.sign) {return 1; }
             return 0;
         });
         return times;
