@@ -10,14 +10,9 @@ function checkHeartbeat(beat) {
 
     if (beat.serverTime === lastbeats[beat.signId].serverTime) {
         logger.log('server', beat.signId, 2, 'checkHeartbeat',
-            'No heartbeat since ' + beat.serverTime +
-            ' (uptime was ' +
+            'No heartbeat (uptime was ' +
                 logger.formatDuration(lastbeats[beat.signId].uptime) + ')');
         lastbeats[beat.signId].up = false;
-    } else if (lastbeats[beat.signId].uptime < beat.uptime) {
-        logger.log('server', beat.signId, 2, 'checkHeartbeat',
-            'Sign has reset (uptime was '
-                + lastbeats[beat.signId].uptime + ')');
     }
 }
 
@@ -40,6 +35,11 @@ function heartbeat(pathname, id, response, postData) {
                 lastbeats[beat.signId].heartbeatRate < Date.now()) {
             logger.log('server', beat.signId, 5, 'checkHeartbeat',
                 'Sign is back online', true);
+        } else if (lastbeats[beat.signId].uptime > beat.uptime) {
+            logger.log('server', beat.signId, 2, 'checkHeartbeat',
+                'Sign has reset (uptime was '
+                    + logger.formatDuration(lastbeats[beat.signId].uptime)
+                    + ')', true);
         }
 
         lastbeats[beat.signId] = beat;

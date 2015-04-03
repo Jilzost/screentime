@@ -117,7 +117,7 @@ function sendLogEntryEmail(includedSpan) {
         if (error) {
             errorLog = new Entry('server', 'server', 2, 'logger.sendLogEntryEmail',
                 'Error: ' + error);
-            recordLogEntry(entry);
+            recordLogEntry(errorLog);
         }
     });
     emailContent = '';
