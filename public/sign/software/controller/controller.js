@@ -2609,6 +2609,26 @@ var speakTextList = function (textList, i) {
 };
 
 /**
+ * Used to start speech. 
+ * @param  {object} evt keypress event
+ */
+var reactKey = function (evt) {
+    'use strict';
+    if (speechSynthesis.speaking) {
+        speechSynthesis.cancel();
+    } else {
+        var i, textList = [];
+        if (evt.keyCode === 83) {
+            for (i = 0; i < allVisualElements.length; i += 1) {
+                textList = textList.concat(v[allVisualElements[i]].vocalize());
+            }
+            speakTextList(textList, 0);
+        }
+    }
+};
+document.onkeydown = function (key) { 'use strict'; reactKey(key); };
+
+/**
  * Clock in the upper-right corner of display. 
  * @type {Object}
  */
@@ -2627,22 +2647,6 @@ clock.tick = function () {
     if (h > 12) { h -= 12; }
     document.getElementById('clock').innerHTML = h + ":" + m;
 };
-
-/**
- * Used to start speech. 
- * @param  {object} evt keypress event
- */
-var reactKey = function (evt) {
-    'use strict';
-    var i, textList = [];
-    if (evt.keyCode === 83) {
-        for (i = 0; i < allVisualElements.length; i += 1) {
-            textList = textList.concat(v[allVisualElements[i]].vocalize());
-        }
-        speakTextList(textList, 0);
-    }
-};
-document.onkeydown = function (key) { 'use strict'; reactKey(key); };
 
 /**
  * Chooses the best "carousel," the set of information to show in what order. 
