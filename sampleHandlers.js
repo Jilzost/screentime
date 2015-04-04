@@ -181,7 +181,7 @@ function showSamples(pathname, id, response, postData) {
                 "</tr>";
         }
 
-        responseHtml += "</tbody>" + "</body>" + "</html>";
+        responseHtml += "</tbody>" + "</table>" + "</body>" + "</html>";
 
         fileRequestHandlers.returnFile(response, 'samples.html', responseHtml);
     } catch (err) {

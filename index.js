@@ -8,6 +8,8 @@ var heartbeatHandlers = require("./heartbeatHandlers");
 var logHandlers = require("./logHandlers");
 var logger = require("./logger");
 var sampleHandlers = require("./sampleHandlers");
+var speechSampleHandlers = require("./speechSampleHandlers");
+
 
 var handle = {};
 
@@ -26,9 +28,13 @@ handle["/postheartbeat"] = heartbeatHandlers.heartbeat;
 handle["/postlog"] = logHandlers.receiveLog;
 handle["/postsample"] = sampleHandlers.newSamplePage;
 handle["/postsamplestat"] = sampleHandlers.newSampleStat;
+handle["/postspeechsample"] = speechSampleHandlers.newSpeechSample;
 
 handle["/sample"] = sampleHandlers.showSample;
 handle["/samples"] = sampleHandlers.showSamples;
+
+handle["/speechsample"] = speechSampleHandlers.showSample;
+handle["/speechsamples"] = speechSampleHandlers.showSamples;
 
 server.start(router.route, handle);
 logger.startLogging();

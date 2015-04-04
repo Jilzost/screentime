@@ -565,6 +565,21 @@ log.sample = function () {
     }
 };
 
+
+/**
+ * Sends one speechSample to the server. 
+ */
+log.speechSample = function (utterances) {
+    'use strict';
+    if (b.logging.sendSpeechSamples && b.logging.destination !== 'console') {
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', 'postspeechsample', true);
+        xhr.send(JSON.stringify({sign: 'DEFAULT_SIGN_ID', timestamp: Date.now(),
+             utterances: utterances }));
+    }
+};
+
+
 //TODO: Put carousels in own file. 
 
 /**
@@ -1460,6 +1475,7 @@ generators.alertsFromMBTARealtime = function () {
                     }
                 }
                 formattedDescription = formattedDescription.replace(/[w\.]{0,4}mbta\.com\/[\w\/-_\.]{10,}/, 'mbta.com');
+                formattedDescription = formattedDescription.replace(/([^\.])$/, '$1.');
                 newAlerts.push(new Alert('banner_' + source[i].alert_id, affectedIds, affectedNames,
                     affectedDirection, source[i].alert_lifecycle, source[i].timeframe_text, startTime,
                     endTime, source[i].effect_name, source[i].service_effect_text,
@@ -1542,6 +1558,7 @@ generators.alertsFromMBTARealtime = function () {
                         && bools.isCurrent && bools.isSevere);
             }
             formattedDescription = source[i].header_text;
+            formattedDescription = formattedDescription.replace(/([^\.])$/, '$1.');
             if (source[i].hasOwnProperty('description_text')) {
                 formattedDetails = source[i].description_text.replace(/(\r\n|\n|\r)/gm, '<br>');
                 formattedDetails = formattedDetails.replace(/<br><br>/gm, '<p>');
@@ -1708,6 +1725,8 @@ generators.extractCurrentServiceAlertsCombiningDelaysAndSort = function () {
                     }
                 }
 
+                description += '.';
+                formattedDescription += '.';
 
                 return new Alert(0, [], [], '', 'New', '', 0, 0, 'Delays', '', description, formattedDescription, '', '', new AlertBools());
             } catch (err) {
@@ -2103,6 +2122,7 @@ visualizers.alerts = function () {
     var i,
         a = f[this.requiredFacets.alerts].data,
         title = this.parameters.title,
+        footer = this.parameters.footer || false,
         content = '';
 
     try {
@@ -2117,7 +2137,17 @@ visualizers.alerts = function () {
                 content += '<div class="AlertTimeframe">' + a[i].timeframeText.cap() + '</div>: ';
             }
 
-            content +=  a[i].formattedDescription + '</div>';
+            content +=  a[i].formattedDescription;
+
+            if (a.length === 1 && footer) {
+                content += ' ' + footer;
+            }
+
+            content +=  '</div>';
+        }
+
+        if (a.length > 1 && footer) {
+            content += '<div class="alert">' + footer + '</div>';
         }
 
         return content;
@@ -2136,6 +2166,7 @@ vocalizers.alerts = function () {
     var i,
         a = f[this.requiredFacets.alerts].data,
         title = this.parameters.title,
+        footer = this.parameters.footer || false,
         content = [];
 
     try {
@@ -2146,6 +2177,9 @@ vocalizers.alerts = function () {
         for (i = 0; i < a.length; i += 1) {
             content.push(a[i].description);
         }
+
+        if (footer) { content.push(footer); }
+
         return content;
     } catch (err) {
         log.error('vocalizers.alerts', err);
@@ -2623,6 +2657,7 @@ var reactKey = function (evt) {
                 textList = textList.concat(v[allVisualElements[i]].vocalize());
             }
             speakTextList(textList, 0);
+            log.speechSample(textList);
         }
     }
 };
@@ -2763,6 +2798,7 @@ controller.updateDatasources = function (forceUpdate) {
 /**
  * Sends a heartbeat if it's time to do so. 
  */
+/*
 controller.heartbeat = function () {
     'use strict';
     if (this.nextHeartbeat < Date.now()) {
@@ -2770,6 +2806,27 @@ controller.heartbeat = function () {
         this.nextHeartbeat += this.heartbeatRate;
         log.heartbeat(this.lastHeartbeat - this.firstHeartbeat,
                 this.heartbeatRate * 2.1);
+    }
+};
+*/
+
+/**
+ * Sends a heartbeat if it's time to do so. 
+ */
+controller.heartbeat = function () {
+    'use strict';
+    if (this.nextHeartbeat < Date.now()) {
+        //while loop is to handle wake-from-sleep-type scenario, 
+        //in which the originally-scheduled next heartbeat time
+        //may be well in the future. 
+        //This is not factored into uptime calculation, however. 
+        while (this.nextHeartbeat < Date.now()) {
+            this.lastHeartbeat = this.nextHeartbeat;
+            this.nextHeartbeat += this.heartbeatRate;
+        }
+        log.heartbeat(this.lastHeartbeat - this.firstHeartbeat,
+            this.heartbeatRate * 2.1);
+
     }
 };
 

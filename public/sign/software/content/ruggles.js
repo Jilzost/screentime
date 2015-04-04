@@ -73,7 +73,8 @@ var c = {
                 title: {
                     text: 'Elevator Updates',
                     format: 'CSS_ElevatorAlerts'
-                }
+                },
+                footer: 'See mbta.com for suggested alternatives.'
             }
         },
     },
