@@ -69,7 +69,7 @@ var c = {
             },
             parameters: {
                 title: {
-                    text: 'Elevator Updates',
+                    text: 'Elevators Unavailable',
                     format: 'CSS_ElevatorAlerts'
                 },
                 footer: 'See mbta.com for suggested alternatives.'

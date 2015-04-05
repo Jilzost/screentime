@@ -1072,7 +1072,8 @@ var AlertBools = function () {
     this.isSubway = false;      //Affects a subway line?
     this.isLocal = false;       //Affects a service that serves this station?
     this.isCurrent = false;     //Currently active (and relatively new?)
-    this.isSoon = false;        //Starts in the next 7 days?
+    this.isSoon = false;        //Starts in the next 3-7 days?
+    this.isUpcoming = false;    //Starts in the future?
     this.isSevere = false;      //Severe issue?
     this.isSystemwide = false;  //Systemwide issue (affecting a mode?)
     this.isFeatured = false;    //Should this alert be "featured?"
@@ -1118,6 +1119,7 @@ var Alert = function (alertId, affectedIds, affectedNames, affectedDirection, li
     this.isLocal = alertBools.isLocal;
     this.isCurrent = alertBools.isCurrent;
     this.isSoon = alertBools.isSoon;
+    this.isUpcoming = alertBools.isUpcoming;
     this.isSevere = alertBools.isSevere;
     this.isSystemwide = alertBools.isSystemwide;
     this.isFeatured = alertBools.isFeatured;
@@ -1418,6 +1420,7 @@ generators.alertsFromMBTARealtime = function () {
         bools,          //AlertBools of alert under construction
         startTime,      //Start time of alert under construction
         endTime,        //end time of alert under construction
+        description,            //description of alert
         formattedDescription,   //html-formatted description of alert 
         formattedDetails,       //html-formatted details of alert
         newAffectedId,          //Route ID to add to list
@@ -1460,8 +1463,11 @@ generators.alertsFromMBTARealtime = function () {
 
                 if (source[i].alert_lifecycle === 'New') {
                     bools.isCurrent = true;
-                } else if (source[i].alert_lifecycle === 'Upcoming' && startTime < Date.now() + 604800000) {
-                    bools.isSoon = true;
+                } else if (source[i].alert_lifecycle === 'Upcoming') {
+                    bools.isUpcoming = true;
+                    if (startTime < Date.now() + 604800000) {
+                        bools.isSoon = true;
+                    }
                 }
                 if (source[i].severity === 'Severe') {bools.isSevere = true; }
 
@@ -1492,8 +1498,31 @@ generators.alertsFromMBTARealtime = function () {
             affectedIds = [];
             affectedNames = [];
             affectedDirection = '';
+            description = '';
             bools = new AlertBools();
+
             bools.isService = (source[i].affected_services.services.length > 0);
+            if (source[i].effect_periods.length > 0) {
+                startTime = source[i].effect_periods[0].effect_start * 1000;
+                endTime = source[i].effect_periods[source[i].effect_periods.length - 1].effect_end * 1000;
+            } else {
+                startTime = Date(0);
+                endTime = Date(0);
+            }
+
+            if (source[i].alert_lifecycle === 'New') {
+                bools.isCurrent = true;
+            } else if (source[i].alert_lifecycle === 'Upcoming') {
+                bools.isUpcoming = true;
+                if ((startTime < Date.now() + 604800000 && source[i].severity === 'Severe') ||
+                        (startTime < Date.now() + 432000000 && source[i].severity === 'Moderate') ||
+                        (startTime < Date.now() + 432000000 && source[i].severity === 'Significant') ||
+                        (startTime < Date.now() + 259200000 && source[i].severity === 'Minor')) {
+                    bools.isSoon = true;
+                }
+            }
+            if (source[i].severity === 'Severe') {bools.isSevere = true; }
+
             if (bools.isService) {
                 for (j = 0; j < source[i].affected_services.services.length; j += 1) {
                     if (source[i].affected_services.services[j].hasOwnProperty('route_id')) {
@@ -1521,6 +1550,22 @@ generators.alertsFromMBTARealtime = function () {
                         bools.isSubway = true;
                     }
                 }
+                description = source[i].header_text;
+                formattedDescription = description;
+                formattedDescription = formattedDescription.replace(/([^\.])$/, '$1.');
+                if (source[i].hasOwnProperty('description_text')) {
+                    formattedDetails = source[i].description_text.replace(/(\r\n|\n|\r)/gm, '<br>');
+                    formattedDetails = formattedDetails.replace(/<br><br>/gm, '<p>');
+                } else {
+                    formattedDetails = '';
+                }
+                for (j = affectedNames.length - 1; j >= 0; j -= 1) {
+                    if (agencyRoutes.byName.hasOwnProperty(affectedNames[j])) {
+                        formattedDescription = formattedDescription.replace(new RegExp(affectedNames[j], 'gi'),
+                                '<span style="color:' + agencyRoutes.byName[affectedNames[j]].color
+                                + '">' + affectedNames[j] + '</span>');
+                    }
+                }
             } else {
                 for (j = 0; j < source[i].affected_services.elevators.length; j += 1) {
                     if (source[i].affected_services.elevators[j].elev_type === 'Elevator') {
@@ -1537,47 +1582,54 @@ generators.alertsFromMBTARealtime = function () {
                     }
                     affectedIds.pushUnique('access_' + source[i].affected_services.elevators[j].elev_id);
                 }
-            }
-            if (source[i].effect_periods.length > 0) {
-                startTime = source[i].effect_periods[0].effect_start * 1000;
-                endTime = source[i].effect_periods[source[i].effect_periods.length - 1].effect_end * 1000;
-            } else {
-                startTime = Date(0);
-                endTime = Date(0);
-            }
+                if (source[i].affected_services.elevators.length === 1 &&
+                        source[i].affected_services.elevators[0].hasOwnProperty('elev_id') &&
+                        source[i].affected_services.elevators[0].hasOwnProperty('elev_name')) {
+                    description = source[i].timeframe_text + affectedNames[0] + ' elevator number ' +
+                            source[i].affected_services.elevators[0].elev_id +
+                            ': ' +
+                            source[i].affected_services.elevators[0].elev_name.replace(/^[^\-]* - /, '');
+                    if (bools.isUpcoming) {
+                        formattedDescription = '<span class="upcomingElevatorStation">' +
+                                affectedNames[0] +
+                                '</span> ' +
+                                '<span class="upcomingElevatorNumber">' +
+                                source[i].affected_services.elevators[0].elev_id +
+                                '</span> ' +
+                                source[i].affected_services.elevators[0].elev_name.replace(/^[^\-]* - /, '') +
+                                '.';
+                    } else {
+                        formattedDescription = '<span class="elevatorStation">' +
+                            '<em>Now: </em>' +
+                            affectedNames[0] +
+                            '</span> ' +
+                            '<span class="elevatorNumber">' +
+                            source[i].affected_services.elevators[0].elev_id +
+                            '</span> ' +
+                            source[i].affected_services.elevators[0].elev_name.replace(/^[^\-]* - /, '') +
+                            '.';
+                    }
 
-            if (source[i].alert_lifecycle === 'New') {
-                bools.isCurrent = true;
-            } else if (source[i].alert_lifecycle === 'Upcoming'
-                    && startTime < Date.now() + 604800000) {
-                bools.isSoon = true;
+                } else {
+                    description = source[i].header_text;
+                }
             }
-            if (source[i].severity === 'Severe') {bools.isSevere = true; }
+            //TODO: 
+            //break the creation of the "formattedDescription" up into one section for service alerts (as written) 
+            //and one for access.
+            //Access should take the affected station's name (use parent if available), followed by the elevator
+            //number, and then the elevator name (minus everything before the ' - ')
+            //
             if (!bannerExists) {
                 bools.isFeatured = (bools.isSubway && bools.isLocal
                         && bools.isCurrent && bools.isSevere);
-            }
-            formattedDescription = source[i].header_text;
-            formattedDescription = formattedDescription.replace(/([^\.])$/, '$1.');
-            if (source[i].hasOwnProperty('description_text')) {
-                formattedDetails = source[i].description_text.replace(/(\r\n|\n|\r)/gm, '<br>');
-                formattedDetails = formattedDetails.replace(/<br><br>/gm, '<p>');
-            } else {
-                formattedDetails = '';
-            }
-            for (j = affectedNames.length - 1; j >= 0; j -= 1) {
-                if (agencyRoutes.byName.hasOwnProperty(affectedNames[j])) {
-                    formattedDescription = formattedDescription.replace(new RegExp(affectedNames[j], 'gi'),
-                            '<span style="color:' + agencyRoutes.byName[affectedNames[j]].color
-                            + '">' + affectedNames[j] + '</span>');
-                }
             }
 
             newAlerts.push(new Alert(source[i].alert_id, affectedIds,
                 affectedNames, affectedDirection, source[i].alert_lifecycle,
                 source[i].timeframe_text, startTime, endTime,
                 source[i].effect_name, source[i].service_effect_text,
-                source[i].header_text, formattedDescription,
+                description, formattedDescription,
                 source[i].description_text, formattedDetails, bools));
 
         } catch (err) {
@@ -1810,6 +1862,11 @@ generators.extractElevatorAlertsAndSort = function () {
             }
         }
         alertsOut.sort(function (a, b) {
+            if (!a.isUpcoming && b.isUpcoming) {return -1; }
+            if (a.isUpcoming && !b.isUpcoming) {return 1; }
+            if (a.isUpcoming && b.isUpcoming && a.startTime !== b.startTime) {
+                return a.startTime - b.startTime;
+            }
             if (a.affectedNames[0] < b.affectedNames[0]) {return -1; }
             if (a.affectedNames[0] > b.affectedNames[0]) {return 1; }
             return 0;
@@ -2133,8 +2190,8 @@ visualizers.alerts = function () {
 
         for (i = 0; i < a.length; i += 1) {
             content += '<div class="alert">';
-            if (a[i].isSoon) {
-                content += '<div class="AlertTimeframe">' + a[i].timeframeText.cap() + '</div>: ';
+            if (a[i].isUpcoming) {
+                content += '<div class="AlertTimeframe">' + a[i].timeframeText.cap() + ':</div> ';
             }
 
             content +=  a[i].formattedDescription;
