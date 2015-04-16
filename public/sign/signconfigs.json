@@ -1,6 +1,8 @@
 {
     "DEFAULT_SIGN_ID": {
         "software": {
+            "jquery": "jquery.js",
+            "underscore": "underscore.js",
             "content": "default.js",
             "behavior": "dev.js",
             "controller": "controller.js"
@@ -10,6 +12,8 @@
     },
     "ashmont": {
         "software": {
+            "jquery": "jquery.js",
+            "underscore": "underscore.js",
             "content": "ashmont.js",
             "behavior": "dev.js",
             "controller": "controller.js"
@@ -19,6 +23,8 @@
     },
     "ashmont_nobanner": {
         "software": {
+            "jquery": "jquery.js",
+            "underscore": "underscore.js",
             "content": "ashmont_nobanner.js",
             "behavior": "dev.js",
             "controller": "controller.js"
@@ -28,6 +34,8 @@
     },
     "central": {
         "software": {
+            "jquery": "jquery.js",
+            "underscore": "underscore.js",
             "content": "central.js",
             "behavior": "dev.js",
             "controller": "controller.js"
@@ -37,6 +45,8 @@
     },
     "foresthills": {
         "software": {
+            "jquery": "jquery.js",
+            "underscore": "underscore.js",
             "content": "foresthills.js",
             "behavior": "dev.js",
             "controller": "controller.js"
@@ -46,6 +56,8 @@
     },
     "foresthills_nobanner": {
         "software": {
+            "jquery": "jquery.js",
+            "underscore": "underscore.js",
             "content": "foresthills_nobanner.js",
             "behavior": "dev.js",
             "controller": "controller.js"
@@ -55,6 +67,8 @@
     },
     "harvard": {
         "software": {
+            "jquery": "jquery.js",
+            "underscore": "underscore.js",
             "content": "harvard.js",
             "behavior": "dev.js",
             "controller": "controller.js"
@@ -64,6 +78,8 @@
     },
     "haymarket": {
         "software": {
+            "jquery": "jquery.js",
+            "underscore": "underscore.js",
             "content": "haymarket.js",
             "behavior": "dev.js",
             "controller": "controller.js"
@@ -72,6 +88,8 @@
         "style": "style.css"
     },    "maverick": {
         "software": {
+            "jquery": "jquery.js",
+            "underscore": "underscore.js",
             "content": "maverick.js",
             "behavior": "dev.js",
             "controller": "controller.js"
@@ -81,6 +99,8 @@
     },
     "ruggles": {
         "software": {
+            "jquery": "jquery.js",
+            "underscore": "underscore.js",
             "content": "ruggles.js",
             "behavior": "dev.js",
             "controller": "controller.js"
@@ -90,6 +110,8 @@
     },
     "sullivan": {
         "software": {
+            "jquery": "jquery.js",
+            "underscore": "underscore.js",
             "content": "sullivan.js",
             "behavior": "dev.js",
             "controller": "controller.js"
@@ -99,6 +121,8 @@
     },
     "wonderland": {
         "software": {
+            "jquery": "jquery.js",
+            "underscore": "underscore.js",
             "content": "wonderland.js",
             "behavior": "dev.js",
             "controller": "controller.js"

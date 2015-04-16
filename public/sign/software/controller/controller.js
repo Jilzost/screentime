@@ -1,5 +1,5 @@
 /*jslint devel: true indent: 4 */
-/*global b, c, XMLHttpRequest, SpeechSynthesisUtterance, speechSynthesis, document, window */
+/*global b, c, XMLHttpRequest, SpeechSynthesisUtterance, speechSynthesis, document, window, $ */
 
 //
 //
@@ -58,7 +58,7 @@ log.unsentEntries = 0;
  */
 log.send = function (logLevel, sourceFunctionName, message) {
     'use strict';
-    var unsent, entry, xhr;
+    var unsent, entry;
     try {
         // Is event important enough to clear threshold?
         if (logLevel <= b.logging.level) {
@@ -71,9 +71,7 @@ log.send = function (logLevel, sourceFunctionName, message) {
                 } else {
                     entry = new Entry('sign', 'DEFAULT_SIGN_ID',
                             logLevel, sourceFunctionName, message);
-                    xhr = new XMLHttpRequest();
-                    xhr.open('POST', 'postlog', true);
-                    xhr.send(JSON.stringify(entry));
+                    $.post('postlog', JSON.stringify(entry));
                 }
             //We've sent too many entries; are we sure it's not time 
             //to start sending again?
