@@ -58,7 +58,7 @@ log.unsentEntries = 0;
  */
 log.send = function (logLevel, sourceFunctionName, message) {
     'use strict';
-    var unsent, entry; //, xhr;
+    var unsent, entry;
     try {
         // Is event important enough to clear threshold?
         if (logLevel <= b.logging.level) {
@@ -71,9 +71,6 @@ log.send = function (logLevel, sourceFunctionName, message) {
                 } else {
                     entry = new Entry('sign', 'DEFAULT_SIGN_ID',
                             logLevel, sourceFunctionName, message);
-                    //xhr = new XMLHttpRequest();
-                    //xhr.open('POST', 'postlog', true);
-                    //xhr.send(JSON.stringify(entry));
                     $.post('postlog', JSON.stringify(entry));
                 }
             //We've sent too many entries; are we sure it's not time 
@@ -165,10 +162,9 @@ log.heartbeat = function (uptime, heartbeatRate) {
     'use strict';
     if (b.logging.level !== 0) {
         if (b.logging.destination !== 'console') {
-            var xhr = new XMLHttpRequest();
-            xhr.open('POST', 'postheartbeat', true);
-            xhr.send(JSON.stringify({sign: 'DEFAULT_SIGN_ID', timestamp: Date.now(),
-                uptime: uptime, heartbeatRate: heartbeatRate }));
+            $.post('postheartbeat', JSON.stringify({sign: 'DEFAULT_SIGN_ID',
+                timestamp: Date.now(), uptime: uptime,
+                heartbeatRate: heartbeatRate }));
         }
     }
 };
@@ -179,9 +175,10 @@ log.heartbeat = function (uptime, heartbeatRate) {
  * @return {string} input string, with first letter capitalized. 
  */
 _.mixin({
-  capitalize: function(string) {
-    return string.charAt(0).toUpperCase() + string.substring(1);
-  }
+    capitalize: function (string) {
+        'use strict';
+        return string.charAt(0).toUpperCase() + string.substring(1);
+    }
 });
 
 /**
