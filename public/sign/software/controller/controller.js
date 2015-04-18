@@ -1,5 +1,5 @@
 /*jslint devel: true indent: 4 */
-/*global b, c, XMLHttpRequest, SpeechSynthesisUtterance, speechSynthesis, document, window, $ */
+/*global b, c, XMLHttpRequest, SpeechSynthesisUtterance, speechSynthesis, document, window, _, $ */
 
 //
 //
@@ -58,7 +58,7 @@ log.unsentEntries = 0;
  */
 log.send = function (logLevel, sourceFunctionName, message) {
     'use strict';
-    var unsent, entry;
+    var unsent, entry, xhr;
     try {
         // Is event important enough to clear threshold?
         if (logLevel <= b.logging.level) {
@@ -71,7 +71,9 @@ log.send = function (logLevel, sourceFunctionName, message) {
                 } else {
                     entry = new Entry('sign', 'DEFAULT_SIGN_ID',
                             logLevel, sourceFunctionName, message);
-                    $.post('postlog', JSON.stringify(entry));
+                    xhr = new XMLHttpRequest();
+                    xhr.open('POST', 'postlog', true);
+                    xhr.send(JSON.stringify(entry));
                 }
             //We've sent too many entries; are we sure it's not time 
             //to start sending again?
@@ -168,50 +170,6 @@ log.heartbeat = function (uptime, heartbeatRate) {
                 uptime: uptime, heartbeatRate: heartbeatRate }));
         }
     }
-};
-/**
- * Returns true if this object matches all the values in the template.
- * @param  {object} template  Contains any number of properties.
- * @return {boolean}          True if values of template's properties match
- *                            the object's.
- */
-Object.prototype.matches = function (template) {
-    'use strict';
-    var i;
-    try {
-        for (i in template) {
-            if (template.hasOwnProperty(i)) {
-                if (this[i] !== template[i]) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    } catch (err) {
-        log.warning('Object.prototype.matches', err);
-        return false;
-    }
-};
-
-
-/**
- * Returns true if this object matches all values in any one of the templates
- * @param  {array} templates [description]
- * @return {[type]}           [description]
- */
-Object.prototype.matchesOneOf = function (templates) {
-    'use strict';
-    var i;
-    try {
-        for (i = 0; i < templates.length; i += 1) {
-            if (this.matches(templates[i])) {
-                return true;
-            }
-        }
-    } catch (err) {
-        log.warning('Object.prototype.matchesOneOf', err);
-    }
-    return false;
 };
 
 /**
@@ -1280,13 +1238,23 @@ generators.defaultGenerator = function () {
  * @return {array} Filtered data
  */
 generators.objectsMatchATemplate = function () {
+//can rewrite this to use _.filter
     'use strict';
     var i,
         source = f[this.requiredFacets.source].data,
-        outputList = [];
+        outputList = [],
+        matchesOneOf = function (obj, templates) {
+            var j;
+            for (j = 0; j < templates.length; j += 1) {
+                if (_(obj).isMatch(templates[j])) {
+                    return true;
+                }
+            }
+            return false;
+        };
     try {
         for (i = 0; i < source.length; i += 1) {
-            if (source[i].matchesOneOf(this.parameters.templates)) {
+            if (matchesOneOf(source[i], this.parameters.templates)) {
                 outputList.push(source[i]);
             }
         }
@@ -1827,7 +1795,9 @@ generators.extractUpcomingServiceAlertsAndSort = function () {
 
     try {
         for (i = 0; i < a.length; i += 1) {
-            if (a[i].matchesOneOf([{isLocal: true, isSoon: true}, {isSubway: true, isSoon: true}])) {
+            if (_(a[i]).isMatch({isLocal: true, isSoon: true}) ||
+                _(a[i]).isMatch({isSubway: true, isSoon: true})) {
+//            if (a[i].matchesOneOf([{isLocal: true, isSoon: true}, {isSubway: true, isSoon: true}])) {
                 alertsOut.push(a[i]);
             }
         }
