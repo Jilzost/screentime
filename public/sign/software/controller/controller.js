@@ -173,32 +173,15 @@ log.heartbeat = function (uptime, heartbeatRate) {
 };
 
 /**
- * Pushes an item to an array only if the array does not have it. 
- * @param  {object} item to be pushed
- * @return {bool}      true if item was added; false if it had been there.
- */
-Array.prototype.pushUnique = function (item) {
-    'use strict';
-    try {
-        if (this.indexOf(item) === -1) {
-            this.push(item);
-            return true;
-        }
-    } catch (err) {
-        log.warning('Array.prototype.pushUnique', err);
-    }
-    return false;
-};
-
-/**
+ * Expand underscore library: 
  * Capitalizes first letter of string. 
- * @return {string} this string, with first letter capitalized. 
+ * @return {string} input string, with first letter capitalized. 
  */
-String.prototype.cap = function () {
-    'use strict';
-    return this.charAt(0).toUpperCase() + this.slice(1);
-};
-
+_.mixin({
+  capitalize: function(string) {
+    return string.charAt(0).toUpperCase() + string.substring(1);
+  }
+});
 
 /**
  * [onerror description]
@@ -1415,8 +1398,8 @@ generators.alertsFromMBTARealtime = function () {
                         newAffectedId = 'mode_' + source[i].affected_services.services[j].mode_name;
                         newAffectedName = source[i].affected_services.services[j].mode_name;
                     }
-                    affectedIds.pushUnique(newAffectedId);
-                    affectedNames.pushUnique(newAffectedName);
+                    affectedIds.push(newAffectedId);
+                    affectedNames.push(newAffectedName);
                 }
 
                 if (source[i].effect_periods.length > 0) {
@@ -1448,10 +1431,13 @@ generators.alertsFromMBTARealtime = function () {
                 }
                 formattedDescription = formattedDescription.replace(/[w\.]{0,4}mbta\.com\/[\w\/-_\.]{10,}/, 'mbta.com');
                 formattedDescription = formattedDescription.replace(/([^\.])$/, '$1.');
-                newAlerts.push(new Alert('banner_' + source[i].alert_id, affectedIds, affectedNames,
-                    affectedDirection, source[i].alert_lifecycle, source[i].timeframe_text, startTime,
-                    endTime, source[i].effect_name, source[i].service_effect_text,
-                    source[i].banner_text, formattedDescription, '', '', bools));
+                newAlerts.push(new Alert('banner_' + source[i].alert_id, 
+                    _(affectedIds).uniq(), _(affectedNames).uniq(),
+                    affectedDirection, source[i].alert_lifecycle, 
+                    source[i].timeframe_text, startTime, endTime,
+                    source[i].effect_name, source[i].service_effect_text,
+                    source[i].banner_text, formattedDescription, '', '',
+                    bools));
             }
         } catch (err) {
             log.warning('generators.alertsFromMBTARealtime', 'could not parse banner alert, ' + err);
@@ -1507,8 +1493,8 @@ generators.alertsFromMBTARealtime = function () {
                         newAffectedId = 'mode_' + source[i].affected_services.services[j].mode_name;
                         newAffectedName = source[i].affected_services.services[j].mode_name;
                     }
-                    affectedIds.pushUnique(newAffectedId);
-                    affectedNames.pushUnique(newAffectedName);
+                    affectedIds.push(newAffectedId);
+                    affectedNames.push(newAffectedName);
                     if (localRoutes.byName.hasOwnProperty(newAffectedName)) {
                         bools.isLocal = true;
                     }
@@ -1539,14 +1525,14 @@ generators.alertsFromMBTARealtime = function () {
                     }
                     if (source[i].affected_services.elevators[j].stops.length > 0) {
                         if (source[i].affected_services.elevators[j].stops[0].hasOwnProperty('parent_station_name')) {
-                            affectedNames.pushUnique(source[i].affected_services.elevators[j].stops[0].parent_station_name);
+                            affectedNames.push(source[i].affected_services.elevators[j].stops[0].parent_station_name);
                         } else if (source[i].affected_services.elevators[j].stops[0].hasOwnProperty('stop_name')) {
-                            affectedNames.pushUnique(source[i].affected_services.elevators[j].stops[0].stop_name);
+                            affectedNames.push(source[i].affected_services.elevators[j].stops[0].stop_name);
                         }
                     } else {
-                        affectedNames.pushUnique(source[i].affected_services.elevators[j].elev_name);
+                        affectedNames.push(source[i].affected_services.elevators[j].elev_name);
                     }
-                    affectedIds.pushUnique('access_' + source[i].affected_services.elevators[j].elev_id);
+                    affectedIds.push('access_' + source[i].affected_services.elevators[j].elev_id);
                 }
                 if (source[i].affected_services.elevators.length === 1 &&
                         source[i].affected_services.elevators[0].hasOwnProperty('elev_id') &&
@@ -1591,10 +1577,10 @@ generators.alertsFromMBTARealtime = function () {
                         && bools.isCurrent && bools.isSevere);
             }
 
-            newAlerts.push(new Alert(source[i].alert_id, affectedIds,
-                affectedNames, affectedDirection, source[i].alert_lifecycle,
-                source[i].timeframe_text, startTime, endTime,
-                source[i].effect_name, source[i].service_effect_text,
+            newAlerts.push(new Alert(source[i].alert_id, _(affectedIds).uniq(),
+                _(affectedNames).uniq(), affectedDirection,
+                source[i].alert_lifecycle, source[i].timeframe_text, startTime,
+                endTime, source[i].effect_name, source[i].service_effect_text,
                 description, formattedDescription,
                 source[i].description_text, formattedDetails, bools));
 
@@ -2159,7 +2145,8 @@ visualizers.alerts = function () {
         for (i = 0; i < a.length; i += 1) {
             content += '<div class="alert">';
             if (a[i].isUpcoming) {
-                content += '<div class="AlertTimeframe">' + a[i].timeframeText.cap() + ':</div> ';
+                content += '<div class="AlertTimeframe">' +
+                _(a[i].timeframeText).capitalize() + ':</div> ';
             }
 
             content +=  a[i].formattedDescription;
