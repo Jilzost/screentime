@@ -318,118 +318,81 @@ log.sampleComputeTime = 1;
  * If it gets a number value back, updates serverId. 
  * @param  {number} index Identifies sampleStat. 
  */
+
+
 log.sendSampleStat = function (index) {
     'use strict';
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', 'postsamplestat');
-    xhr.onload = (function (index) {
-        return function (e) {
-            if (xhr.readyState === 4) {
-                if (xhr.status === 200) {
-                    if (!isNaN(JSON.parse(xhr.responseText))) {
-                        log.samplepagedata[index].serverId =
-                            JSON.parse(xhr.responseText);
-
-                    }
-                } else {
-                    log.error('log.shareSampleStats', JSON.stringify(e));
-                }
+    $.ajax({
+        url: 'postsamplestat',
+        method: 'POST',
+        dataType: 'json',
+        data: JSON.stringify(new SampleStat(log.samplepagedata[index])),
+        success: function (resp) {
+            if (!isNaN(resp)) {
+                log.samplepagedata[index].serverId = resp;
             }
-        };
-    }(index));
-    xhr.onerror = (function (index) {
-        return function (e) {
-            log.warning('log.shareSampleStats', 'Could not share sample number '
-                    + index + ' because ' + JSON.stringify(e));
-        };
-    }(index));
-    xhr.send(JSON.stringify(new SampleStat(log.samplepagedata[index])));
-
-};
-
-/**
- * Transmits statistcs about recent samples (which have serverId's) to server.
- */
-log.sendSampleStats = function () {
-    'use strict';
-    var i;
-    //For each sample:
-    for (i = 0; i < log.samplepagedata.length; i += 1) {
-        //If it has a serverid, and it has a countsincelastshared, send.
-        if (log.samplepagedata[i].serverId >= 0 &&
-                log.samplepagedata[i].countSinceLastShared > 0) {
-            log.sendSampleStat(i);
+            log.samplepagedata[index].countSinceLastShared = 0;
+        },
+        error: function (req, status, err) {
+            log.error('log.shareSampleStats', status + ' ' + err);
         }
-    }
+    });
 };
 
 /**
  * Send a sample to the server, including statistics, and get a serverId back.  
  * @param  {number} index index number of the sample to be sent
  */
+
 log.shareSample = function (index) {
     'use strict';
-    var xhr;
-    try {
-        xhr = new XMLHttpRequest();
-        xhr.open('POST', 'postsample');
-        xhr.onload = (function (index) {
-            return function (e) {
-                if (xhr.readyState === 4) {
-                    if (xhr.status === 200) {
-                        log.samplepagedata[index].serverId =
-                                JSON.parse(xhr.responseText);
-                        log.samplepagedata[index].lastShared = new Date();
-                        log.samplepagedata[index].countSinceLastShared = 0;
-
-                    } else {
-                        log.error('log.shareSample', JSON.stringify(e));
-                    }
-                    log.sendSampleStats();
-                }
-            };
-        }(index));
-        xhr.onerror = (function (index) {
-            return function (e) {
-                log.warning('log.shareSample', 'Could not share sample number '
-                        + index + ' because ' + JSON.stringify(e));
-            };
-        }(index));
-        xhr.send(JSON.stringify(log.samplepagedata[index]));
-    } catch (err) {
-        log.error('log.shareSample' + err);
-    }
+    $.ajax({
+        url: 'postsample',
+        method: 'POST',
+        dataType: 'json',
+        data: JSON.stringify(log.samplepagedata[index]),
+        success: function (resp) {
+            log.samplepagedata[index].serverId = resp;
+            log.samplepagedata[index].lastShared = new Date();
+            log.samplepagedata[index].countSinceLastShared = 0;
+        },
+        error: function (req, status, err) {
+            log.error('log.shareSample', status + ' ' + err);
+        }
+    });
 };
 
 /**
- * Send one sample (if applicable) and the latest statistics (if applicable)
+ * Send the latest statistics and one sample (if applicable)
  * @return {[type]} [description]
  */
 log.shareSamplesAndStats = function () {
     'use strict';
-    var i, mostShows = 0, mostShown;
+    var mostShown;
+    log.lastSampleSent = Date.now();
     //First check to see if we should reset completely instead of sending. 
     if (0 < b.logging.maxSamples && b.logging.maxSamples < log.samplepages.length) {
         log.samplepages = [];
         log.samplepagedata = [];
         log.info('shareSamplesAndStats', 'Reached maximum sample size and reset to 0');
     } else {
-        //1. Find the most-shown sample that has never been sent.
-        for (i = 0; i < log.samplepagedata.length; i += 1) {
-            if (log.samplepagedata[i].serverId === -1 &&
-                    log.samplepagedata[i].count >= mostShows) {
-                mostShown = i;
-                mostShows = log.samplepagedata[i].count;
+        //Transmit updated counts (stats) where applicable
+        _(log.samplepagedata).each(function (element, index) {
+            if (element.serverId >= 0 && element.countSinceLastShared > 0) {
+                log.sendSampleStat(index);
             }
+        });
+        //identify the most-shown unsent page (sample)
+        mostShown = _(log.samplepagedata).reduce(function (memo, element, index) {
+            if (element.serverId === -1 && element.count >= memo.count) {
+                return {index: index, count: element.count};
+            }
+            return memo;
+        }, {index: -1, count: -1});
+        //Send the sample for the most-shown unsent page (if it exists)
+        if (mostShown.count > 0) {
+            log.shareSample(mostShown.index);
         }
-        //2a. If there is one, send it, then send the latest sample count.
-        if (mostShows > 0) {
-            log.shareSample(mostShown);
-        } else {
-        //2b. If there isn't one, go straight to latest sample count. 
-            log.sendSampleStats();
-        }
-        log.lastSampleSent = Date.now();
     }
 };
 

@@ -83,7 +83,6 @@ function rotateFile() {
 
 function newSamplePage(pathname, id, response, postData) {
     var samplePageData, index;
-
     try {
         samplePageData = JSON.parse(postData);
 
@@ -121,7 +120,6 @@ function newSamplePage(pathname, id, response, postData) {
 
 function newSampleStat(pathname, id, response, postData) {
     var sampleStat;
-
     try {
         sampleStat = JSON.parse(postData);
 
@@ -145,7 +143,7 @@ function newSampleStat(pathname, id, response, postData) {
         }
     } catch (err) {
         logger.log('server', id, 3,
-            'sampleHandlers.newSamplePage', 'Failed: ' + err);
+            'sampleHandlers.newSampleStat', 'Failed: ' + err);
     }
 }
 
