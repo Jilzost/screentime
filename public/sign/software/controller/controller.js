@@ -403,43 +403,44 @@ log.shareSamplesAndStats = function () {
 log.sample = function () {
     'use strict';
     var index,
-        head,
-        body,
-        foot,
         samplepage,
-        searchStartTime;
+        searchStartTime,
+        template = _.template('<!DOCTYPE html>' +
+            '<html lang="en"><head><title>ScreenTime</title>' +
+            '<link rel=\'stylesheet\' href=\'style\'></link></head>' +
+            '<body>' +
+            '<%= body %>' +
+            '</body></html>'),
+        transformations = [
+            //exclude any hidden senctions
+            { regex: /^.*display: none.*$/gm, replacement: '' },
+            //Replace countdown minute digits 0 and 3-9 with 2, for consolidation.
+            { regex: /<td class="minutes_away">[02-9]/g, replacement: '<td class="minutes_away">2' },
+            { regex: /<td class="minutes_away">1[02-9]/g, replacement: '<td class="minutes_away">12' },
+            { regex: /<td class="minutes_away">2[02-9]/g, replacement: '<td class="minutes_away">22' },
+            //Set clock to 11:11, for consolidation. 
+            { regex: /<div id="clock">[\d\:]{4,5}<\/div>/, replacement: '<div id="clock">11:11</div>' },
+        ];
 
-    if (!b.logging.sendSamples) { return true; }
-
-    //TODO: the following hard-codes one stylesheet link. Need systematic way to 
+    //TODO: this hard-codes one stylesheet link. Need systematic way to 
     //manage files and versions. 
-    //TODO: The following has much HTML inline in function, should be split out.
 
-    head = '<!DOCTYPE html>' +
-        '<html lang="en"><head><title>ScreenTime</title>' +
-        '<link rel=\'stylesheet\' href=\'style\'></link></head>' +
-        '<body>';
-    body = document.body.innerHTML;
-    foot = '</body></html>';
-    searchStartTime = Date.now();
+    samplepage = template({body: $('body').html() });
 
-    //Replace: blanks out anything not being shown
-    samplepage = head + body.replace(/^.*display: none.*$/gm, '') + foot;
-
-    //Replace countdown minute digits 0 and 3-9 with 2, for consolidation. 
-    samplepage = samplepage.replace(/<td class="minutes_away">[02-9]/g,
-        '<td class="minutes_away">2');
-    samplepage = samplepage.replace(/<td class="minutes_away">1[02-9]/g,
-        '<td class="minutes_away">12');
-    samplepage = samplepage.replace(/<td class="minutes_away">2[02-9]/g,
-        '<td class="minutes_away">22');
-    //Replace clock time. 
-    samplepage = samplepage.replace(/<div id="clock">[\d\:]{4,5}<\/div>/,
-        '<div id="clock">11:11</div>');
+    samplepage = _(transformations).reduce(function (state, transform) {
+        return state.replace(transform.regex, transform.replacement);
+    }, samplepage);
 
     //Now that it's been processed, see if it's a page we already have on file.
     //Update stats if we do, file it if we don't. 
+    //If lookup took longer than it has before send warning. 
+    searchStartTime = Date.now();
     index = log.samplepages.indexOf(samplepage);
+    if (Date.now() - searchStartTime > log.sampleComputeTime) {
+        log.sampleComputeTime = Date.now() - searchStartTime;
+        log.warning('log.sample', 'Compute time took ' + log.sampleComputeTime
+             + ' ms for ' + log.samplepagedata.length + ' samples');
+    }
     if (index === -1) {
         log.samplepages.push(samplepage);
         index = log.samplepages.indexOf(samplepage);
@@ -452,19 +453,11 @@ log.sample = function () {
         log.samplepagedata[index].countSinceLastShared += 1;
     }
 
-    //If lookup took longer than it has before send warning. 
-    if (Date.now() - searchStartTime > log.sampleComputeTime) {
-        log.sampleComputeTime = Date.now() - searchStartTime;
-        log.warning('log.sample', 'Compute time took ' + log.sampleComputeTime
-             + ' ms for ' + log.samplepagedata.length + ' samples');
-    }
-
     //If it's time to send more samples, do so. 
     if (log.lastSampleSent + b.logging.shareSamplesEvery < Date.now()) {
         log.shareSamplesAndStats();
     }
 };
-
 
 /**
  * Sends one speechSample to the server. 
@@ -1385,16 +1378,16 @@ generators.alertsFromMBTARealtime = function () {
 
                 for (j = affectedNames.length - 1; j >= 0; j -= 1) {
                     if (agencyRoutes.byName.hasOwnProperty(affectedNames[j])) {
-                        formattedDescription = formattedDescription.replace(new RegExp(affectedNames[j], 'gi'),
+                        formattedDescription = formattedDescription.replace(new RegExp('\\b' + affectedNames[j] + '\\b', 'gi'),
                                 '<span style="color:' + agencyRoutes.byName[affectedNames[j]].color
                                 + '">' + affectedNames[j] + '</span>');
                     }
                 }
                 formattedDescription = formattedDescription.replace(/[w\.]{0,4}mbta\.com\/[\w\/-_\.]{10,}/, 'mbta.com');
                 formattedDescription = formattedDescription.replace(/([^\.])$/, '$1.');
-                newAlerts.push(new Alert('banner_' + source[i].alert_id, 
+                newAlerts.push(new Alert('banner_' + source[i].alert_id,
                     _(affectedIds).uniq(), _(affectedNames).uniq(),
-                    affectedDirection, source[i].alert_lifecycle, 
+                    affectedDirection, source[i].alert_lifecycle,
                     source[i].timeframe_text, startTime, endTime,
                     source[i].effect_name, source[i].service_effect_text,
                     source[i].banner_text, formattedDescription, '', '',
@@ -1474,7 +1467,7 @@ generators.alertsFromMBTARealtime = function () {
                 }
                 for (j = affectedNames.length - 1; j >= 0; j -= 1) {
                     if (agencyRoutes.byName.hasOwnProperty(affectedNames[j])) {
-                        formattedDescription = formattedDescription.replace(new RegExp(affectedNames[j], 'gi'),
+                        formattedDescription = formattedDescription.replace(new RegExp('\\b' + affectedNames[j] + '\\b', 'gi'),
                                 '<span style="color:' + agencyRoutes.byName[affectedNames[j]].color
                                 + '">' + affectedNames[j] + '</span>');
                     }
@@ -2816,7 +2809,7 @@ controller.displayOnly = function (visualElements) {
             v[allVisualElements[i]].moveContentToPage();
             v[allVisualElements[i]].showOrHide(visible);
         }
-        log.sample();
+        if (b.logging.sendSamples) { log.sample(); }
     } catch (err) {
         log.error('controller.displayOnly', JSON.stringify(err));
     }
