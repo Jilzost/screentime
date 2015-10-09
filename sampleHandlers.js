@@ -44,24 +44,51 @@ var asDate = function (datetime) {
     return yyyy + '-' + mm + '-' + dd;
 };
 
-var SampleStat = function (samplePageData) {
-    this.sign = samplePageData.sign;
-    this.serverId = samplePageData.serverId;
-    this.countSinceLastShared = samplePageData.countSinceLastShared;
-    this.lastShown = samplePageData.lastShown;
-};
+// var SampleStat = function (samplePageData) {
+//     this.sign = samplePageData.sign;
+//     this.serverId = samplePageData.serverId;
+//     this.shownSinceSync = samplePageData.shownSinceSync;
+//     this.lastShown = samplePageData.lastShown;
+// };
 
-var SampleStat = function (sign, localId, serverId, content, firstShown, lastShown, lastShared, count, countSinceLastShared) {
-    this.sign = sign;
-    this.localId = localId;
-    this.serverId = serverId || -1;
-    this.content = content;
-    this.firstShown = firstShown;
-    this.lastShown = lastShown;
-    this.lastShared = lastShared;
-    this.count = count;
-    this.countSinceLastShared = countSinceLastShared;
-};
+// var SampleStat = function (sign, serverId, actualText, firstShown, lastShown, count, shownSinceSync) {
+//     var i,
+//         genericize = [
+//             { regex: /^.*display: none.*$/gm, replacement: '' },
+//             //Replace countdown minute digits with 0 or 00, for consolidation.
+//             {
+//                 regex: /(<td class="minutes_away"[^>]{0,25}>)[0-9]/g,
+//                 replacement: '$10'
+//             },
+//             {
+//                 regex: /(<td class="minutes_away"[^>]{0,25}>)0[0-9]/g,
+//                 replacement: '$100'
+//             },
+//             //Set clock to 12:34, for consolidation. 
+//             {
+//                 regex: /<div id="clock">[\d\:]{4,5}<\/div>/,
+//                 replacement: '<div id="clock">12:34</div>'
+//             }
+//         ];
+
+//     this.sign = sign;
+//     this.serverId = serverId || -1;
+//     this.actualText = actualText;
+//     this.genericText = actualText;
+//     for (i = 0; i < genericize.length; i += 1) {
+//         this.genericText = this.genericText.replace(
+//             genericize[i].regex,
+//             genericize[i].replacement
+//         );
+//     }
+//     // this.genericText = _(genericize).reduce(function (state, transform) {
+//     //     return state.replace(transform.regex, transform.replacement);
+//     // }, actualText);
+//     this.firstShown = firstShown;
+//     this.lastShown = lastShown;
+//     this.count = count;
+//     this.shownSinceSync = shownSinceSync;
+// };
 
 function rotateFile() {
     try {
@@ -82,22 +109,54 @@ function rotateFile() {
 }
 
 function newSamplePage(pathname, id, response, postData) {
-    var samplePageData, index;
+    var i,
+        samplePageData,
+        index,
+        genericize = [
+            { regex: /^.*display: none.*$/gm, replacement: '' },
+            //Replace countdown minute digits with 0 or 00, for consolidation.
+            {
+            //To keep more records, eliminate the {1,2} and uncomment next section
+                regex: /(<td class="minutes_away"[^>]{0,25}>)[0-9]{1,2}/g,
+                replacement: '$10'
+            },
+            // {
+            //     regex: /(<td class="minutes_away"[^>]{0,25}>)0[0-9]/g,
+            //     replacement: '$100'
+            // },
+            //Set clock to 12:34, for consolidation. 
+            {
+                regex: /<div id="clock">[\d\:]{4,5}<\/div>/,
+                replacement: '<div id="clock">12:34</div>'
+            }
+        ];
+
     try {
         samplePageData = JSON.parse(postData);
+        samplePageData.genericText = samplePageData.actualText;
+        for (i = 0; i < genericize.length; i += 1) {
+            samplePageData.genericText = samplePageData.genericText.replace(
+                genericize[i].regex,
+                genericize[i].replacement
+            );
+        }
+        samplePageData.count = samplePageData.shownSinceSync;
 
         if (samplePageData.serverId === -1) {
-            index = samplepages.indexOf(samplePageData.content);
+            index = samplepages.indexOf(samplePageData.genericText);
             if (index === -1) {
-                samplepages.push(samplePageData.content);
-                index = samplepages.indexOf(samplePageData.content);
+                samplepages.push(samplePageData.genericText);
+                index = samplepages.indexOf(samplePageData.genericText);
                 samplePageData.serverId = index;
                 samplePageData.firstShown = new Date(samplePageData.firstShown);
                 samplePageData.lastShown = new Date(samplePageData.lastShown);
+
                 samplestats[index] = samplePageData;
             } else {
-                samplestats[index].count += samplePageData.countSinceLastShared;
+
+                samplestats[index].count += samplePageData.count;
                 samplePageData.lastShown = new Date(samplePageData.lastShown);
+
                 if (samplePageData.lastShown > samplestats[index].lastShown) {
                     samplestats[index].lastShown = samplePageData.lastShown;
                 }
@@ -124,10 +183,11 @@ function newSampleStat(pathname, id, response, postData) {
         sampleStat = JSON.parse(postData);
 
         if (samplestats.hasOwnProperty(sampleStat.serverId)) {
-            samplestats[sampleStat.serverId].count += sampleStat.countSinceLastShared;
-            sampleStat.lastShown = new Date(SampleStat.lastShown);
+            samplestats[sampleStat.serverId].count += sampleStat.shownSinceSync;
+            sampleStat.lastShown = new Date(sampleStat.lastShown);
             if (sampleStat.lastShown > samplestats[sampleStat.serverId].lastShown) {
-                samplestats[sampleStat.serverId].lastShown += sampleStat.lastShown;
+                //TODO shouldn't the below be = and not += ?
+                samplestats[sampleStat.serverId].lastShown = sampleStat.lastShown;
             }
             response.writeHead(200, {"Content-Type": "text/plain"});
             response.write(JSON.stringify('ok'));
@@ -193,7 +253,7 @@ function showSample(pathname, id, response, postData) {
     var index = JSON.parse(id);
     if (samplestats.hasOwnProperty(index)) {
         fileRequestHandlers.returnFile(response, 'sample' + id + '.html',
-            samplestats[index].content);
+            samplestats[index].actualText);
     } else {
         fileRequestHandlers.send404(response);
     }

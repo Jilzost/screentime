@@ -5,9 +5,11 @@ var http = require("http");
 var url = require("url");
 var querystring = require('querystring');
 var logger = require('./logger');
+var socketServer = require('./socketServer');
 
 
 function start(route, handle) {
+    var server;
     function onRequest(request, response) {
         var postData,
             pathname,
@@ -31,8 +33,10 @@ function start(route, handle) {
                 'server.start.onRequest', 'Failed: ' + err);
         }
     }
-    http.createServer(onRequest).listen(3000);
+    server = http.createServer(onRequest).listen(3000);
+    console.log('Server is listening on port 3000.');
     logger.log('server', 'server', 5, 'server.start', 'Server started');
+    socketServer.listen(server);
 }
 
 exports.start = start;

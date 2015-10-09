@@ -136,7 +136,7 @@ td.minutes_away {
 
 .alert {
     font-size: 100%;
-    margin-bottom: 1em;
+    margin-bottom: 0.5em;
 }
 
 .featuredAlertDescription {
@@ -152,7 +152,7 @@ td.minutes_away {
     font-weight: light;
 }
 
-.CSS_ElevatorAlerts {
+.CSS_ElevatorAlertsTitle {
     background-color: lightskyblue;
     color: black;
     border-radius: 25px;
@@ -170,13 +170,34 @@ td.minutes_away {
 
 .elevatorNumber {
     color: black;
-    background-color: lightskyblue;
     border-style: solid;
-    border-color: lightskyblue;
-    border-top-width: 8px;
+    border-radius: 8px;
+    border-top-width: 0px;
     border-bottom-width: 0px;
     border-left-width: 8px;
     border-right-width: 8px;
+}
+
+table.elevatorCurrent .elevatorStation {
+    color: lightskyblue;
+}
+
+table.elevatorCurrent .elevatorNumber {
+    background-color: lightskyblue;
+    border-color: lightskyblue;
+}
+
+table.elevatorUpcoming .elevatorNumber {
+    background-color: white;
+    border-color: white;
+}
+
+.elevatorDescription {
+    font-size: 75%;
+}
+
+.elevatorTimeframe {
+    font-size: 75%;
 }
 
 .upcomingElevatorStation {
@@ -188,23 +209,21 @@ td.minutes_away {
     background-color: white;
     border-style: solid;
     border-color: white;
-    border-top-width: 8px;
+    border-radius: 8px;
+    border-top-width: 0px;
     border-bottom-width: 0px;
     border-left-width: 8px;
     border-right-width: 8px;
 }
 
-.elevatorStation {
-    color: lightskyblue;
-}
 
-#welcome {
+#status {
     margin-left: auto;
     margin-right: auto;
     text-align: center;
     padding-top: 200px;
     display: block;
-    font-size: 250%;
+    font-size: 100%;
     font-weight: bold;
 }
 

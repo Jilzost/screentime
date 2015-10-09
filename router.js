@@ -9,7 +9,7 @@ function route(handle, pathname, id, response, postData) {
             //console.log("Routing request for " + pathname);
             handle[pathname](pathname, id, response, postData);
         } else {
-            console.log("Unrecognized request " + pathname);
+            handle['/'](pathname, id, response, postData);
         }
     } catch (err) {
         logger.log('server', id, 1, 'router.route', 'Failed: ' + err);

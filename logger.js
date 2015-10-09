@@ -12,7 +12,7 @@ var tabheader = 'sign\tsourceTime\tprocess\tmessage\r\n';
 var serverStartTime;
 var logThreshold = 5;
 
-var emailIsOn = true;
+var emailIsOn = false;
 var emailThreshold = 3;
 var baseEmailFrequency = 60000;
 var currentEmailFrequency = baseEmailFrequency;

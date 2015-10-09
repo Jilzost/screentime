@@ -3,6 +3,8 @@
         "software": {
             "jquery": "jquery.js",
             "underscore": "underscore.js",
+            "backbone": "backbone.js",
+            "mespeak": "mespeak.js",
             "content": "default.js",
             "behavior": "dev.js",
             "carousels": "carousels.js",
@@ -15,6 +17,8 @@
         "software": {
             "jquery": "jquery.js",
             "underscore": "underscore.js",
+            "backbone": "backbone.js",
+            "mespeak": "mespeak.js",
             "content": "ashmont.js",
             "behavior": "dev.js",
             "carousels": "carousels.js",
@@ -27,6 +31,8 @@
         "software": {
             "jquery": "jquery.js",
             "underscore": "underscore.js",
+            "backbone": "backbone.js",
+            "mespeak": "mespeak.js",
             "content": "ashmont_nobanner.js",
             "behavior": "dev.js",
             "carousels": "carousels.js",
@@ -39,7 +45,23 @@
         "software": {
             "jquery": "jquery.js",
             "underscore": "underscore.js",
+            "backbone": "backbone.js",
+            "mespeak": "mespeak.js",
             "content": "central.js",
+            "behavior": "dev.js",
+            "carousels": "carousels.js",
+            "controller": "controller.js"
+        },
+        "sign": "sign.html",
+        "style": "style.css"
+    },
+    "central2": {
+        "software": {
+            "jquery": "jquery.js",
+            "underscore": "underscore.js",
+            "backbone": "backbone.js",
+            "mespeak": "mespeak.js",
+            "content": "central2.js",
             "behavior": "dev.js",
             "carousels": "carousels.js",
             "controller": "controller.js"
@@ -51,6 +73,8 @@
         "software": {
             "jquery": "jquery.js",
             "underscore": "underscore.js",
+            "backbone": "backbone.js",
+            "mespeak": "mespeak.js",
             "content": "foresthills.js",
             "behavior": "dev.js",
             "carousels": "carousels.js",
@@ -63,6 +87,8 @@
         "software": {
             "jquery": "jquery.js",
             "underscore": "underscore.js",
+            "backbone": "backbone.js",
+            "mespeak": "mespeak.js",
             "content": "foresthills_nobanner.js",
             "behavior": "dev.js",
             "carousels": "carousels.js",
@@ -75,6 +101,8 @@
         "software": {
             "jquery": "jquery.js",
             "underscore": "underscore.js",
+            "backbone": "backbone.js",
+            "mespeak": "mespeak.js",
             "content": "harvard.js",
             "behavior": "dev.js",
             "carousels": "carousels.js",
@@ -87,6 +115,8 @@
         "software": {
             "jquery": "jquery.js",
             "underscore": "underscore.js",
+            "backbone": "backbone.js",
+            "mespeak": "mespeak.js",
             "content": "haymarket.js",
             "behavior": "dev.js",
             "carousels": "carousels.js",
@@ -98,6 +128,8 @@
         "software": {
             "jquery": "jquery.js",
             "underscore": "underscore.js",
+            "backbone": "backbone.js",
+            "mespeak": "mespeak.js",
             "content": "maverick.js",
             "behavior": "dev.js",
             "carousels": "carousels.js",
@@ -110,6 +142,8 @@
         "software": {
             "jquery": "jquery.js",
             "underscore": "underscore.js",
+            "backbone": "backbone.js",
+            "mespeak": "mespeak.js",
             "content": "ruggles.js",
             "behavior": "dev.js",
             "carousels": "carousels.js",
@@ -122,6 +156,8 @@
         "software": {
             "jquery": "jquery.js",
             "underscore": "underscore.js",
+            "backbone": "backbone.js",
+            "mespeak": "mespeak.js",
             "content": "sullivan.js",
             "behavior": "dev.js",
             "carousels": "carousels.js",
@@ -134,6 +170,8 @@
         "software": {
             "jquery": "jquery.js",
             "underscore": "underscore.js",
+            "backbone": "backbone.js",
+            "mespeak": "mespeak.js",
             "content": "wonderland.js",
             "behavior": "dev.js",
             "carousels": "carousels.js",

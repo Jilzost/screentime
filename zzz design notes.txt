@@ -1,0 +1,19 @@
+Start with modeling the agency. 
+
+Displaying information can come later. And it probably won't even be that hard. Start with the agency. 
+
+Create an agency by giving it a name and a data retrieval method. 
+
+It's not clear to me yet whether the data retrieval is part of the model or the view. 
+
+Agency.routes
+Agency.localRoutes
+Agency.stops
+Agency.localStops
+Agency.alerts
+Agency.localDepartures
+
+route (or a "service?")
+stop
+departure
+alert
