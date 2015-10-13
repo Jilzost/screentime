@@ -50,11 +50,9 @@
         <% if (this.model.get('isCurrent')) { %>
         <table class="elevatorCurrent">
         <% } else {%>
-        <table class="elevatorUpcoming">
+        <table class="elevatorCurrent">
         <% } %>
         <tbody>
-
-
         <tr>
         <td>
         <% if (this.model.get('isUpcoming')){ %>
@@ -68,18 +66,15 @@
         </span>
         </td>
         </tr>
-
-            <tr>
-            <td class="elevatorDescription">
-            <%- this.model.get('affectedElevatorDescription') %>
-            <% if (!this.model.get('isUpcoming') && this.model.get('timeframe') !== 'ongoing' ){ %>
-            <br>
-            <span>
-            <%- _(this.model.get('timeframe')).capitalize() %>
-            </span>
-            </td>
-            </tr>
-            <% } %>
+        <tr>
+        <td class="elevatorDescription">
+        <%- this.model.get('affectedElevatorDescription') %>
+        <% if (!this.model.get('isUpcoming') && this.model.get('timeframe') !== 'ongoing' ){ %>
+        <br>
+        <span>
+        <%- _(this.model.get('timeframe')).capitalize() %>
+        </span>
+        <% } %>
         </tbody>
         </table>
     </script>

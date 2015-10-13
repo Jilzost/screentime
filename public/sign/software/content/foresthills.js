@@ -15,3 +15,9 @@ var agencyConfig =
         // behavior_suppressDepartures: true
     };
 
+
+var signConfig =
+    {
+        speech: 'mespeak',
+        speechTrigger: 'socket'
+    };

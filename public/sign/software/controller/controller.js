@@ -363,7 +363,7 @@ st.m.Sign = Backbone.Model.extend({
         heartbeat: true,
         signId: '',
         status: '', //FUTURE WORK Store sign's status and show as needed 
-        heartbeatRate: 60000, //FUTURE WORK Implement heartbeat
+        heartbeatRate: 60000,
         lastUpdate: Date(0),
         lastHeartbeat: Date(0),
         agencies: {}, //FUTURE WORK move st.agencies here
@@ -757,6 +757,12 @@ st.c.Alerts = Backbone.Collection.extend({
                     newAlert.set({isSoon: true});
                 }
 
+                if (newAlert.get('isElevator')
+                    && newAlert.get('startTime') < Date.now()
+                    && newAlert.get('startTime') > Date.now() - 3628800000) {
+                    newAlert.set({isCurrent: true});
+                }
+
                 _(source.affected_services.services).each(function (el) {
                     if (el.hasOwnProperty('route_id')) {
                         affected = new st.m.Route({
@@ -798,7 +804,9 @@ st.c.Alerts = Backbone.Collection.extend({
 
                     if (el.hasOwnProperty('direction_name')) {
                         if (newAlert.get('affectedDirection') === '') {
-                            newAlert.set({affectedDirection: el.direction_name});
+                            newAlert.set({
+                                affectedDirection: el.direction_name
+                            });
                         } else if (newAlert.get('affectedDirection')
                                 !== el.direction_name) {
                             newAlert.set({affectedDirection: 'both'});
@@ -1074,7 +1082,7 @@ st.lib.mbta.initializeAgency = function (newAgency) {
         }, newAgency));
     });
     newAgency.get('upcomingServiceAlerts').order = 'byTime';
-    newAgency.get('elevatorAlerts').order = 'byElevatorTimeAndStation';
+    newAgency.get('elevatorAlerts').order = 'byElevatorStation';
 
     if (newAgency.get('behavior_suppressAlerts') !== true) {
         newAgency.set('alertsSource', initializeComponent({
@@ -1133,7 +1141,16 @@ st.lib.mbta.initializeAgency = function (newAgency) {
             {
                 collection: 'elevatorAlerts',
                 process: function () {
-                    return newAgency.get('alerts').where({isElevator: true});
+                    var x = [];
+                    x = (newAgency.get('alerts').where(
+                        {isElevator: true, isCurrent: true}
+                    ));
+                    x = x.concat(newAgency.get('alerts').where(
+                        {isElevator: true, isSoon: true}
+                    ));
+                    // return newAgency.get('alerts').where({isElevator: true});
+                    console.log(x);
+                    return x;
                 }
             },
         ]).each(function (x) {
@@ -1212,6 +1229,9 @@ st.lib.mbta.initializeAgency = function (newAgency) {
                 }
             );
         });
+
+        st.screenData.get('elevatorAlerts').order = 'byElevatorStation';
+
     }
 
     _(sourceNames).each(function (name) {
@@ -2203,6 +2223,8 @@ var init = function () {
      * Used to start speech. 
      * @param  {object} evt keypress event
      */
+    
+    //window.location.search.replace(/[\?\&]id=([^\?\&]*)/i, '$1')
 
     if (signConfig.speechTrigger === undefined) {
         signConfig.speechTrigger = 83;
