@@ -3,6 +3,7 @@
     "version": "0.2.1",
     "description": "Transit Information Display",
     "dependencies": {
+        "underscore": "~1.8.3",
         "nodemailer": "1.1.1",
         "mime": "~1.2.7",
         "cron": "~1.0.0",

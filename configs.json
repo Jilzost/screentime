@@ -1,0 +1,94 @@
+{
+    "signConfigs": {
+        "bases": {
+            "mbta_lfd_1": {
+                "agencies": ["MBTA"],
+                "MBTA_name": "MBTA",
+                "MBTA_sourceType": "MBTA-realtime",
+                "MBTA_baseURL": "http://realtime.mbta.com/developer/api/v2/",
+                "MBTA_api_key": "17xKel6QtUOSVDtGlCgjlg",
+                "sign_speech": "mespeak",
+                "sign_speechTrigger": "socket"
+            }
+        },
+        "ashmont": {
+            "base": "mbta_lfd_1",
+            "values": {
+                "MBTA_stops": [{"stop_id": "place-asmnl", "locationName": "Ashmont Station"}],
+                "MBTA_destinationFilter": "^Ashmont"
+            }
+        },
+        "central": {
+            "base": "mbta_lfd_1",
+            "values": {
+                "MBTA_stops": [
+                    {"stop_id": "place-cntsq", "locationName": "Central Square"},
+                    {"stop_id": "1060", "locationName": "Magazine Street"},
+                    {"stop_id": "1123", "locationName": "Green Street"},
+                    {"stop_id": "72", "locationName": "This bus stop"}
+                ],
+                "MBTA_destinationFilter": "^Central\\sSquare"
+            }
+        },
+        "default": {
+            "base": "mbta_lfd_1",
+            "values": {
+                "sign_behavior_alertsForAllRoutes": "true",
+                "sign_behavior_suppressDepartures": "true"
+            }
+        },
+        "foresthills": {
+            "base": "mbta_lfd_1",
+            "values": {
+                "MBTA_stops": [{"stop_id": "place-forhl", "locationName": "Forest Hills"}],
+                "MBTA_destinationFilter": "^Forest\\sHills"
+            }
+        },
+        "harvard": {
+            "base": "mbta_lfd_1",
+            "values": {
+                "MBTA_stops": [{"stop_id": "place-harsq", "locationName": "Harvard Station"}],
+                "MBTA_destinationFilter": "^Harvard"
+            }
+        },
+        "haymarket": {
+            "base": "mbta_lfd_1",
+            "values": {
+                "MBTA_stops": [
+                    {"stop_id": "place-haecl", "locationName": "Haymarket Station"},
+                    {"stop_id": "4511", "locationName": "New Sudbury Street"},
+                    {"stop_id": "117", "locationName": "Congress Street"}
+                ],
+                "MBTA_destinationFilter": "^Haymarket"
+            }
+        },
+        "maverick": {
+            "base": "mbta_lfd_1",
+            "values": {
+                "MBTA_stops": [{"stop_id": "place-mvbcl", "locationName": "Maverick Station"}],
+                "MBTA_destinationFilter": "^Maverick"
+            }
+        },
+        "ruggles": {
+            "base": "mbta_lfd_1",
+            "values": {
+                "MBTA_stops": [{"stop_id": "place-rugg", "locationName": "Ruggles Station"}],
+                "MBTA_destinationFilter": "^Ruggles"
+            }
+        },
+        "sullivan": {
+            "base": "mbta_lfd_1",
+            "values": {
+                "MBTA_stops": [{"stop_id": "place-sull", "locationName": "Sullivan Station"}],
+                "MBTA_destinationFilter": "^Sullivan"
+            }
+        },
+        "wonderland": {
+            "base": "mbta_lfd_1",
+            "values": {
+                "MBTA_stops": [{"stop_id": "place-wondl", "locationName": "Wonderland Station"}],
+                "MBTA_destinationFilter": "^Wonderland"
+            }
+        }
+    }
+}
