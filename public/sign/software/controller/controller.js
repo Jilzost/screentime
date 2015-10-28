@@ -51,7 +51,10 @@ st.sign = {};
 st.logger = {};
 
 st.logger.log = function (sourceFunctionName, message) {
-    var unsent, entry;
+    var unsent, entry, signId;
+
+    signId = st.sign.get('signId') || 'UNKNOWN';
+
     try {
         st.logger.entriesCounted = st.logger.entriesCounted || 0;
         //Are we sure we haven't sent too many entries recently?
@@ -61,7 +64,7 @@ st.logger.log = function (sourceFunctionName, message) {
                 logTime: new Date(),
                 sourceTime: new Date(),
                 source: 'sign',
-                sign: 'DEFAULT_SIGN_ID',
+                sign: signId,
                 logLevel: 3,
                 process: sourceFunctionName,
                 message: message
@@ -83,7 +86,7 @@ st.logger.log = function (sourceFunctionName, message) {
                 entry = {
                     logTime: new Date(),
                     source: 'sign',
-                    sign: 'DEFAULT_SIGN_ID',
+                    sign: signId,
                     logLevel: 3,
                     process: 'logger',
                     message: unsent + ' messages unsent due to overflow'
@@ -1015,6 +1018,10 @@ st.lib.mbta.initializeAgency = function (newAgency) {
             return component;
         };
 
+    newAgency.set({
+        destinationFilter: new RegExp(newAgency.get('destinationFilter'))
+    });
+
     /********************* routes *********************/
     newAgency.set({routesSource: initializeComponent({
         constructor: st.c.Routes,
@@ -1149,7 +1156,6 @@ st.lib.mbta.initializeAgency = function (newAgency) {
                         {isElevator: true, isSoon: true}
                     ));
                     // return newAgency.get('alerts').where({isElevator: true});
-                    console.log(x);
                     return x;
                 }
             },
@@ -1439,7 +1445,7 @@ st.lib.process.currentServiceAlertsCD = function (alerts) {
     alertsOut.add(alerts.filter(function (al) {
         return (al.get('isService') &&
                 al.get('isCurrent') &&
-                (al.get('isLocal') || al.get('isSubway')) &&
+                (al.get('isLocal') || al.get('isSubway') || al.get('isSystemwide')) &&
                 (al.get('disruptionType') !== 'Delay' ||
                     al.get('isSystemwide') ||
                     (al.get('isLocal') && al.get('isSubway'))));
@@ -1743,7 +1749,7 @@ st.lib.startSpeechSocket = function () {
     //     console.log(data);
     // });
 
-    st.speechSocket.emit('join', {newChannel: 'DEFAULT_SIGN_ID'});
+    st.speechSocket.emit('join', {newChannel: st.sign.get('signId')});
 };
 
 st.m.Screenshot = Backbone.Model.extend({
@@ -2000,14 +2006,94 @@ cleanupScreenShot
  - log the deletion
 */
 
-var init = function () {
+st.lib.filterProperties = function (obj, name, separater) {
+    var newObj, testExp, newPropName, prop;
+    separater = separater || '';
+    testExp = new RegExp('^' + name + separater + '(.*)');
+    newObj = {};
+
+    for (prop in obj) {
+        if (obj.hasOwnProperty(prop) && testExp.test(prop)) {
+            newPropName = prop.replace(testExp, '$1');
+            newObj[newPropName] = obj[prop];
+        }
+    }
+    return newObj;
+};
+
+st.lib.signStart = function (signConfig) { //Should this be creation of sign object?
+    if (signConfig.speechTrigger === undefined) {
+        signConfig.speechTrigger = 83;
+    }
+    if (!isNaN(signConfig.speechTrigger)) {
+        var reactKey = function (evt) {
+            if (evt.keyCode === 83) {
+                st.lib.speak();
+            }
+        };
+        document.onkeydown = function (key) { reactKey(key); };
+    } else if (signConfig.speechTrigger === 'socket') {
+        st.lib.startSpeechSocket();
+    }
+
+    st.clock = new st.v.Clock();
+
+    st.lib.carousel.spin(st.screenViews.departures,
+        [
+            st.screenViews.currentAlerts,
+            st.screenViews.upcomingAlerts,
+            st.screenViews.elevatorAlerts
+        ]);
+
+    st.screenshots = new st.m.ScreenshotManager({syncScreenshotFreq: 30000});
+
+    if (signConfig && signConfig.speech === 'mespeak') {
+        st.sign.set({speech: 'mespeak'});
+        meSpeak.loadConfig("/sign/software/mespeak/mespeak_config.json");
+        meSpeak.loadVoice('/sign/software/mespeak/voices/en/en-us.json');
+    }
+};
+
+st.lib.loadStart = function () {
+    var signId = window.location.search.replace(/[\?\&]id=([^\?\&]*)/i, '$1');
+
+    // var signId;
     $('#status').html('Loading...');
     st.sign = new st.m.Sign(
         {
-            signId: 'DEFAULT_SIGN_ID',
+            signId: signId,
             heartbeatRate: 60000,
         }
     );
+
+    $.get('getsignconfig?id=' + st.sign.get('signId'))
+        .done(function (data) {
+            var configData,
+                agencyConfig,
+                signConfig;
+            configData = JSON.parse(data);
+            _(configData.agencies).each(function (aName) {
+                agencyConfig = st.lib.filterProperties(configData, aName, '_');
+                st.agencies[aName] = new Agency(agencyConfig);
+            });
+            signConfig = st.lib.filterProperties(configData, 'sign', '_');
+            st.lib.signStart(signConfig);
+        })
+        .fail(function () {
+            setTimeout(function () {st.lib.loadStart();}, 10000);
+            // st.logger.log('st.lib.loadStart', 'getsignconfig failed');
+        });
+};
+
+var init = function () {
+    // var signId;
+    // $('#status').html('Loading...');
+    // st.sign = new st.m.Sign(
+    //     {
+    //         signId: 'DEFAULT_SIGN_ID',
+    //         heartbeatRate: 60000,
+    //     }
+    // );
 
     st.v.DepartureView = Backbone.View.extend({
         tagName: 'tr',
@@ -2219,44 +2305,8 @@ var init = function () {
         AlertView: st.v.AlertViewElevator
     });
 
-    /**
-     * Used to start speech. 
-     * @param  {object} evt keypress event
-     */
-    
-    //window.location.search.replace(/[\?\&]id=([^\?\&]*)/i, '$1')
 
-    if (signConfig.speechTrigger === undefined) {
-        signConfig.speechTrigger = 83;
-    }
-    if (!isNaN(signConfig.speechTrigger)) {
-        var reactKey = function (evt) {
-            if (evt.keyCode === 83) {
-                st.lib.speak();
-            }
-        };
-        document.onkeydown = function (key) { reactKey(key); };
-    } else if (signConfig.speechTrigger === 'socket') {
-        st.lib.startSpeechSocket();
-    }
-    st.agencies.mbta = new Agency(agencyConfig);
-
-    st.clock = new st.v.Clock();
-
-    st.lib.carousel.spin(st.screenViews.departures,
-        [
-            st.screenViews.currentAlerts,
-            st.screenViews.upcomingAlerts,
-            st.screenViews.elevatorAlerts
-        ]);
-
-    st.screenshots = new st.m.ScreenshotManager({syncScreenshotFreq: 30000});
-
-    if (signConfig && signConfig.speech === 'mespeak') {
-        st.sign.set({speech: 'mespeak'});
-        meSpeak.loadConfig("/sign/software/mespeak/mespeak_config.json");
-        meSpeak.loadVoice('/sign/software/mespeak/voices/en/en-us.json');
-    }
+    st.lib.loadStart();
 };
 
 //FUTURE WORK rather than each agency maintaining a list of so many kinds of 
