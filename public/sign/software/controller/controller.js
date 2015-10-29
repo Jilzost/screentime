@@ -671,7 +671,7 @@ st.c.Alerts = Backbone.Collection.extend({
             return model.get('startTime') * 10000000000000 +
                     model.get('endTime');
         case 'byElevatorStation':
-            return model.get('stationName') || model.get('summary');
+            return model.get('affectedStation') || model.get('summary');
         case 'byElevatorTimeAndStation':
             return (model.get('isSoon') ? model.get('startTime') : '0000') +
                 model.get('stationName') || model.get('summary');
