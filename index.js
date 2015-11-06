@@ -5,6 +5,7 @@ var server = require("./server");
 var router = require("./router");
 var fileRequestHandlers = require("./fileRequestHandlers");
 var heartbeatHandlers = require("./heartbeatHandlers");
+var configHandlers = require("./configHandlers");
 var logHandlers = require("./logHandlers");
 var logger = require("./logger");
 var sampleHandlers = require("./sampleHandlers");
@@ -28,6 +29,7 @@ handle["/body"] = fileRequestHandlers.sendSignFile;
 handle["/style"] = fileRequestHandlers.sendSignFile;
 handle["/software"] = fileRequestHandlers.sendSignFile;
 
+handle["/getsignconfig"] = configHandlers.getSignConfig;
 handle["/postheartbeat"] = heartbeatHandlers.heartbeat;
 handle["/postlog"] = logHandlers.receiveLog;
 handle["/postsample"] = sampleHandlers.newSamplePage;
