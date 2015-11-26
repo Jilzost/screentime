@@ -56,8 +56,6 @@ function joinChannel(socket, channel) {
 
 function handleSpeakBroadcasting(socket) {
     socket.on('speak', function (message) {
-        // console.log("handleSpeakBroadcasting ");
-        // console.log(message);
         io.sockets.in(message.channel).emit('speak');
     });
 }
@@ -72,14 +70,12 @@ function handleChannelJoining(socket) {
 function handleClientDisconnection(socket) {
     socket.on('disconnect', function () {
         var nameIndex = namesUsed.indexOf(signNames[socket.id]);
-        console.log('handleClientDisconnection ' + nameIndex);
         delete namesUsed[nameIndex];
         delete signNames[socket.id];
     });
 }
 
 function listen(server) {
-    console.log('socket server listening');
     io = socketio.listen(server);
     // io.set('log level', 1);
     io.sockets.on('connection', function (socket) {
@@ -97,6 +93,7 @@ function listen(server) {
 }
 
 function speak(path, id, response) {
+    console.log('speech triggered for ' + path);
     io.sockets.in(id).emit('speak');
     // var i;
     // for (i = 0; i < allSockets.length; i += 1) {

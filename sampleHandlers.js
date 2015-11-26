@@ -44,52 +44,6 @@ var asDate = function (datetime) {
     return yyyy + '-' + mm + '-' + dd;
 };
 
-// var SampleStat = function (samplePageData) {
-//     this.sign = samplePageData.sign;
-//     this.serverId = samplePageData.serverId;
-//     this.shownSinceSync = samplePageData.shownSinceSync;
-//     this.lastShown = samplePageData.lastShown;
-// };
-
-// var SampleStat = function (sign, serverId, actualText, firstShown, lastShown, count, shownSinceSync) {
-//     var i,
-//         genericize = [
-//             { regex: /^.*display: none.*$/gm, replacement: '' },
-//             //Replace countdown minute digits with 0 or 00, for consolidation.
-//             {
-//                 regex: /(<td class="minutes_away"[^>]{0,25}>)[0-9]/g,
-//                 replacement: '$10'
-//             },
-//             {
-//                 regex: /(<td class="minutes_away"[^>]{0,25}>)0[0-9]/g,
-//                 replacement: '$100'
-//             },
-//             //Set clock to 12:34, for consolidation. 
-//             {
-//                 regex: /<div id="clock">[\d\:]{4,5}<\/div>/,
-//                 replacement: '<div id="clock">12:34</div>'
-//             }
-//         ];
-
-//     this.sign = sign;
-//     this.serverId = serverId || -1;
-//     this.actualText = actualText;
-//     this.genericText = actualText;
-//     for (i = 0; i < genericize.length; i += 1) {
-//         this.genericText = this.genericText.replace(
-//             genericize[i].regex,
-//             genericize[i].replacement
-//         );
-//     }
-//     // this.genericText = _(genericize).reduce(function (state, transform) {
-//     //     return state.replace(transform.regex, transform.replacement);
-//     // }, actualText);
-//     this.firstShown = firstShown;
-//     this.lastShown = lastShown;
-//     this.count = count;
-//     this.shownSinceSync = shownSinceSync;
-// };
-
 function rotateFile() {
     try {
         if (fs.existsSync('samples/samples.json')) {

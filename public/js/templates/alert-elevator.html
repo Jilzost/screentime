@@ -1,0 +1,28 @@
+<!-- filename: alert-elevator -->
+<% if (this.model.get('isCurrent')) { %>
+<table class="elevatorCurrent">
+<% } else {%>
+<table class="elevatorCurrent">
+<% } %>
+<tbody>
+<tr>
+<td>
+<span  class="elevatorStation"><%- this.model.get('affectedStation') %></span>
+<% if (this.model.get('isUpcoming')){ %>
+<%- this.model.get('timeframe') %>
+<% } else { %>
+<span  class="elevatorNumber"><%- this.model.get('affectedElevatorId') %></span>
+<% } %>            
+</td>
+</tr>
+<tr>
+<td class="elevatorDescription">
+<%- this.model.get('affectedElevatorDescription') %>
+<% if (!this.model.get('isUpcoming') && this.model.get('timeframe') !== 'ongoing' && this.model.get('timeframe') !== ''){ %>
+<br>
+<span><%- this.model.get('timeframe') %></span>
+<% } %>
+</td>
+</tr>
+</tbody>
+</table>

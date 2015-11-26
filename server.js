@@ -18,7 +18,6 @@ function start(route, handle) {
             postData = '';
             pathname = url.parse(request.url).pathname;
             id = querystring.parse(url.parse(request.url).query).id;
-
             request.setEncoding("utf8");
 
             request.addListener("data", function (postDataChunk) {

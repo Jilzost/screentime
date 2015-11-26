@@ -23,12 +23,6 @@ handle["/stylesheet.css"] = fileRequestHandlers.sendFile;
 handle["/sign/software/mespeak/mespeak_config.json"] = fileRequestHandlers.sendFile;
 handle["/sign/software/mespeak/voices/en/en-us.json"] = fileRequestHandlers.sendFile;
 
-
-handle["/sign"] = fileRequestHandlers.sendSignFile;
-handle["/body"] = fileRequestHandlers.sendSignFile;
-handle["/style"] = fileRequestHandlers.sendSignFile;
-handle["/software"] = fileRequestHandlers.sendSignFile;
-
 handle["/getsignconfig"] = configHandlers.getSignConfig;
 handle["/postheartbeat"] = heartbeatHandlers.heartbeat;
 handle["/postlog"] = logHandlers.receiveLog;

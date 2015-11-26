@@ -7,8 +7,8 @@
                 "MBTA_sourceType": "MBTA-realtime",
                 "MBTA_baseURL": "http://realtime.mbta.com/developer/api/v2/",
                 "MBTA_api_key": "17xKel6QtUOSVDtGlCgjlg",
-                "sign_speech": "mespeak",
-                "sign_speechTrigger": "socket"
+                "speaker_voiceTools": "mespeak",
+                "speaker_triggerTypes": "key socket"
             }
         },
         "ashmont": {

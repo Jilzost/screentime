@@ -1,0 +1,4 @@
+<!-- filename: alert-timeframe.html -->
+<div class='AlertTimeframe'>
+<%- this.model.get('timeframe').charAt(0).toUpperCase() + this.model.get('timeframe').substring(1) %>: </div>
+<%= this.model.getFormatted('description') %>
