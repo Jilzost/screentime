@@ -11,7 +11,6 @@ define([
     'models/Sign'
 ], function ($, _, Backbone, Sign) {
     var bootup = function () {
-        console.log(Sign);
         var s = new Sign();
     };
 

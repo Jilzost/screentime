@@ -71,7 +71,6 @@ define([
         },
         startStop: function () {
             var textList = [], self = this;
-            console.log('startStop triggered');
             if (self.get('voiceTools') ===
                     'webspeech' && speechSynthesis.speaking) {
                 speechSynthesis.cancel();

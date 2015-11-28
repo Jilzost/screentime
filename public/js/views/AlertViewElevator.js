@@ -22,8 +22,6 @@ define([
             this.render();
         },
         render: function () {
-            console.log(this);
-            console.log(this.model.get('affectedElevatorId'));
             var html;
             html = this.template();
             this.$el.html(html);

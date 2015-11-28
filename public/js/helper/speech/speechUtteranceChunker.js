@@ -12,7 +12,6 @@ define([
     var speechUtteranceChunker = function (utt, settings, callback) {
 
         var newUtt, txt, chunk, x, chunkLength, pattRegex, chunkArr;
-        console.log('chunker file');
         settings = settings || {};
         txt = (settings && settings.offset !==
             undefined ? utt.text.substring(settings.offset) : utt.text);
