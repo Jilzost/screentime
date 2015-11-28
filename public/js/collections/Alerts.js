@@ -22,12 +22,21 @@ define([
         maxAge: 60000, //FUTURE WORK validate role. 
         order: 'txid',
         comparator: function (model) {
+            if (this.order === 'byTime') {
+                console.log(this);
+                console.log(model);
+                console.log(model.get('startTime'));
+                console.log(model.get('endTime'));
+            }
             switch (this.order) {
             case 'byRoute':
                 return model.get('affecteds').first().get('sortOrder');
             case 'byTime':
                 return model.get('startTime') * 10000000000000 +
                         model.get('endTime');
+            case 'byTimeAndRoute':
+                return model.get('startTime') * 10000000000000 +
+                        model.get('affecteds').first().get('sortOrder');
             case 'byElevatorStation':
                 return model.get('affectedStation') || model.get('summary');
             case 'byElevatorTimeAndStation':

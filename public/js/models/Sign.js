@@ -148,18 +148,16 @@ define([
                         _(newAgency.get('outputs')).each(function (x) {
                             this.get('screenData').get(x + 'Sources').push(
                                 newAgency.get(x)
-                                );
+                            );
                             this.get('screenData').get(x).listenTo(
                                 newAgency.get(x),
                                 'reset sync change',
                                 function () {
                                     return self.get('screenData').refresh(x);
-                                }                                )
+                                }
+                            );
                         }, this);
                     }, self);
-
-                    //TODO why does self work and this doesn't?
-                    self.get('screenData').get('elevatorAlerts').order = 'byElevatorStation';
 
                     speakerConfig = filterProperties(
                         configData,

@@ -31,7 +31,9 @@ define([
             this.set('departures', new Departures());
             this.set('currentServiceAlertsCD', new Alerts());
             this.set('upcomingServiceAlerts', new Alerts());
+            this.get('upcomingServiceAlerts').order = 'byTimeAndRoute';
             this.set('elevatorAlerts', new Alerts());
+            this.get('elevatorAlerts').order = 'byElevatorStation';
         },
         refresh: function (coll) {
             var newColl = [];
