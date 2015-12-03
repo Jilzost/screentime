@@ -146,6 +146,7 @@ define([
                     }
 
                     _(source.affected_services.services).each(function (el) {
+
                         if (el.hasOwnProperty('route_id')) {
                             affected = new Route({
                                 txid: el.route_id,
@@ -159,8 +160,8 @@ define([
                             });
                         } else {
                             affected = new Route({
-                                txid: el.route_id,
-                                name:   el.route_name,
+                                txid: 'mode_' + el.mode_name,
+                                name:   el.mode_name,
                                 mode:   el.mode_name,
                                 color: pickRouteColor(el.mode_name, ''),
                                 isHidden: el.route_hide

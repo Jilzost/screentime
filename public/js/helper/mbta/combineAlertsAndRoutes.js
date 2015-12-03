@@ -21,6 +21,9 @@ define([
                 if (a.get('isLocal')) {
                     t.set({isLocal: true});
                 }
+                if (a.get('mode') === 'Subway') {
+                    t.set({isSubway: true});
+                }
             });
         });
         return alertList;
