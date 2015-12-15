@@ -7,6 +7,7 @@ var signNumber = 1;
 var signNames = {};
 var namesUsed = [];
 var currentChannel = {};
+var lastButtonpress = {};
 
 function assignSignName(socket, signNumber, signNames, namesUsed) {
     var name = 'Sign' + signNumber;
@@ -93,15 +94,13 @@ function listen(server) {
 }
 
 function speak(path, id, response) {
-    console.log('speech triggered for ' + path);
-    io.sockets.in(id).emit('speak');
-    // var i;
-    // for (i = 0; i < allSockets.length; i += 1) {
-    //     console.log('emitting');
-    //     console.log(allSockets[i]);
-    //     allSockets[i].broadcast.to(id).emit('speak', {});
-        // allSockets[i].broadcast.emit('speak');
-    // }
+    if (!lastButtonpress[id] || lastButtonpress[id] + 1000 < Date.now()) {
+        lastButtonpress[id] = Date.now();
+        console.log('speech triggered for ' + path);
+        io.sockets.in(id).emit('speak');
+    } else {
+        console.log('Additional buttonpress ignored for ' + path);
+    }
     response.writeHead(404, {'Content-Type': 'text/plain'});
     response.write('Error 404: resource not found.');
     response.end();
