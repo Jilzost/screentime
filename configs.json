@@ -73,7 +73,8 @@
             "base": "mbta_lfd_1",
             "values": {
                 "MBTA_stops": [{"stop_id": "place-rugg", "locationName": "Ruggles Station"}],
-                "MBTA_destinationFilter": "^Ruggles"
+                "MBTA_destinationFilter": "^Ruggles",
+                "MBTA_suppressPredictions": ["Subway", "Commuter Rail"]
             }
         },
         "sullivan": {

@@ -16,14 +16,22 @@ define([
             nextDeps = new Departures();
 
         _(agency.get('departuresCollections')).each(function (d) {
-            deps.push(agency.get(d).toArray()); //TODO need to test this
+            deps.push(agency.get(d).toArray());
         });
+
 
         nextDeps.order = 'presentationOrder';
         deps.order = 'predictionTimeOrder';
         deps.sort();
 
         deps.each(function (dep) {
+            if (agency.get('suppressPredictions') &&
+                    (_(agency.get('suppressPredictions'))
+                    .contains(dep.get('route').get('mode')))) {
+                console.log(dep);
+                return;
+            }
+
             if (agency.get('routes').findWhere(
                     {
                         txid: dep.get('route').get('txid')
