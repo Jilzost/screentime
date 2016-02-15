@@ -33,8 +33,14 @@
         "default": {
             "base": "mbta_lfd_1",
             "values": {
-                "sign_behavior_alertsForAllRoutes": "true",
-                "sign_behavior_suppressDepartures": "true"
+                "MBTA_outputDepartures": false
+            }
+        },
+        "allalerts": {
+            "base": "mbta_lfd_1",
+            "values": {
+                "MBTA_outputAllAlerts": true,
+                "MBTA_outputDepartures": false
             }
         },
         "foresthills": {
@@ -74,7 +80,21 @@
             "values": {
                 "MBTA_stops": [{"stop_id": "place-rugg", "locationName": "Ruggles Station"}],
                 "MBTA_destinationFilter": "^Ruggles",
-                "MBTA_suppressPredictions": ["Subway", "Commuter Rail"]
+                "MBTA_suppressDepartures": ["Subway", "Commuter Rail"]
+            }
+        },
+        "rugglesfull": {
+            "base": "mbta_lfd_1",
+            "values": {
+                "MBTA_stops": [{"stop_id": "place-rugg", "locationName": "Ruggles Station"}],
+                "MBTA_destinationFilter": "^Ruggles"
+            }
+        },
+        "southstation": {
+            "base": "mbta_lfd_1",
+            "values": {
+                "MBTA_stops": [{"stop_id": "place-sstat", "locationName": "South Station"}],
+                "MBTA_destinationFilter": "^South Sta"
             }
         },
         "sullivan": {

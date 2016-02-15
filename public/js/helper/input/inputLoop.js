@@ -22,12 +22,14 @@ define([
                 waittime = Math.min(waittime, 60000);
             }
         } else {
-            waittime = input.feed.maxAge || 60000;
+            waittime = input.waittime || input.feed.maxAge || 60000;
         }
         setTimeout(function () {input.feed.fetch(
             {
                 success: function () {inputLoop({feed: input.feed}); },
-                error: function () {inputLoop({feed: input.feed, failed: true}); }
+                error: function () {
+                    inputLoop({feed: input.feed, failed: true});
+                }
             }
         ); }, waittime);
     };

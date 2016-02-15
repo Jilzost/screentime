@@ -8,9 +8,32 @@ define([
     'jquery',
     'underscore',
     'backbone',
+    'collections/Departures',
     'views/DepartureView',
+//    'helper/process/nextDepartures',
     'text!templates/departures.html'
-], function ($, _, Backbone, DepartureView, departuresTemplate) {
+], function ($, _, Backbone, Departures, DepartureView, departuresTemplate) {
+    var nextDepartures = function (deps) {
+        var nextDeps = new Departures();
+
+        deps = new Departures(deps.toArray());
+
+        nextDeps.order = 'presentationOrder';
+        deps.order = 'predictionTimeOrder';
+        deps.sort();
+
+        deps.each(function (dep) {
+
+            if (!nextDeps.findWhere({
+                    serviceGroup: dep.get('serviceGroup')
+                })) {
+                nextDeps.add(dep);
+            }
+        });
+
+        return (nextDeps.toArray());
+    };
+
     var DeparturesView = Backbone.View.extend({
 
         el: '#departures',
@@ -31,7 +54,7 @@ define([
             this.render();
         },
         render: function () {
-            var html;
+            var html, deps;
             this.speechScript = [];
             if (this.model === undefined ||
                     this.model.get('collection') === undefined ||
@@ -47,7 +70,17 @@ define([
             this.$('tbody').css('fontSize', this.fontSize + '%');
             this.$el.html(html);
             this.speechScript.push(this.model.get('titleText'));
-            this.model.get('collection').each(function (x) {
+
+            deps = nextDepartures(this.model.get('collection'));
+            deps = _(deps).filter(function (x) {
+                return (Date.now() - 90000 < x.get('time') &&
+                        x.get('time') < Date.now() + 60000 * 65);
+            });
+            deps = new Departures(deps);
+            deps.order = 'presentationOrder';
+            deps.sort();
+
+            deps.each(function (x) {
                 var item = new DepartureView(
                     {model: x, className: x.get('route').get('mode')}
                 );

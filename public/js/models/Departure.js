@@ -59,12 +59,12 @@ define([
             }
         },
         /**
-         * Departure is "soon" if it's no more than one minute in the past
+         * Departure is "soon" if it's no more than 90 secs in the past
          * and no more than 65 minutes in the future.
          * @return {Boolean} is departure soon.
          */
         isSoon: function () {
-            return (Date.now() - 60000 < this.get('time') &&
+            return (Date.now() - 90000 < this.get('time') &&
                     this.get('time') < Date.now() + 60000 * 65);
         },
         /**

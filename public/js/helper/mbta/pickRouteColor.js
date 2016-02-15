@@ -4,7 +4,9 @@ speechSynthesis, document, window */
 'use strict';
 
 // Filename: helper/mbta/pickRouteColor
-//st.lib.mbta.pickRouteColor
+// 
+// Future work: this should be associated directly with an agency, using
+// a generic pattern-matching system. 
 define([
     'jquery',
     'underscore',

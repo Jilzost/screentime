@@ -9,9 +9,38 @@ define([
     'underscore',
     'backbone',
     'models/Alert',
-    'collections/Routes',
-    'helper/process/formatDelay'
-], function ($, _, Backbone, Alert, Routes, formatDelay) {
+    'collections/Routes'
+], function ($, _, Backbone, Alert, Routes) {
+    var formatDelay = function (delay) {
+        var branch,
+            direction,
+            severe;
+
+        if (_(delay.branches).uniq().length === 1 &&
+                _(delay.branches).first() !== '') {
+            branch = _(delay.branches).first();
+        }
+
+        if (_(delay.directions).uniq().length === 1 &&
+                typeof _(delay.directions).first() === 'string' &&
+                _(delay.directions).first() !== '') {
+            direction = _(delay.directions).first().toLowerCase();
+        }
+
+        if (delay.isSevere) {
+            severe = 'severe';
+        }
+
+        return delay.serviceName +
+                    (branch || direction || severe ? ' (' : '') +
+                    (branch || '') +
+                    (branch && direction ? ' ' : '') +
+                    (direction || '') +
+                    ((branch || direction) && severe ? ', ' : '') +
+                    (severe || '') +
+                    (branch || direction || severe ? ')' : '');
+    };
+
     var combinedDelayAlert = function (alerts) {
 
 
@@ -39,7 +68,7 @@ define([
             delay,
             serviceName,
             isSevere,
-            affectedDirection,
+            direction,
             remainingDelayed, //Remaining (not-yet-listed) delays
             description, //For alert being created
             routes = new Routes(),
@@ -48,18 +77,19 @@ define([
         newAlert = new Alert({
             txid: 'CombinedDelayAlert',
             disruptionType: 'Delays',
-            isCurrent: true,
-            isService: true
+            isNow: true,
+            isService: true,
+            isRelevant: true
         });
 
         alerts.each(function (a) {
-            affectedDirection = a.get('affectedDirection');
-            isSevere = a.get('isSevere');
+            isSevere = a.get('severityPct') >= 75;
             routes.add(a.get('affecteds').where({
                 modelType: 'Route',
                 isHidden: false
             }));
             routes.each(function (r) {
+                direction = r.get('direction');
                 newAlert.get('affecteds').add(r);
                 serviceName = r.get('trunkName');
                 if (!_(delays).findWhere({serviceName: serviceName})) {
@@ -67,7 +97,7 @@ define([
                     delay = {
                         serviceName: serviceName,
                         branches: [],
-                        directions: [affectedDirection],
+                        directions: [],
                         isRoute: (r.get('mode') === 'Bus' &&
                             r.get('name').search(/Line/) === -1),
                         isSevere: isSevere,
@@ -76,13 +106,18 @@ define([
                     if (r.get('branchName') !== '') {
                         delay.branches.push(r.get('branchName'));
                     }
+                    if (direction) { delay.directions.push(direction); }
+
                     delays.push(delay);
                 } else {
                     //Existing serviceName
                     delay = _(delays).findWhere({serviceName: serviceName});
                     if (r.get('branchName') !== '') {
                         delay.branches.push(r.get('branchName'));
-                        delay.directions.push(affectedDirection);
+                        if (direction) {
+                            delay.directions.push(direction);
+                            delay.directions = _.uniq(delay.directions);
+                        }
                         delay.isSevere = delay.isSevere || isSevere;
                     }
                 }
@@ -106,7 +141,7 @@ define([
                     description += formatDelay(d);
                     break;
                 case 1:
-                    if (lineDelays.length === 1) {
+                    if (lineDelays.length <= 2) {
                         description += formatDelay(d) + ' and ';
                     } else {
                         description += formatDelay(d) + ', and ';
@@ -130,7 +165,11 @@ define([
                     description +=  formatDelay(d);
                     break;
                 case 1:
-                    description += formatDelay(d) + ' and ';
+                    if (routeDelays.length <= 2) {
+                        description += formatDelay(d) + ' and ';
+                    } else {
+                        description += formatDelay(d) + ', and ';
+                    }
                     break;
                 default:
                     description += formatDelay(d) + ', ';

@@ -13,7 +13,7 @@ define([
     'underscore',
     'backbone',
     'helper/process/filterProperties',
-    'models/Agency',
+    'helper/process/agencyModelIndex',
     'models/Clock',
     'models/Heartbeat',
     'models/ScreenData',
@@ -26,10 +26,10 @@ define([
     'views/AlertViewSimple',
     'views/AlertViewTimeframe'
 
-], function ($, _, Backbone, filterProperties, Agency, Clock,
-    Heartbeat, ScreenData, ScreenModel, ScreenshotManager, Speaker,
-    DeparturesView, AlertsView, AlertViewElevator, AlertViewSimple,
-    AlertViewTimeframe) {
+], function ($, _, Backbone, filterProperties, agencyModelIndex,
+    Clock, Heartbeat, ScreenData, ScreenModel,
+    ScreenshotManager, Speaker, DeparturesView, AlertsView, AlertViewElevator,
+    AlertViewSimple, AlertViewTimeframe) {
     var Sign = Backbone.Model.extend({
         defaults: {
             clock: {},
@@ -59,11 +59,10 @@ define([
                 });
             }
 
-            //Clock()? Or Clock.Clock()?
             this.set({clock: new Clock()});
 
             this.set({startTime: Date.now()});
-            //TODO are these necessary or not?
+
             this.sendHeartbeat = _.bind(this.sendHeartbeat, this);
             this.loadStart = _.bind(this.loadStart, this);
             this.runSlideshow = _.bind(this.runSlideshow, this);
@@ -78,6 +77,44 @@ define([
 
             this.set({screenData: new ScreenData()});
 
+            //FUTURE WORK WILL REPLACE SOME OF WHAT FOLLOWS
+            // new model: Insight.
+            // Represents something shown on a slide, which has a header, a body
+            // Has information on the header; the collection; filter info;
+            // info on what view to use for collection; probably the element.
+            // Spiritual successor to ScreenModel.  
+            // new view: InsightView.
+            // departures, service updates, etc. all InsightViews. 
+
+            ///notes from earlier:
+            //...again raises the question of where exactly the change from 
+            //"alerts" to specifics should take place. 
+            //Perhaps screenData could have currentAlerts, upcomingServiceAlerts
+            //etc. and have them reference its own "alerts".
+            //This would also give ScreenData something to do. 
+            //
+            //But is it possible to do it even later, at the view?
+            //
+            //Ultimately instead of ScreenData should the aggregation be like an
+            //agency, whose data source is other agencies? Like an AggAgency
+            //model. (Agg for Aggregate.)
+            //
+            //It could even be only invoked when there are multiple agencies.
+            //Otherwise the views just reference the agency directly. 
+            //I'm liking this. 
+            //
+            //Next steps: 
+            //Modify view so that it checks for condition property 
+            //(could be function) and uses it if available
+            //
+            //Modify this file so that it provides those things to 
+            //each of the different views
+            //
+            //Modify this file so that the views reference the 1 agency 
+            //directly (with a note to add AggAgency later)
+            //
+            //Test!
+
             models.departures = new ScreenModel({
                 titleText: 'Departures',
                 titleFormat: 'CSS_DeparturesTitle',
@@ -86,50 +123,43 @@ define([
                 minutesAwayColHeader: 'Mins',
                 collection: this.get('screenData').get('departures')
             });
-            models.currentServiceAlertsCD = new ScreenModel({
+            models.serviceAlerts = new ScreenModel({
                 titleText: 'Service Updates',
                 titleFormat: 'CSS_CurrentAlertsTitle',
-                collection: this.get('screenData').get('currentServiceAlertsCD')
+                where: {
+                    isRelevant: true,
+                    isNow: true,
+                    isService: true
+                },
+                collection: this.get('screenData').get('alerts')
             });
-            models.upcomingServiceAlerts = new ScreenModel({
+            models.upcomingAlerts = new ScreenModel({
                 titleText: 'Coming Up',
                 titleFormat: 'CSS_UpcomingAlertsTitle',
-                collection: this.get('screenData').get('upcomingServiceAlerts')
+                where: {
+                    isRelevant: true,
+                    isSoon: true,
+                    isService: true
+                },
+                collection: this.get('screenData').get('alerts')
             });
 
             models.elevatorAlerts = new ScreenModel({
                 titleText: 'Elevators Unavailable',
                 titleFormat: 'CSS_ElevatorAlertsTitle',
-                collection: this.get('screenData').get('elevatorAlerts')
+                where: {
+                    isElevator: true,
+                    isRelevant: true
+                },
+                collection: this.get('screenData').get('alerts')
             });
 
             this.set({screenModels: models});
 
-            this.set({screenViews: {
-                departures: new DeparturesView({
-                    model: this.get('screenModels').departures
-                }),
-                currentAlerts: new AlertsView({
-                    el: '#currentAlerts',
-                    model: this.get('screenModels').currentServiceAlertsCD,
-                    AlertView: AlertViewSimple
-                }),
-                upcomingAlerts: new AlertsView({
-                    el: '#upcomingAlerts',
-                    model: this.get('screenModels').upcomingServiceAlerts,
-                    AlertView: AlertViewTimeframe
-                }),
-                elevatorAlerts: new AlertsView({
-                    el: '#elevatorAlerts',
-                    model: this.get('screenModels').elevatorAlerts,
-                    AlertView: AlertViewElevator
-                })
-            }});
-
             this.loadStart();
         },
         loadStart: function () {
-            var newAgency, self = this;
+            var newAgency, targetAgency, self = this;
             $('#status').html('Loading...');
 
             $.get('getsignconfig?id=' + this.get('signId'))
@@ -140,24 +170,91 @@ define([
                         speakerConfig,
                         x;
                     configData = JSON.parse(data);
+
                     _(configData.agencies).each(function (aName) {
                         agencyConfig = filterProperties(configData, aName, '_');
-                        newAgency = new Agency(agencyConfig);
-                        this.get('agencies')[aName] = newAgency;
+                        // newAgency = new Agency(agencyConfig);
+                        // this.get('agencies')[aName] = newAgency;
 
-                        _(newAgency.get('outputs')).each(function (x) {
-                            this.get('screenData').get(x + 'Sources').push(
-                                newAgency.get(x)
-                            );
-                            this.get('screenData').get(x).listenTo(
-                                newAgency.get(x),
-                                'reset sync change',
-                                function () {
-                                    return self.get('screenData').refresh(x);
-                                }
-                            );
+                        newAgency = new agencyModelIndex[agencyConfig.sourceType](agencyConfig); //TESTCODE
+                        //console.log(this.get('agencies'));
+                        this.get('agencies')[aName] = newAgency;    //TESTCODE
+                        //console.log(this.get('agencies'));
+
+                        _(['alerts', 'departures']).each(function (x) {
+                            if (newAgency.get(x)) {
+                                this.get('screenData').get(x + 'Sources').push(
+                                    newAgency.get(x)
+                                );
+                                this.get('screenData').get(x).listenTo(
+                                    newAgency.get(x),
+                                    'reset sync change',
+                                    function () {
+                                        return self.get('screenData')
+                                            .refresh(x);
+                                    }
+                                );
+                            }
                         }, this);
                     }, self);
+
+                    //FUTURE WORK
+                    //The following is not finished and is not used yet. 
+                    //targetAgency will be either the one agency or AggAgency. 
+                    if (_(self.get('agencies')).keys().length === 1) {
+                        _(self.get('agencies')).each(function (a) {
+                            targetAgency = a;
+                        });
+                    } else {
+                        console.log('WARNING: unsupported number of agencies');
+                        //future: AggAgency here
+                    }
+
+
+                    self.set({screenViews: {
+                        departures: new DeparturesView({
+                            model: self.get('screenModels').departures,
+                        }),
+                        currentAlerts: new AlertsView({
+                            el: '#currentAlerts',
+                            // collection: targetAgency.get('alerts'),
+                            model: self.get('screenModels').serviceAlerts,
+                            AlertView: AlertViewSimple,
+                            // where: {
+                            //     isRelevant: true,
+                            //     isNow: true,
+                            //     isService: true
+                            // },
+                            titleText: 'Service Updates',//UNUSED
+                            titleFormat: 'CSS_CurrentAlertsTitle',//UNUSED
+                        }),
+                        upcomingAlerts: new AlertsView({
+                            el: '#upcomingAlerts',
+                            // collection: targetAgency.get('alerts'),
+                            model: self.get('screenModels').upcomingAlerts,
+                            AlertView: AlertViewTimeframe,
+                            // where: {
+                            //     isRelevant: true,
+                            //     isSoon: true,
+                            //     isService: true
+                            // },
+                            titleText: 'Coming Up',
+                            titleFormat: 'CSS_UpcomingAlertsTitle',
+                        }),
+                        elevatorAlerts: new AlertsView({
+                            el: '#elevatorAlerts',
+                            // collection: targetAgency.get('alerts'),
+                            model: self.get('screenModels').elevatorAlerts,
+                            AlertView: AlertViewElevator,
+                            // where: {
+                            //     isElevator: true,
+                            //     isRelevant: true
+                            // },
+                            titleText: 'Elevators Unavailable',
+                            titleFormat: 'CSS_ElevatorAlertsTitle',
+                        })
+                    }});
+
 
                     speakerConfig = filterProperties(
                         configData,
@@ -201,6 +298,9 @@ define([
                 t = 0,
                 nextSlideInfo = {},
                 self = this;
+            // console.log(self); //TESTCODE
+            // console.log(primary);
+            // console.log(allSecondaries);
             if (standalone) {
                 _(allViews).push(standalone);
             }

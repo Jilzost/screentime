@@ -13,14 +13,12 @@ define([
     var AgencyComponents = Backbone.Collection.extend({
 
         model: AgencyComponent,
-        agency: {}, //FUTURE WORK validate role
+        agency: {},
         sourceType: '', //supported: MBTA-realtime
                         //FUTURE WORK validate role
         url: '',
-        maxAge: 30000,//FUTURE WORK validate role
-        lastUpdated: 0,//FUTURE WORK validate role
-        upToDate: false, //Not up-to-date until it's been initialized.
-                        //FUTURE WORK validate role
+        maxAge: 30000,
+        lastUpdated: 0,
         comparator: 'sortOrder'
     });
 

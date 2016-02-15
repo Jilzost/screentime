@@ -16,3 +16,5 @@ define([
 
     return mixCase;
 });
+
+//FOR FUTURE USE

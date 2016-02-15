@@ -3,17 +3,19 @@
 speechSynthesis, document, window */
 'use strict';
 
-// Filename: helper/format/capitalize.js
+// Filename: models/RealtimeModel
 define([
     'jquery',
     'underscore',
-    'backbone',
+    'backbone'
 ], function ($, _, Backbone) {
-    var capitalize = function (str) {
-        return str.charAt(0).toUpperCase() + str.substring(1);
-    };
+    var RealtimeModel = Backbone.Model.extend({
+        defaults: {
+            modelType: 'RealtimeModel',
+            txid: '',
+            name: ''
+        }
+    });
 
-    return capitalize;
+    return RealtimeModel;
 });
-
-//FOR FUTURE USE

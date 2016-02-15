@@ -3,16 +3,16 @@
 speechSynthesis, document, window */
 'use strict';
 
-// Filename: helper/process/bootup.js
+// Filename: helper/process/agencyModelIndex.js
 define([
     'jquery',
     'underscore',
     'backbone',
-    'models/Sign'
-], function ($, _, Backbone, Sign) { /**/
-    var bootup = function () {
-        var s = new Sign();
+    'models/RealtimeAgency'
+], function ($, _, Backbone, RealtimeAgency) {
+    var agencyModelIndex = {
+        'MBTA-realtime': RealtimeAgency
     };
 
-    return bootup;
+    return agencyModelIndex;
 });

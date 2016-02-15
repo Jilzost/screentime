@@ -15,25 +15,14 @@ define([
     var ScreenData = Backbone.Model.extend({
 
         defaults: {
-            featuredAlertsSources: [],
+            alertsSources: [],
             departuresSources: [],
-            currentServiceAlertsCDSources: [],
-            upcomingServiceAlertsSources: [],
-            elevatorAlertsSources: [],
-            featuredAlerts: undefined,
+            alerts: undefined,
             departures: undefined,
-            currentAlerts: undefined,
-            upcomingServiceAlerts: undefined,
-            elevatorAlerts: undefined
         },
         initialize: function () {
-            this.set('featuredAlerts', new Alerts());
             this.set('departures', new Departures());
-            this.set('currentServiceAlertsCD', new Alerts());
-            this.set('upcomingServiceAlerts', new Alerts());
-            this.get('upcomingServiceAlerts').order = 'byTimeAndRoute';
-            this.set('elevatorAlerts', new Alerts());
-            this.get('elevatorAlerts').order = 'byElevatorStation';
+            this.set('alerts', new Alerts());
         },
         refresh: function (coll) {
             var newColl = [];

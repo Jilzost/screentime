@@ -4,7 +4,20 @@
 <head>
     <title>ScreenTime</title>
     <link rel='stylesheet' href='css/style.css'></link>
-    <script src="js/libs/require.js" data-main="js/main"></script>
+<!--    <script src="js/libs/require.js" data-main="js/main"></script> -->
+
+<script>
+setTimeout(function () {
+    'use strict';
+    var headID = document.getElementsByTagName("head")[0],
+        newScript = document.createElement('script');
+    newScript.src = 'js/libs/require.js';
+    newScript.setAttribute('data-main', 'js/main');
+    headID.appendChild(newScript);
+    document.getElementById('status').html = 'Loading..';
+}, Math.random() * 9 * 1000 + 100);
+</script>
+
 </head>
 
 <body>

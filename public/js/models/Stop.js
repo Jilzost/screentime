@@ -44,6 +44,13 @@ define([
                 _(r).push(
                     new RegExp('\\b(' + this.escape('name') + ')\\b', 'gi')
                 );
+                if (/\s-\s/.test(this.get('name'))) {
+                    _(r).push(
+                        new RegExp('\\b('
+                            + this.escape('name').replace(/\s-\s.*/, '')
+                            + ')\\b', 'gi')
+                    );
+                }
             }
             return r;
         }

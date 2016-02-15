@@ -80,8 +80,12 @@ body {
 .AlertTimeframe {
 /*    font-variant: small-caps;*/
 /*    font-weight: bold; */
-    font-style: italic;
+
+/*    font-style: italic; */
     display: inline;
+    color: #FF6464;
+    font-weight: lighter;
+
 }
 
 #departurestable {

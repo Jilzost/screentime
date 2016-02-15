@@ -32,8 +32,8 @@ function start(route, handle) {
                 'server.start.onRequest', 'Failed: ' + err);
         }
     }
-    server = http.createServer(onRequest).listen(3000);
-    console.log('Server is listening on port 3000.');
+    server = http.createServer(onRequest).listen(6276);
+    console.log('Server is listening on port 6276.');
     logger.log('server', 'server', 5, 'server.start', 'Server started');
     socketServer.listen(server);
 }

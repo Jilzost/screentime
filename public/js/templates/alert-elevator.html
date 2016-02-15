@@ -1,5 +1,5 @@
 <!-- filename: alert-elevator -->
-<% if (this.model.get('isCurrent')) { %>
+<% if (this.model.get('isNow')) { %>
 <table class="elevatorCurrent">
 <% } else {%>
 <table class="elevatorCurrent">
@@ -8,7 +8,7 @@
 <tr>
 <td>
 <span  class="elevatorStation"><%- this.model.get('affectedStation') %></span>
-<% if (this.model.get('isUpcoming')){ %>
+<% if (this.model.get('isSoon')){ %>
 <%- this.model.get('timeframe') %>
 <% } else { %>
 <span  class="elevatorNumber"><%- this.model.get('affectedElevatorId') %></span>
@@ -18,7 +18,7 @@
 <tr>
 <td class="elevatorDescription">
 <%- this.model.get('affectedElevatorDescription') %>
-<% if (!this.model.get('isUpcoming') && this.model.get('timeframe') !== 'ongoing' && this.model.get('timeframe') !== ''){ %>
+<% if (!this.model.get('isSoon') && this.model.get('timeframe') !== 'ongoing' && this.model.get('timeframe') !== ''){ %>
 <br>
 <span><%- this.model.get('timeframe') %></span>
 <% } %>

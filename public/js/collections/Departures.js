@@ -8,14 +8,9 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    'helper/logger',
     'collections/AgencyComponents',
-    'models/Departure',
-    'models/Route',
-    'helper/mbta/pickRouteColor',
-    'helper/mbta/deriveDestination'
-], function ($, _, Backbone, logger, AgencyComponents, Departure, Route,
-    pickRouteColor, deriveDestination) {
+    'models/Departure'
+], function ($, _, Backbone, AgencyComponents, Departure) {
     var Departures = AgencyComponents.extend({
 
         model: Departure,
@@ -46,56 +41,6 @@ define([
                 if (a.get(this.order) > b.get(this.order)) { return 1; }
                 if (a.get(this.order) < b.get(this.order)) { return -1; }
                 return 0;
-            }
-        },
-        parse: function (data) {
-            var parseMBTARealtime = function (deps, locationName) {
-                var departures = [],
-                    destination;
-                _(deps.mode).each(function (mode) {
-                    _(mode.route).each(function (route) {
-                        _(route.direction).each(function (direction) {
-                            _(direction.trip).each(function (trip) {
-                            //generate "destinationTitle", "destinationSubtitle"
-                                destination = deriveDestination(
-                                    mode.mode_name,
-                                    route.route_name,
-                                    direction.direction_name,
-                                    trip
-                                );
-                                departures.push({
-                                    route: new Route(
-                                        {
-                                            txid: route.route_id,
-                                            name:   route.route_name,
-                                            mode:   mode.mode_name,
-                                            color: pickRouteColor(
-                                                mode.mode_name,
-                                                route.route_name
-                                            )
-                                        }
-                                    ),
-                                    direction: direction.direction_name,
-                                    tripId: trip.trip_id,
-                                    destinationTitle: destination.title,
-                                    destinationSubtitle: destination.subtitle,
-                                    scheduledTime: trip.sch_dep_dt * 1000,
-                                    predictedTime: trip.pre_dt * 1000,
-                                    locationName: locationName
-                                });
-                            });
-                        });
-                    });
-                });
-                return departures;
-            };
-            switch (this.sourceType) {
-            case 'MBTA-realtime':
-                return parseMBTARealtime(data, (this.locationName || ''));
-            default:
-                logger.log('Departures',
-                    'Unsupported data source ' + this.sourceType);
-                return [];
             }
         }
     });

@@ -8,10 +8,8 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    'helper/logger',
-    'helper/mbta/combineRoutesAndLocal',
-    'helper/mbta/initializeAgency'
-], function ($, _, Backbone, logger, combineRoutesAndLocal, initializeAgency) {
+    'helper/logger'
+], function ($, _, Backbone, logger) {
     var Agency = Backbone.Model.extend({
 
         defaults: {
@@ -20,21 +18,6 @@ define([
             routes: undefined,
             departures: undefined,
             alerts: undefined,
-        },
-        initialize: function () {
-            switch (this.get('sourceType')) {
-            case 'MBTA-realtime':
-                initializeAgency(this);
-                break;
-            default:
-                logger.log(
-                    'Agency',
-                    'Unsupported data source ' + this.get('sourceType')
-                );
-            }
-        },
-        combineRoutesAndLocal: function () {
-            combineRoutesAndLocal(this);
         }
     });
 
