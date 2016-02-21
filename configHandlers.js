@@ -71,8 +71,9 @@ function getSignConfig(path, id, response) {
                 send500(response);
             }
         });
+    } else {
+        buildAndSendResponse(path, id, response);
     }
-    buildAndSendResponse(path, id, response);
 }
 
 exports.getSignConfig = getSignConfig;

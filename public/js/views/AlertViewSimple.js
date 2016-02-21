@@ -4,7 +4,6 @@ speechSynthesis, document, window */
 'use strict';
 
 // Filename: views/AlertViewSimple
-//TODO confirm whether text requirejs plugin will work without installation
 define([
     'jquery',
     'underscore',

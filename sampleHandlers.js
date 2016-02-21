@@ -25,7 +25,7 @@ if (fs.existsSync('samples/samples.json')) {
         }
     });
 } else {
-    logger.log('server', 'server', 5,
+    logger.log('server', 'server', 4,
         'sampleHandlers', 'starting new samples/samples.json');
 }
 

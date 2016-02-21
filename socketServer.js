@@ -28,32 +28,7 @@ function joinChannel(socket, channel) {
     io.sockets.in(channel).emit('message', {
         text: 'channel has been joined '
     });
-    // var usersInChannel = io.sockets.clients(channel);
-    // if (usersInChannel.length > 1) {
-    //     var usersInChannelSummary = 'Users currently in ' + channel + ': ';
-    //     for (var index in usersInRoom) {
-    //         var userSocketId = usersInRoom[index].id;
-    //         if (userSocketId != socket.id) {
-    //             if (index > 0) {
-    //                 usersInRoomSummary += ', ';
-    //             }
-    //             usersInRoomSummary += nickNames[userSocketId];
-    //         }
-    //     }
-    //     usersInRoomSummary += '.';
-    //     socket.emit('message', {text: usersInRoomSummary});
-    // } 
 }
-
-
-// function handleMessageBroadcasting(socket) {
-//     socket.on('message', function (message) {
-//         console.log("handleMessageBroadcasting " + message);
-//         socket.broadcast.to(message.channel).emit('message', {
-//             text: message.text
-//         });
-//     });
-// }
 
 function handleSpeakBroadcasting(socket) {
     socket.on('speak', function (message) {
@@ -82,9 +57,7 @@ function listen(server) {
     io.sockets.on('connection', function (socket) {
         signNumber = assignSignName(socket, signNumber, signNames, namesUsed);
         joinChannel(socket, 'Lobby');
-        // handleMessageBroadcasting(socket, signNames);
         handleSpeakBroadcasting(socket, signNames);
-        // handleNameChangeAttempts(socket, signNames, namesUsed);
         handleChannelJoining(socket);
         socket.on('channels', function () {
             socket.emit('channels', io.sockets.manager.channels);

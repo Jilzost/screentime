@@ -21,7 +21,7 @@ define([
             return '#33FF33';
         case 'Red Line':
         case 'Mattapan Trolley':
-            return '#FF6464';
+            return '#FF3232';//'#FF6464';
         case 'Blue Line':
             return '#80AAFF';
         case 'Orange Line':

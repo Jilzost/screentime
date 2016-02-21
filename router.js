@@ -13,7 +13,7 @@ function route(handle, pathname, id, response, postData) {
             handle['/'](pathname, id, response, postData);
         }
     } catch (err) {
-        logger.log('server', id, 1, 'router.route', 'Failed: ' + err);
+        logger.log('server', id, 1, 'router.route', 'Failed to route ' + pathname + " : " + err);
     }
 }
 

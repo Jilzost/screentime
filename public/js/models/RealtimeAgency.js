@@ -511,7 +511,8 @@ define([
 
                 newAlert.set({isRelevant: newAlert.get('isRelevant')
                     || isLocal || isSubway
-                    || thisAgency.get('outputAllAlerts')});
+                    || (thisAgency.get('outputAllAlerts')
+                        && newAlert.get('isLocal'))});
 
                 if (newAlert.get('disruptionType') === 'Delay' &&
                         ((isLocal && !isSubway)

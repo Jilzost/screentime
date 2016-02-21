@@ -1,0 +1,5 @@
+{
+	"emailIsOn": false,
+	"emailThreshold": 5,
+	"logThreshold": 5
+}

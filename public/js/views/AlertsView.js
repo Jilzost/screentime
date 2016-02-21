@@ -38,8 +38,6 @@ define([
             if (this.model === undefined ||
                     this.model.get('collection') === undefined ||
                     this.model.get('collection').length === 0) {
-            // if (this.collection.length === 0) {
-                // console.log('no content');
                 this.$el.html('');
                 this.hasContent = false;
                 this.lastHeight = 0;
@@ -53,13 +51,11 @@ define([
                 alerts = this.model.get('collection');
             }
             if (alerts.length === 0) {
-                // console.log('no content');
                 this.$el.html('');
                 this.hasContent = false;
                 this.lastHeight = 0;
                 return this;
             }
-            // console.log('content');
             this.hasContent = true;
             html = this.template();
             this.$el.html(html);
@@ -70,9 +66,9 @@ define([
                 var item = new this.options.AlertView(
                     {model: x}
                 );
+                console.log(x);
                 this.$('.alerts-list').append(item.render().$el);
                 this.speechScript.push(x.get('description'));
-                console.log(x);
             }, this);
 
 //FUTURE WORK the +23 is a hack to account for the margin at the bottom of the 

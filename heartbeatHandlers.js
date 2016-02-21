@@ -25,21 +25,21 @@ function heartbeat(pathname, id, response, postData) {
 
         if (!lastbeats.hasOwnProperty(beat.sign)) {
             if (beat.uptime < 1000) {
-                logger.log('server', beat.sign, 5, 'checkHeartbeat',
-                    'New sign activated', true);
+                logger.log('server', beat.sign, 2, 'checkHeartbeat',
+                    'New sign activated');
             } else {
-                logger.log('server', beat.sign, 5, 'checkHeartbeat',
+                logger.log('server', beat.sign, 4, 'checkHeartbeat',
                     'First heartbeat from existing sign');
             }
         } else if (lastbeats[beat.sign].serverTime +
                 lastbeats[beat.sign].heartbeatRate < Date.now()) {
-            logger.log('server', beat.sign, 5, 'checkHeartbeat',
-                'Sign is back online', true);
-        } else if (lastbeats[beat.sign].uptime > beat.uptime) {
             logger.log('server', beat.sign, 2, 'checkHeartbeat',
+                'Sign is back online');
+        } else if (lastbeats[beat.sign].uptime > beat.uptime) {
+            logger.log('server', beat.sign, 4, 'checkHeartbeat',
                 'Sign has reset (uptime was '
                     + logger.formatDuration(lastbeats[beat.sign].uptime)
-                    + ')', true);
+                    + ')');
         }
 
         lastbeats[beat.sign] = beat;
@@ -51,7 +51,7 @@ function heartbeat(pathname, id, response, postData) {
 
         response.end();
     } catch (err) {
-        logger.log('server', 'server', 3,
+        logger.log('server', 'server', 2,
             'heartbeatHandlers.heartbeat', 'Failed: ' + err);
     }
 }

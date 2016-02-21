@@ -5,15 +5,22 @@ var heartbeatHandlers = require('./heartbeatHandlers.js');
 var fs = require('fs');
 var nodemailer = require('nodemailer');
 var cron = require('cron');
+var config = require('config');
 
 var csvheader = '"serverTime","source","sign","sourceTime","logLevel","process","message"\r\n';
 var tabheader = 'sign\tsourceTime\tprocess\tmessage\r\n';
 
 var serverStartTime;
-var logThreshold = 5;
 
-var emailIsOn = false;
-var emailThreshold = 3;
+var logThreshold = config.get('logThreshold');
+var emailThreshold = config.get('emailThreshold');
+var email = config.get('emailIsOn');
+if (email && config.has('emailSettings')) {
+    email = config.get('emailSettings');
+} else {
+    email = false;
+}
+
 var baseEmailFrequency = 60000;
 var currentEmailFrequency = baseEmailFrequency;
 var emailContent = '';
@@ -96,19 +103,13 @@ function recordLogEntry(entry, overrideThreshold) {
 function sendLogEntryEmail(includedSpan) {
     var transporter, mailOptions, errorLog;
 
-    if (!emailIsOn) { return false; }
+    if (!email) { return false; }
 
-    transporter = nodemailer.createTransport({
-        service: 'Gmail',
-        auth: {
-            user: 'mbta.screentime@gmail.com',
-            pass: 'bjduek3galtuvpsjncg'
-        }
-    });
+    transporter = nodemailer.createTransport(email.transport);
     mailOptions = {
-        from: 'MBTA ScreenTime <mbta.screentime@gmail.com>', // sender address
-        to: 'dpb@alum.mit.edu, dbarker@mbta.com', // list of receivers
-        subject: 'Screentime log', // Subject line
+        from: email.from, // sender address
+        to: email.to, // list of receivers
+        subject: email.subject, // Subject line
         text: emailContent + '\r\nIncludes entries from last ' +
             includedSpan / 60000 + ' minute(s).\r\n' // plaintext body
     };
@@ -165,7 +166,7 @@ function logUptimes() {
 }
 
 function startLogging() {
-    var logUptimeJob = new cron.CronJob('34 56 7 * * *', function () {logUptimes(); }, null, true);
+    var logUptimeJob = new cron.CronJob('34 56 8 * * *', function () {logUptimes(); }, null, true);
     serverStartTime = new Date();
 }
 

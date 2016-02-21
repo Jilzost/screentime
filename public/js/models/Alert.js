@@ -45,6 +45,7 @@ define([
             var input = this.escape(propName),
                 tests = ['Route', 'Stop', 'AccessFeature'],
                 allRegexes,
+                appliedRegexes = [],
                 i,
                 j,
                 k,
@@ -67,6 +68,8 @@ define([
                 return memo;
             }, []);
 
+            // console.log(allRegexes);
+
             for (i = 0; i < allRegexes.length; i += 1) {
                 if (!success) {
                     for (j = 0; j < allRegexes[i].length; j += 1) {
@@ -76,9 +79,15 @@ define([
                                 k += 1) {
                             if (!routeSuccess &&
                                     allRegexes[i][j].regexes[k].test(input) &&
+                                    !_(appliedRegexes).contains(
+                                        String(allRegexes[i][j].regexes[k])
+                                    ) &&
                                     allRegexes[i][j].regexes[k].color !== '') {
                                 success = true;
                                 routeSuccess = true;
+                                appliedRegexes.push(
+                                    String(allRegexes[i][j].regexes[k])
+                                );
                                 input = input.replace(
                                     allRegexes[i][j].regexes[k],
                                     '<span style="color:'

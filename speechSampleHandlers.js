@@ -23,7 +23,7 @@ if (fs.existsSync('speechsamples/speechsamples.json')) {
         }
     });
 } else {
-    logger.log('server', 'server', 5,
+    logger.log('server', 'server', 4,
         'sampleHandlers',
         'starting new speechsamples/speechsamples.json');
 }
