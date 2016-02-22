@@ -142,7 +142,7 @@ td.minutes_away {
 
 .alert {
     font-size: 100%;
-    margin-bottom: 0.5em;
+    padding-bottom: 0.5em;
 }
 
 .featuredAlertDescription {

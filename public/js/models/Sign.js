@@ -38,7 +38,7 @@ define([
             heartbeat: true,
             signId: '',
             status: '', //FUTURE WORK Store sign's status and show as needed 
-            heartbeatRate: 60000,
+            heartbeatRate: 200000,
             lastUpdate: Date(0),
             lastHeartbeat: Date(0),
             agencies: {},
@@ -173,13 +173,9 @@ define([
 
                     _(configData.agencies).each(function (aName) {
                         agencyConfig = filterProperties(configData, aName, '_');
-                        // newAgency = new Agency(agencyConfig);
-                        // this.get('agencies')[aName] = newAgency;
 
                         newAgency = new agencyModelIndex[agencyConfig.sourceType](agencyConfig); //TESTCODE
-                        //console.log(this.get('agencies'));
-                        this.get('agencies')[aName] = newAgency;    //TESTCODE
-                        //console.log(this.get('agencies'));
+                        this.get('agencies')[aName] = newAgency;
 
                         _(['alerts', 'departures']).each(function (x) {
                             if (newAgency.get(x)) {
@@ -217,41 +213,24 @@ define([
                         }),
                         currentAlerts: new AlertsView({
                             el: '#currentAlerts',
-                            // collection: targetAgency.get('alerts'),
                             model: self.get('screenModels').serviceAlerts,
-                            AlertView: AlertViewSimple,
-                            // where: {
-                            //     isRelevant: true,
-                            //     isNow: true,
-                            //     isService: true
-                            // },
-                            titleText: 'Service Updates',//UNUSED
-                            titleFormat: 'CSS_CurrentAlertsTitle',//UNUSED
+                            AlertView: AlertViewSimple
+                            //titleText: 'Service Updates',//UNUSED
+                            //titleFormat: 'CSS_CurrentAlertsTitle',//UNUSED
                         }),
                         upcomingAlerts: new AlertsView({
                             el: '#upcomingAlerts',
-                            // collection: targetAgency.get('alerts'),
                             model: self.get('screenModels').upcomingAlerts,
-                            AlertView: AlertViewTimeframe,
-                            // where: {
-                            //     isRelevant: true,
-                            //     isSoon: true,
-                            //     isService: true
-                            // },
-                            titleText: 'Coming Up',
-                            titleFormat: 'CSS_UpcomingAlertsTitle',
+                            AlertView: AlertViewTimeframe
+                            // titleText: 'Coming Up',//UNUSED
+                            // titleFormat: 'CSS_UpcomingAlertsTitle',//UNUSED
                         }),
                         elevatorAlerts: new AlertsView({
                             el: '#elevatorAlerts',
-                            // collection: targetAgency.get('alerts'),
                             model: self.get('screenModels').elevatorAlerts,
-                            AlertView: AlertViewElevator,
-                            // where: {
-                            //     isElevator: true,
-                            //     isRelevant: true
-                            // },
-                            titleText: 'Elevators Unavailable',
-                            titleFormat: 'CSS_ElevatorAlertsTitle',
+                            AlertView: AlertViewElevator
+                            // titleText: 'Elevators Unavailable',//UNUSED
+                            // titleFormat: 'CSS_ElevatorAlertsTitle',//UNUSED
                         })
                     }});
 
@@ -271,120 +250,211 @@ define([
                         }
                     }
 
-                    self.runSlideshow(self.get('screenViews').departures,
+                    self.runSlideshow(
                         [
+                            self.get('screenViews').departures,
                             self.get('screenViews').currentAlerts,
                             self.get('screenViews').upcomingAlerts,
                             self.get('screenViews').elevatorAlerts
-                        ]);
+                        ]
+                    );
                     self.set({screenshotManager: new ScreenshotManager({
-                        syncScreenshotFreq: 30000
+                        syncScreenshotFreq: 91000
                     })});
-
-
                 })
                 .fail(function () {
                     setTimeout(function () {this.loadStart(); }, 10000);
                     // log('st.lib.loadStart', 'getsignconfig failed');
                 });
         },
-        runSlideshow: function (primary, allSecondaries, standalone) {
-            var totalHeights = 0,
-                comboHeight = 0,
+        runSlideshow: function (allSlides) {
+            var topBottom = function (allToRotate, i, screenHeight) {
+                    var topGroup, bottomGroup, topHeight, bottomHeight;
+                    topGroup = _(allToRotate).initial(i);
+                    bottomGroup = _(allToRotate).last(i);
+                    topHeight = _(topGroup).reduce(function (memo, view) {
+                        return view.lastHeight + memo;
+                    }, 0);
+                    bottomHeight = _(bottomGroup).reduce(function (memo, view) {
+                        return Math.max(view.lastHeight, memo);
+                    }, 0);
+                    if (topHeight + bottomHeight > screenHeight) {
+                        return false;
+                    }
+                    return {topGroup: topGroup, bottomGroup: bottomGroup};
+                },
+                slides = [],
                 screenHeight = window.innerHeight,
-                allViews = [],
-                showViews = [],
-                someSecondaries = [],
                 t = 0,
                 nextSlideInfo = {},
-                self = this;
-            // console.log(self); //TESTCODE
-            // console.log(primary);
-            // console.log(allSecondaries);
-            if (standalone) {
-                _(allViews).push(standalone);
-            }
-            allViews.push(primary);
-            allViews = allViews.concat(allSecondaries);
-            someSecondaries = _(allSecondaries).filter(
-                function (v) {return v.hasContent; }
+                self = this,
+                i = 0,
+                groups = false;
+
+
+            self.set({lastUpdated: Date.now()});
+
+            //1. Identify the list of slides to be shown. 
+            slides = _(allSlides).filter(
+                function (s) {return s.hasContent; }
             );
-            if (standalone && standalone.hasContent) {
-                self.showSlide([standalone], allViews);
-                t += 10000;
-            }
 
-            totalHeights = _(someSecondaries).reduce(function (memo, view) {
-                return view.lastHeight + memo;
-            }, primary.lastHeight);
-
-            if (totalHeights <= screenHeight || someSecondaries.length === 0) {
-                showViews.push(primary);
-                _(someSecondaries).each(function (s) {
-                    showViews.push(s);
-                });
+            //2. If there are 0 or 1 slides to show, just show them.
+            if (slides.length <= 1) {
                 setTimeout(function () {
-                    self.showSlide(showViews, allViews);
+                    self.showSlide(slides, allSlides);
                 }, t);
-                if (t === 0) {t = 1000; } else {t += 10000; }
+                t += 2000;
                 setTimeout(function () {
-                    self.runSlideshow(primary, allSecondaries, standalone);
+                    self.runSlideshow(allSlides);
                 }, t);
                 return;
             }
 
-            comboHeight = primary.lastHeight;
-            comboHeight += _(someSecondaries).reduce(function (memo, view) {
-                return Math.max(view.lastHeight, memo);
-            }, 0);
-            if (comboHeight < screenHeight) {
-                t = _(someSecondaries).reduce(function (memo, view) {
+            //3. determine if first slide(s) are to be shown 
+            //on a screen by themselves (solo). If so show them.
+            //At the end we have the list of remaining slides. 
+            slides = _(slides).rest().reduce(function (memo, next) {
+                var slide;
+                //If we are currently paging and the current slide must be
+                //paged, page the current slide
+                if (memo.mustPage &&
+                        memo.curr.lastHeight + next.lastHeight > screenHeight) {
+                    slide = memo.curr;
                     setTimeout(function () {
-                        self.showSlide([primary, view], allViews);
-                    }, memo);
-                    return memo + 10000;
-                }, t);
+                        self.showSlide(
+                            [slide],
+                            allSlides
+                        );
+                    }, t);
+                    t += 10000;
+                    memo.curr = next;
+                    memo.remaining = [next];
+                    return memo;
+                }
+                //if we are paging we can no longer page
+                memo.mustPage = false;
+                memo.remaining.push(next);
+                return memo;
+
+            }, {curr: _(slides).first(),
+                mustPage: true,
+                remaining: [_(slides).first()]
+                }).remaining;
+
+            //4. If there is 1 remaining slides to show, just show it.
+            if (slides.length === 1) {
                 setTimeout(function () {
-                    self.runSlideshow(primary, allSecondaries, standalone);
+                    self.showSlide(
+                        slides,
+                        allSlides
+                    );
+                }, t);
+                t += 10000;
+                if (t === 10000) { t = 2000; }
+                setTimeout(function () {
+                    self.runSlideshow(allSlides);
                 }, t);
                 return;
             }
 
-            nextSlideInfo = _(someSecondaries).reduce(function (memo, view) {
+            //5. Try to cycle remaining slides in groups, holding top
+            //constant while bottom rotates. 
+            //For n = 1 to the total number of slides - 1, 
+            //can we hold n - 1 slides on top, 
+            //and rotate through the remaining n slides on the bottom?
+            //(If n = 1 that means showing all slides at once.)
+            for (i = 1; i < slides.length; i += 1) {
+                if (!groups) {
+                    groups = topBottom(slides, i, screenHeight);
+                }
+            }
+            //If any top/bottom grouping was found
+            if (groups) {
+                _(groups.bottomGroup).each(function (bottomView) {
+                    var toShow = groups.topGroup.concat([bottomView]),
+                        bottomGroup = groups.bottomGroup;
+                    setTimeout(function () {
+                        self.showSlide(
+                            toShow,
+                            allSlides,
+                            bottomGroup
+                        );
+                    }, t);
+                    t += 10000;
+                });
+                if (t === 10000) { t = 2000; }
+                setTimeout(function () {
+                    self.runSlideshow(allSlides);
+                }, t);
+                return;
+            }
+
+            //6. Build slides, fitting as much as you can on each (in order)
+            nextSlideInfo = _(slides).rest().reduce(function (memo, view) {
+                var toShow;
                 if (memo.height + view.lastHeight <= screenHeight) {
                     memo.views.push(view);
                     memo.height += view.lastHeight;
                     return memo;
                 }
+                toShow = memo.views;
                 setTimeout(function () {
-                    self.showSlide(memo.views, allViews);
+                    self.showSlide(toShow, allSlides);
                 }, memo.t);
                 return {
                     views: [view],
                     height: view.lastHeight,
                     t: memo.t + 10000
                 };
-            }, {views: [primary], height: primary.lastHeight, t: t});
+            }, {views: [_(slides).first()],
+                height: _(slides).first().lastHeight, t: t});
 
             t = nextSlideInfo.t;
             if (nextSlideInfo.views.length > 0) {
                 setTimeout(function () {
-                    self.showSlide(nextSlideInfo.views, allViews);
+                    self.showSlide(nextSlideInfo.views, allSlides);
                 }, t);
                 t += 10000;
             }
             setTimeout(function () {
-                self.runSlideshow(primary, allSecondaries, standalone);
+                self.runSlideshow(allSlides);
             }, t);
-            //FUTURE WORK make timing configurable
-            self.set({lastUpdated: Date.now()});
         },
-        showSlide: function (showViews, allViews) {
-            var hasContent = false;
+        showSlide: function (showViews, allViews, allBottomViews) {
+            var hasContent = false,
+                totalHeights = 0,
+                screenHeight = window.innerHeight,
+                gapHeight = 0,
+                bottomHeight = false;
+
+            if (allBottomViews) {
+                bottomHeight =
+                    _(allBottomViews).reduce(function (memo, view) {
+                        return Math.max(memo, view.lastHeight);
+                    }, 0);
+            }
+            totalHeights = _(showViews).reduce(function (memo, view) {
+                view.$el.css({'padding-bottom': 0});
+                if (bottomHeight && _(allBottomViews).contains(view)) {
+                    return bottomHeight + memo;
+                }
+                if (view.$el.html() === '') {return memo; }
+                return view.lastHeight + memo;
+            }, 0);
+
+            if (totalHeights * 1.01 < screenHeight) {
+                gapHeight = Math.floor(
+                    (screenHeight - totalHeights) /
+                        Math.max(showViews.length, 1)
+                );
+            }
+
             _(allViews).each(function (v) {
                 if (_(showViews).contains(v)) {
                     v.$el.show();
                     v.render();
+                    v.$el.css({'padding-bottom': gapHeight});
                     if (v.$el.html() !== '') {
                         hasContent = true;
                     }

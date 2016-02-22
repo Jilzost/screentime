@@ -16,9 +16,7 @@ define([
         template: _.template(alertsTemplate),
         initialize: function (options) {
             this.options = options;
-            // console.log(this);
             this.listenTo(this.model, 'reset sync', this.render);
-            // this.listenTo(this.collection, 'reset sync', this.render);
             if (this.model.get('collection') !== undefined) {
                 this.listenTo(
                     this.model.get('collection'),
@@ -41,8 +39,6 @@ define([
                 this.$el.html('');
                 this.hasContent = false;
                 this.lastHeight = 0;
-//NB remains to be seen if 0 is the right value
-//had been "offsetHeight" in earlier version but that's not available
                 return this;
             }
             if (this.model.get('where')) {
@@ -66,19 +62,10 @@ define([
                 var item = new this.options.AlertView(
                     {model: x}
                 );
-                console.log(x);
                 this.$('.alerts-list').append(item.render().$el);
                 this.speechScript.push(x.get('description'));
             }, this);
-
-//FUTURE WORK the +23 is a hack to account for the margin at the bottom of the 
-//last alert; should be fixed
-////Had been "offsetHeight" in an earlier version but 
-///that didn't seem to translate
-            this.lastHeight = this.$el.height() + 23;
-//NB remains to be seen if 23 is the right value
-//had been "offsetHeight" in earlier version but that's not available
-            while (this.fontSize > 1 && this.lastHeight > window.innerHeight) {
+            this.lastHeight = this.$el.height();            while (this.fontSize > 1 && this.lastHeight > window.innerHeight) {
                 this.fontSize -= 1;
                 this.$('.alerts-list').css('fontSize', this.fontSize + '%');
                 this.lastHeight = Math.max(this.$el.height(), 1);
