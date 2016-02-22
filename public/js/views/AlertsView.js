@@ -42,9 +42,15 @@ define([
                 return this;
             }
             if (this.model.get('where')) {
-                alerts = new Alerts(this.model.get('collection').where(this.model.get('where')));
+                alerts = new Alerts(
+                    this.model.get('collection').where(this.model.get('where'))
+                );
             } else {
                 alerts = this.model.get('collection');
+            }
+            if (this.model.get('sortOrder')) {
+                alerts.order = this.model.get('sortOrder');
+                alerts.sort();
             }
             if (alerts.length === 0) {
                 this.$el.html('');

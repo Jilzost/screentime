@@ -131,6 +131,7 @@ define([
                     isNow: true,
                     isService: true
                 },
+                sortOrder: 'byRoute',
                 collection: this.get('screenData').get('alerts')
             });
             models.upcomingAlerts = new ScreenModel({
@@ -141,6 +142,7 @@ define([
                     isSoon: true,
                     isService: true
                 },
+                sortOrder: 'byTimeAndRoute',
                 collection: this.get('screenData').get('alerts')
             });
 
@@ -151,6 +153,7 @@ define([
                     isElevator: true,
                     isRelevant: true
                 },
+                sortOrder: 'byElevatorStation',
                 collection: this.get('screenData').get('alerts')
             });
 
