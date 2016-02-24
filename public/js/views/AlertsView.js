@@ -32,6 +32,7 @@ define([
         },
         render: function () {
             var html, alerts;
+
             this.speechScript = [];
             if (this.model === undefined ||
                     this.model.get('collection') === undefined ||

@@ -261,9 +261,7 @@ define([
                             self.get('screenViews').elevatorAlerts
                         ]
                     );
-                    self.set({screenshotManager: new ScreenshotManager({
-                        syncScreenshotFreq: 91000
-                    })});
+                    self.set({screenshotManager: new ScreenshotManager()});
                 })
                 .fail(function () {
                     setTimeout(function () {this.loadStart(); }, 10000);

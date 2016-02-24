@@ -15,7 +15,7 @@ define([
 
         defaults: {
             allScreenshots: new Screenshots(),
-            takeScreenshotFreq: 10000,
+            takeScreenshotFreq: 70000,
             syncScreenshotFreq: 1200000,
             maxScreenshots: 1000
         },

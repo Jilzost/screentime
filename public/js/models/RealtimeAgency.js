@@ -111,7 +111,6 @@ define([
                     agency.set(config.sourceName, source);
                     return config;
                 };
-
             agency.buildRoutes = _.bind(agency.buildRoutes, agency);
             agency.buildDepartures = _.bind(agency.buildDepartures, agency);
             agency.buildAlerts = _.bind(agency.buildAlerts, agency);
@@ -221,7 +220,6 @@ define([
                 });
             });
         },
-        //TODO: debug. Why is buildRoutes treating the routes list as "this?" WHY?
         buildRoutes: function (thisAgency) {
             var newRoutes = [],
                 i = 0,
@@ -434,7 +432,7 @@ define([
                             )) {
                             affected = thisAgency.get('routes').findWhere(
                                 {txid: el.route_id}
-                            );
+                            ).clone();
                         } else {
                             affected = new Route({
                                 txid: el.route_id,
@@ -487,7 +485,7 @@ define([
                             )) {
                             affected = thisAgency.get('routes').findWhere(
                                 {txid: 'mode_' + el.mode_name}
-                            );
+                            ).clone();
                         } else {
                             affected = new Route({
                                 txid: 'mode_' + el.mode_name,
@@ -546,11 +544,11 @@ define([
                                 txid: dep.get('route_id')
                             }
                         )) {
-                        route = new Route(thisAgency.get('routes').findWhere(
+                        route = thisAgency.get('routes').findWhere(
                             {
                                 txid: dep.get('route_id')
                             }
-                        ).toJSON());
+                        ).clone();
                     } else {
                         route = new Route(
                             {
