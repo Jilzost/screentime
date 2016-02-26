@@ -18,7 +18,7 @@ define([
         try {
             logger.entriesCounted = logger.entriesCounted || 0;
             //Are we sure we haven't sent too many entries recently?
-            if (logger.entriesCounted < 40) {
+            if (logger.entriesCounted < 20) {
                 logger.entriesCounted += 1;
                 entry = {
                     logTime: new Date(),
