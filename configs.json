@@ -6,7 +6,9 @@
                 "MBTA_name": "MBTA",
                 "MBTA_sourceType": "MBTA-realtime",
                 "MBTA_baseURL": "http://realtime.mbta.com/developer/api/v2/",
-                "MBTA_api_key": "17xKel6QtUOSVDtGlCgjlg",
+                "MBTA_api_key": "Sr7RFBNx5EqgPds6R8eZmA",
+                "MBTA_api_key_test": "Sr7RFBNx5EqgPds6R8eZmA",
+                "MBTA_api_key_prod": "tY0IKrIxSkeFLI3BckvuVQ",
                 "speaker_voiceTools": "mespeak",
                 "speaker_triggerTypes": "key socket"
             }
