@@ -208,17 +208,11 @@ define([
                         function () {agency.buildDepartures(agency); });
             });
 
-            _(allSources).each(function (name) {
+            _(allSources).reduce(function (t, name) {
                 var feed = agency.get(name);
-                feed.fetch({
-                    success: function () {
-                        inputLoop({feed: feed});
-                    },
-                    error: function () {
-                        inputLoop({feed: feed, failed: true});
-                    }
-                });
-            });
+                inputLoop({feed: feed, waittime: t});
+                return t + 222;
+            }, 0);
         },
         buildRoutes: function (thisAgency) {
             var newRoutes = [],

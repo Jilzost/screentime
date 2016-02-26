@@ -290,8 +290,9 @@ define([
                 nextSlideInfo = {},
                 self = this,
                 i = 0,
-                groups = false;
-
+                groups = false,
+                wait = 10000,
+                shortWait = 2500;
 
             self.set({lastUpdated: Date.now()});
 
@@ -328,7 +329,7 @@ define([
                             allSlides
                         );
                     }, t);
-                    t += 10000;
+                    t += wait;
                     memo.curr = next;
                     memo.remaining = [next];
                     return memo;
@@ -351,8 +352,8 @@ define([
                         allSlides
                     );
                 }, t);
-                t += 10000;
-                if (t === 10000) { t = 2000; }
+                t += wait;
+                if (t === wait) { t = shortWait; }
                 setTimeout(function () {
                     self.runSlideshow(allSlides);
                 }, t);
@@ -382,9 +383,9 @@ define([
                             bottomGroup
                         );
                     }, t);
-                    t += 10000;
+                    t += wait;
                 });
-                if (t === 10000) { t = 2000; }
+                if (t === wait) { t = 2000; }
                 setTimeout(function () {
                     self.runSlideshow(allSlides);
                 }, t);
@@ -406,7 +407,7 @@ define([
                 return {
                     views: [view],
                     height: view.lastHeight,
-                    t: memo.t + 10000
+                    t: memo.t + wait
                 };
             }, {views: [_(slides).first()],
                 height: _(slides).first().lastHeight, t: t});
@@ -416,7 +417,7 @@ define([
                 setTimeout(function () {
                     self.showSlide(nextSlideInfo.views, allSlides);
                 }, t);
-                t += 10000;
+                t += wait;
             }
             setTimeout(function () {
                 self.runSlideshow(allSlides);

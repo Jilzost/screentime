@@ -30,7 +30,6 @@ define([
                 nextDeps.add(dep);
             }
         });
-
         return (nextDeps.toArray());
     };
 

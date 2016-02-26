@@ -22,7 +22,11 @@ define([
                 waittime = Math.min(waittime, 60000);
             }
         } else {
-            waittime = input.waittime || input.feed.maxAge || 60000;
+            if (input.waittime !== undefined) {
+                waittime = input.waittime;
+            } else {
+                waittime = input.feed.maxAge || 60000;
+            }
         }
         setTimeout(function () {input.feed.fetch(
             {
