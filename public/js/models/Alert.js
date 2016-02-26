@@ -51,8 +51,9 @@ define([
                 k,
                 routeSuccess = false,
                 success = false,
-
                 affecteds = this.get('affecteds');
+
+            input = input.replace(/http:\/\//, '');
 
             allRegexes = _(tests).reduce(function (memo, test) {
                 memo.push(affecteds.reduce(function (memo2, affected) {
