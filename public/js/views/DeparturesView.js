@@ -72,9 +72,9 @@ define([
 
             deps = nextDepartures(this.model.get('collection'));
             deps = _(deps).filter(function (x) {
-                return (Date.now() - 90000 < x.get('time') &&
-                        x.get('time') < Date.now() + 60000 * 65);
+                return (x.isSoon());
             });
+
             deps = new Departures(deps);
             deps.order = 'presentationOrder';
             deps.sort();
