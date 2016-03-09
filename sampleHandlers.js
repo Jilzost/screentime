@@ -135,7 +135,6 @@ function newSampleStat(pathname, id, response, postData) {
     var sampleStat;
     try {
         sampleStat = JSON.parse(postData);
-
         if (samplestats.hasOwnProperty(sampleStat.serverId)) {
             samplestats[sampleStat.serverId].count += sampleStat.shownSinceSync;
             sampleStat.lastShown = new Date(sampleStat.lastShown);
@@ -150,7 +149,7 @@ function newSampleStat(pathname, id, response, postData) {
             response.writeHead(200, {"Content-Type": "text/plain"});
             response.write(JSON.stringify(-1));
             response.end();
-            logger.log('server', sampleStat.sign, 3,
+            logger.log('server', sampleStat.signId, 3,
                 'sampleHandlers.newSampleStat',
                 'Unrecognized serverId ' + sampleStat.serverId, new Date(),
                 new Date());
