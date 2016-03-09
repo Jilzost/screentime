@@ -65,7 +65,9 @@ define([
         regexes: function () {
             var r = [],
                 names = ['longName', 'name', 'trunkName', 'branchName',
-                    'shortName'];
+                    'shortName'],
+                slashLine = /([\W\w]*)\s?\/\s?([\W\w]*)(\sLine)$/,
+                result;
 
             _(names).each(function (i) {
                 if (this.get(i) !== undefined && this.escape(i) !== '') {
@@ -74,6 +76,17 @@ define([
                     );
                 }
             }, this);
+
+            if (slashLine.test(this.escape('longName'))) {
+                result = slashLine.exec(this.escape('longName'));
+                _(r).push(
+                    new RegExp('\\b(' + result[1] + result[3] + ')\\b', 'gi')
+                );
+                _(r).push(
+                    new RegExp('\\b(' + result[2] + result[3] + ')\\b', 'gi')
+                );
+            }
+
             return _(r).uniq();
         }
     });
