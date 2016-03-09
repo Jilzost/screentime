@@ -45,7 +45,9 @@ define([
             screenViews: {},
             screenModels: {},
             screenData: {},
-            screenshots: {}
+            screenshots: {},
+            slideDuration: 10000,
+            shortSlideDuration: 2000
         },
         initialize: function () {
             var models = {};
@@ -67,13 +69,6 @@ define([
             this.loadStart = _.bind(this.loadStart, this);
             this.runSlideshow = _.bind(this.runSlideshow, this);
             this.showSlide = _.bind(this.showSlide, this);
-
-            if (this.get('heartbeat')) {
-                //FUTURE WORK is using function (self) best practice?
-                setInterval(function (self) {
-                    return self.sendHeartbeat;
-                }(this), this.get('heartbeatRate'));
-            }
 
             this.set({screenData: new ScreenData()});
 
@@ -168,16 +163,15 @@ define([
             $.get('getsignconfig?id=' + this.get('signId'))
                 .done(function (data) {
                     var configData,
-                        agencyConfig,
-                        signConfig,
-                        speakerConfig,
+                        config,
                         x;
                     configData = JSON.parse(data);
 
+                    //Configure agencies
                     _(configData.agencies).each(function (aName) {
-                        agencyConfig = filterProperties(configData, aName, '_');
+                        config = filterProperties(configData, aName, '_');
 
-                        newAgency = new agencyModelIndex[agencyConfig.sourceType](agencyConfig); //TESTCODE
+                        newAgency = new agencyModelIndex[config.sourceType](config);
                         this.get('agencies')[aName] = newAgency;
 
                         _(['alerts', 'departures']).each(function (x) {
@@ -218,40 +212,54 @@ define([
                             el: '#currentAlerts',
                             model: self.get('screenModels').serviceAlerts,
                             AlertView: AlertViewSimple
-                            //titleText: 'Service Updates',//UNUSED
-                            //titleFormat: 'CSS_CurrentAlertsTitle',//UNUSED
                         }),
                         upcomingAlerts: new AlertsView({
                             el: '#upcomingAlerts',
                             model: self.get('screenModels').upcomingAlerts,
                             AlertView: AlertViewTimeframe
-                            // titleText: 'Coming Up',//UNUSED
-                            // titleFormat: 'CSS_UpcomingAlertsTitle',//UNUSED
                         }),
                         elevatorAlerts: new AlertsView({
                             el: '#elevatorAlerts',
                             model: self.get('screenModels').elevatorAlerts,
                             AlertView: AlertViewElevator
-                            // titleText: 'Elevators Unavailable',//UNUSED
-                            // titleFormat: 'CSS_ElevatorAlertsTitle',//UNUSED
                         })
                     }});
 
-
-                    speakerConfig = filterProperties(
+                    //configure speaker
+                    config = filterProperties(
                         configData,
                         'speaker',
                         '_'
                     );
-                    speakerConfig.sign = self;
-                    self.set({speaker: new Speaker(speakerConfig)});
+                    config.sign = self;
+                    self.set({speaker: new Speaker(config)});
 
-                    signConfig = filterProperties(configData, 'sign', '_');
-                    for (x in signConfig) {
-                        if (signConfig.hasOwnProperty(x)) {
-                            self.set(x, signConfig[x]);
+                    //configure sign
+                    config = filterProperties(configData, 'sign', '_');
+                    for (x in config) {
+                        if (config.hasOwnProperty(x)) {
+                            self.set(x, config[x]);
                         }
                     }
+
+                    if (self.get('heartbeat')) {
+                        //FUTURE WORK is using function (self) best practice?
+                        setInterval(function (self) {
+                            return self.sendHeartbeat;
+                        }(self), self.get('heartbeatRate'));
+                    }
+
+                    //configure screenshotManager
+                    config = filterProperties(
+                        configData,
+                        'screenshots',
+                        '_'
+                    );
+                    config.signId = self.get('signId');
+                    self.set({
+                        screenshotManager: new ScreenshotManager(config)
+                    });
+
 
                     self.runSlideshow(
                         [
@@ -261,7 +269,6 @@ define([
                             self.get('screenViews').elevatorAlerts
                         ]
                     );
-                    self.set({screenshotManager: new ScreenshotManager()});
                 })
                 .fail(function () {
                     setTimeout(function () {this.loadStart(); }, 10000);
@@ -291,8 +298,8 @@ define([
                 self = this,
                 i = 0,
                 groups = false,
-                wait = 10000,
-                shortWait = 2500;
+                wait = self.get('slideDuration'),
+                shortWait = self.get('shortSlideDuration');
 
             self.set({lastUpdated: Date.now()});
 
@@ -385,7 +392,7 @@ define([
                     }, t);
                     t += wait;
                 });
-                if (t === wait) { t = 2000; }
+                if (t === wait) { t = shortWait; }
                 setTimeout(function () {
                     self.runSlideshow(allSlides);
                 }, t);

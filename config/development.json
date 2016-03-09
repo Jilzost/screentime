@@ -5,7 +5,9 @@
     "signConfigs": {
         "bases": {
             "mbta_lfd_1": {
-                "MBTA_api_key": "Sr7RFBNx5EqgPds6R8eZmA"
+                "MBTA_api_key": "Sr7RFBNx5EqgPds6R8eZmA",
+                "sign_heartbeat": false,
+                "screenshots_takeScreenshots": false
             }
         }
     }

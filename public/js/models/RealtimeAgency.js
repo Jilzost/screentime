@@ -85,8 +85,11 @@ define([
             sourceType: 'MBTA-realtime',
             stops: [],
             routes: undefined,
+            routesMaxAge: 86400000,
             departures: undefined,
+            departuresMaxAge: 30000,
             alerts: undefined,
+            alertsMaxAge: 60000,
             outputLocalAlerts: true,
             outputSubwayAlerts: true,
             outputAllAlerts: false,
@@ -126,7 +129,7 @@ define([
                 sourceName: 'src_routes',
                 command: 'routes',
                 nests: ['mode', 'route'],
-                maxAge: 86400000,
+                maxAge: agency.get('routesMaxAge'),
                 params: defaultParams
             }, agency);
             allSources.push('src_routes');
@@ -140,7 +143,7 @@ define([
                         sourceName: sourceName,
                         command: 'routesbystop',
                         nests: ['mode', 'route'],
-                        maxAge: 86400000,
+                        maxAge: agency.get('routesMaxAge'),
                         params: _({stop: stop.stop_id}).defaults(defaultParams)
                     }, agency);
                     allSources.push(sourceName);
@@ -158,7 +161,7 @@ define([
                     sourceName: 'src_alerts',
                     command: 'alerts',
                     nests: ['alerts'],
-                    maxAge: 60000,
+                    maxAge: agency.get('alertsMaxAge'),
                     params: _({include_access_alerts: 'true'})
                         .defaults(defaultParams)
                 }, agency);
@@ -175,7 +178,7 @@ define([
                         sourceName: sourceName,
                         command: 'predictionsbystop',
                         nests: ['mode', 'route', 'direction', 'trip'],
-                        maxAge: 30000,
+                        maxAge: agency.get('departuresMaxAge'),
                         params: _({stop: stop.stop_id,
                             include_service_alerts: 'false'
                             }).defaults(defaultParams)

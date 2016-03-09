@@ -15,14 +15,18 @@ define([
 
         defaults: {
             allScreenshots: new Screenshots(),
+            takeScreenshots: true,
             takeScreenshotFreq: 70000,
             syncScreenshotFreq: 1200000,
-            maxScreenshots: 1000
+            maxScreenshots: 1000,
+            signId: 'sign_id_not_set'
         },
         initialize: function () {
             this.takeScreenshot = _.bind(this.takeScreenshot, this);
             this.syncScreenshot = _.bind(this.syncScreenshot, this);
             this.cleanupScreenshots = _.bind(this.cleanupScreenshots, this);
+
+            if (!this.get('takeScreenshots')) {return; }
 
             setInterval(function (self) {
                 return self.takeScreenshot;
@@ -48,6 +52,7 @@ define([
                 oldShot.updateCount();
                 return;
             }
+            newShot.set({signId: this.get('signId')});
             this.get('allScreenshots').push(newShot);
         },
         syncScreenshot: function () {
@@ -67,13 +72,13 @@ define([
         cleanupScreenshots: function () {
             var cutoff = this.get('allScreenshots').min(function (model) {
                 return model.get('lastShown');
-            });
+            }).get('lastShown');
             cutoff = (cutoff + Date.now()) / 2;
-            this.set({
-                allScreenshots: this.get('allScreenshots').filter(function (x) {
-                    return x.get('lastShown') < cutoff && !x.get('upToDate');
+            this.get('allScreenshots').remove(
+                this.get('allScreenshots').filter(function (x) {
+                    return x.get('lastShown') > cutoff && x.get('upToDate');
                 })
-            });
+            );
         }
     });
 

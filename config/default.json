@@ -10,9 +10,12 @@
                 "MBTA_name": "MBTA",
                 "MBTA_sourceType": "MBTA-realtime",
                 "MBTA_baseURL": "http://realtime.mbta.com/developer/api/v2/",
-                "MBTA_api_key": "tY0IKrIxSkeFLI3BckvuVQ",
+                "MBTA_api_key": "Sr7RFBNx5EqgPds6R8eZmA",
                 "speaker_voiceTools": "mespeak",
-                "speaker_triggerTypes": "key socket"
+                "speaker_triggerTypes": "key socket",
+                "screenshots_takeScreenshotFreq": 70000,
+                "screenshots_syncScreenshotFreq": 1200000,
+                "screenshots_maxScreenshots": 500
             }
         },
         "ashmont": {

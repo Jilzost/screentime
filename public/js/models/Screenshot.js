@@ -20,7 +20,8 @@ define([
             firstShown: Date(0),
             lastShown: Date(0),
             totalShown: 1,
-            shownSinceSync: 1
+            shownSinceSync: 1,
+            signId: 'sign_id_not_set'
         },
         initialize: function () {
             var genericize, postProcessers;
@@ -92,16 +93,14 @@ define([
             });
         },
         sync: function () {
+            var self = this;
             if (this.get('serverId') === -1) {
                 $.ajax({
                     url: 'postsample',
                     method: 'POST',
                     dataType: 'json',
                     data: JSON.stringify({
-                        sign: window
-                            .location
-                            .search
-                            .replace(/[\?\&]id=([^\?\&]*)/i, '$1'),
+                        signId: this.get('signId'),
                         serverId: this.get('serverId'),
                         actualText: this.get('actualText'),
                         firstShown: this.get('firstShown'),
@@ -128,15 +127,14 @@ define([
                 method: 'POST',
                 dataType: 'json',
                 data: JSON.stringify({
-                    sign: 'NOT IMPLEMENTED',//st.sign.get('signId'),
+                    signId: this.get('signId'),
                     serverId: this.get('serverId'),
                     shownSinceSync: this.get('shownSinceSync'),
                     lastShown: this.get('lastShown')
                 }),
                 success: function (resp) {
                     if (!isNaN(resp)) {
-                        this.set({serverId: resp});
-                        //FUTURE WORK this produces an error.
+                        self.set({serverId: resp});
                     }
                 },
                 error: function (req, status, err) {

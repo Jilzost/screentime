@@ -1,0 +1,56 @@
+{
+	"port": "int; port number of web service",
+	"emailIsOn": "boolean; turns notification emails on or off",
+	"emailThreshold": "int; level of event that triggers an email (1-5 where higher numbers = more messages)",
+	"logThreshold": "int; level of event that triggers a log write (1-5 where higher numbers = more messages)",
+    "emailSettings": {
+        "from": "example@example.comm",
+        "to": "example@example.comm",
+        "subject": "See nodemailer for documentation on emailSettings",
+        "transport": {
+            "service": "Gmail",
+            "auth": {
+                "user": "usernamehere@gmail.com",
+                "pass": "passwordhere"
+            }
+        }
+    },
+    "signConfigs_explained": "Configuraton for each sign.",
+    "signConfigs": {
+        "bases_explained": "'Bases' are sets of default values used by many signs.",
+        "bases": {
+            "BASENAME": {
+                "agencies": "Array of strings. Each string represents a transit agency and replaces AGENCYSTRING below.",
+                "AGENCYSTRING_name": "string. Human-readable agency name.",
+                "AGENCYSTRING_sourceType": "string. Identifies agency API; currently 'MBTA-realtime' supported.",
+                "AGENCYSTRING_baseURL": "string. Used by agencies with sourceType 'MBTA-realtime.' Example: http://realtime.mbta.com/developer/api/v2/",
+                "AGENCYSTRING_api_key": "string. Used by agencies with sourceType 'MBTA-realtime.' Example: Sr7RFBNx5EqgPds6R8eZmA",
+                "MBTA_alertsMaxAge": "int. Max age of alerts data before it is refreshed, in ms. Used by sourceType 'MBTA-realtime'",
+                "MBTA_routesMaxAge": "int. Max age of routes data before it is refreshed, in ms. Used by sourceType 'MBTA-realtime'",
+                "MBTA_departuresMaxAge": "int. Max age of departures data before it is refreshed, in ms. Used by sourceType 'MBTA-realtime'",
+                "speaker_voiceTools": "String. Identifies text-to-speech engine. Supported: 'mespeak', 'webspeech'",
+                "speaker_triggerTypes": "String. Space-separated list identifying possible triggers for speech. Supported: 'key' 'socket'",
+                "speaker_triggerKey": "Int. char value of key that triggers speech, if triggerTypes included 'key'.",
+                "screenshots_takeScreenshots": "boolean. controls whether screenshots are taken.",
+                "screenshots_takeScreenshotFreq": "Int. Frequency screenshots are taken, in ms.",
+                "screenshots_syncScreenshotFreq": "Int. Frequency screenshots are synced to server, in ms.",
+                "screenshots_maxScreenshots": "Int. Max number of screenshots held in memory at once.",
+                "sign_heartbeat": "boolean. Whether sign sends a heartbeat.",
+                "sign_heartbeatRate": "int. Heartbeat frequency in ms.",
+                "sign_slideDuration": "Int. Time a slide should be shown, in ms.",
+                "sign_shortSlideDuration": "Int. Time a slide should be shown if it's the only slide, in ms."
+            }
+        },
+        "SIGNNAME": {
+            "base": "BASENAME",
+            "values": {
+                "AGENCYSTRING_stops": [{"stop_id": "string. GTFS stop_id value", "locationName": "String. human-readable stop name. This list used by MBTA-realtime"}],
+                "AGENCYSTRING_destinationFilter": "String used to create regular expression. Trips with destinations matching it are not shown. Used by MBTA-realtime",
+                "AGENCYSTRING_outputAllAlerts": "boolean. Whether to output all alerts (instead of just ones affecting subway & local service) Used by MBTA-realtime",
+                "AGENCYSTRING_outputDepartures": "boolean. Whether to output departures. Used by MBTA-realtime",
+                "AGENCYSTRING_outputLocalAlerts": "boolean. Whether to output local alerts. Used by MBTA-realtime.",
+                "AGENCYSTRING_outputSubwayAlerts": "boolean. Whether to output local alerts. Used by MBTA-realtime. If both local and subway alerts are off, elevators are turned off too. Used by MBTA-realtime."
+            }
+        }
+    }
+}
