@@ -13,16 +13,18 @@ define([
     'models/AccessFeature',
     'models/Stop',
     'models/Route',
+    'models/Train',
     'collections/Alerts',
     'collections/Routes',
+    'collections/Trains',
     'collections/Departures',
     'collections/RealtimeSource',
     'helper/input/inputLoop',
     'helper/mbta/pickRouteColor',//Future work: tie to agency generically
     'helper/process/combinedDelayAlert'
 ], function ($, _, Backbone, logger, Alert, AccessFeature, Stop, Route,
-    Alerts, Routes, Departures, RealtimeSource, inputLoop, pickRouteColor,
-    combinedDelayAlert) {
+    Train, Alerts, Routes, Trains, Departures, RealtimeSource, inputLoop,
+    pickRouteColor, combinedDelayAlert) {
 
     var deriveDestination = function (departure) {
 
@@ -287,8 +289,10 @@ define([
                 isSubway,
                 isSystemwide,
                 affected,
+                route,
                 getElevatorName = /^[^a-z]+-\s?/,
                 getElevatorStation = /\s?-[\W\w]+$/,
+                getTrainName = /^([^\s]{1,5})\s/,
                 mixedCase = function (str) {
                     return str.charAt(0).toUpperCase() +
                         str.substring(1).toLowerCase();
@@ -417,6 +421,7 @@ define([
 
                 isSubway = isLocal = isSystemwide = false;
                 _(source.get('affected_services').services).each(function (el) {
+                    route = false;
                     if (el.hasOwnProperty('route_id') &&
                             !newAlert.get('affecteds').findWhere(
                                 {txid: el.route_id}
@@ -424,11 +429,11 @@ define([
                         if (thisAgency.get('routes').findWhere(
                                 {txid: el.route_id}
                             )) {
-                            affected = thisAgency.get('routes').findWhere(
+                            route = thisAgency.get('routes').findWhere(
                                 {txid: el.route_id}
                             ).clone();
                         } else {
-                            affected = new Route({
+                            route = new Route({
                                 txid: el.route_id,
                                 name:   el.route_name,
                                 mode:   el.mode_name,
@@ -441,17 +446,17 @@ define([
                             });
                         }
                         if (el.hasOwnProperty('direction_name')) {
-                            affected.set(
+                            route.set(
                                 {direction: el.direction_name}
                             );
                         }
                         if (!newAlert.get('affecteds')
-                                .findWhere({txid: affected.get('txid')})) {
-                            newAlert.get('affecteds').add(affected);
+                                .findWhere({txid: route.get('txid')})) {
+                            newAlert.get('affecteds').add(route);
                             isLocal = isLocal ||
-                                affected.get('isLocal');
+                                route.get('isLocal');
                             isSubway = isSubway ||
-                                (affected.get('mode') === 'Subway');
+                                (route.get('mode') === 'Subway');
                         }
                     }
 
@@ -471,6 +476,32 @@ define([
                             newAlert.get('affecteds').add(affected);
                         }
                     }
+
+                    if (el.hasOwnProperty('trip_id') &&
+                            el.hasOwnProperty('trip_name') &&
+                            el.mode_name === 'Commuter Rail' &&
+                            getTrainName.test(el.trip_name)) {
+                        affected = new Train({
+                            txid: el.trip_id,
+                            shortName: getTrainName.exec(el.trip_name)[1],
+                            name: getTrainName.exec(el.trip_name)[1],
+                            longName: el.trip_name
+                        });
+                        if (route) {affected.set({route: route}); }
+                        if (!isNaN(affected.get('shortName'))) {
+                            affected.set({
+                                sortOrder: parseInt(
+                                    affected.get('shortName'),
+                                    10
+                                )
+                            });
+                        }
+                        if (!newAlert.get('affecteds')
+                                .findWhere({txid: affected.get('txid')})) {
+                            newAlert.get('affecteds').add(affected);
+                        }
+                    }
+
 
                     if (!el.hasOwnProperty('route_id')
                             && !el.hasOwnProperty('stop_id')) {
@@ -504,7 +535,7 @@ define([
                 newAlert.set({isRelevant: newAlert.get('isRelevant')
                     || isLocal || isSubway
                     || (thisAgency.get('outputAllAlerts')
-                        && newAlert.get('isLocal'))});
+                        && newAlert.get('isService'))});
 
                 if (newAlert.get('disruptionType') === 'Delay' &&
                         ((isLocal && !isSubway)
@@ -515,7 +546,6 @@ define([
                 } else if (newAlert.get('isRelevant')) {
                     newAlerts.push(newAlert);
                 }
-
             }, this);
 
             if (newDelayAlerts.length > 0) {
