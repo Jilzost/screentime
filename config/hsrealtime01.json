@@ -1,0 +1,13 @@
+{
+	"emailSettings": {
+		"from": "MBTA ScreenTime <screentime@mbta.com>",
+		"to": "dbarker@mbta.com, developer@mbta.com",
+		"subject": "Screentime events",
+		"transport": {
+			"host": "smtp.mbta.com",
+			"tls": {
+				"rejectUnauthorized": false
+			}
+		}
+	}
+}

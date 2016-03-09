@@ -1,5 +1,12 @@
 {
 	"emailIsOn": true,
 	"emailThreshold": 2,
-	"logThreshold": 4
+	"logThreshold": 4,
+    "signConfigs": {
+        "bases": {
+            "mbta_lfd_1": {
+                "MBTA_api_key": "tY0IKrIxSkeFLI3BckvuVQ"
+            }
+        }
+    }
 }

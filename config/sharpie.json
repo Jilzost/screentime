@@ -1,0 +1,14 @@
+{
+	"emailSettings": {
+		"from": "MBTA G ScreenTime <mbta.screentime@gmail.com>",
+		"to": "dpb@alum.mit.edu",
+		"subject": "Screentime events - test",
+		"transport": {
+	        "service": "Gmail",
+	        "auth": {
+	            "user": "mbta.screentime@gmail.com",
+	            "pass": "Xv84Z2DdqRGbm59g"
+	        }
+		}
+	}
+}
