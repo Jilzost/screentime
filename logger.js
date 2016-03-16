@@ -49,8 +49,10 @@ Entry.prototype = {
     },
     tabrow: function () {
         return this.sign + '\t' +
-            this.sourceTime.getHours() + ':' +
-            this.sourceTime.getMinutes() + ':' +
+            this.sourceTime.getHours() +
+            (this.sourceTime.getMinutes() < 10 ? ':0' : ':') +
+            this.sourceTime.getMinutes() +
+            (this.sourceTime.getSeconds() < 10 ? ':0' : ':') +
             this.sourceTime.getSeconds() + '\t' +
             this.process + '\t' +
             this.message + '\r\n';
