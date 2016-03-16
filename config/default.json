@@ -15,7 +15,8 @@
                 "speaker_triggerTypes": "key socket",
                 "screenshots_takeScreenshotFreq": 70000,
                 "screenshots_syncScreenshotFreq": 1200000,
-                "screenshots_maxScreenshots": 500
+                "screenshots_maxScreenshots": 500,
+                "sign_slideDuration": 12000
             }
         },
         "ashmont": {
@@ -60,7 +61,10 @@
         "harvard": {
             "base": "mbta_lfd_1",
             "values": {
-                "MBTA_stops": [{"stop_id": "place-harsq", "locationName": "Harvard Station"}],
+                "MBTA_stops": [
+                    {"stop_id": "place-harsq", "locationName": "Harvard Station"},
+                    {"stop_id": "110", "locationName": "Up the stairs and across Mass. Ave."}
+                ],
                 "MBTA_destinationFilter": "^Harvard"
             }
         },
@@ -94,7 +98,8 @@
             "base": "mbta_lfd_1",
             "values": {
                 "MBTA_stops": [{"stop_id": "place-rugg", "locationName": "Ruggles Station"}],
-                "MBTA_destinationFilter": "^Ruggles"
+                "MBTA_destinationFilter": "^Ruggles",
+                "MBTA_suppressDepartures": ["Subway"]
             }
         },
         "southstation": {
@@ -109,6 +114,24 @@
             "values": {
                 "MBTA_stops": [{"stop_id": "place-sull", "locationName": "Sullivan Station"}],
                 "MBTA_destinationFilter": "^Sullivan"
+            }
+        },
+        "wellington": {
+            "base": "mbta_lfd_1",
+            "values": {
+                "MBTA_stops": [
+                    {"stop_id": "place-welln", "locationName": "Wellington Station"},
+                    {"stop_id": "5271", "locationName": "Busway"}
+                ],
+                "MBTA_destinationFilter": "^Wellington"
+            }
+        },
+        "wollaston": {
+            "base": "mbta_lfd_1",
+            "values": {
+                "MBTA_stops": [{"stop_id": "place-wlsta", "locationName": "Wollaston Station"}],
+                "MBTA_destinationFilter": "^Wollaston",
+                "MBTA_outputDepartures": false
             }
         },
         "wonderland": {

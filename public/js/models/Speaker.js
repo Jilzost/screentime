@@ -10,8 +10,9 @@ define([
     'backbone',
     'mespeak',
     'io',
-    'helper/speech/speechUtteranceChunker'
-], function ($, _, Backbone, mespeak, io, speechUtteranceChunker) {
+    'helper/speech/speechUtteranceChunker',
+    'helper/logger'
+], function ($, _, Backbone, mespeak, io, speechUtteranceChunker, logger) {
     var Speaker = Backbone.Model.extend({
         defaults: {
             modelType: 'Speaker',
@@ -22,6 +23,7 @@ define([
             speakingState: false,
             haltSpeech: false,
             chunkerCancel: false,
+            maxChars: 50,
             sign: {}
         },
         initialize: function () {
@@ -70,7 +72,16 @@ define([
             }
         },
         startStop: function () {
-            var textList = [], self = this;
+            var textList = [], self = this,
+                splitPeriod = new RegExp(
+                    '^([\\W\\w]{1,' + self.get('maxChars') + '}\\.)([\\W\\w]*)$'
+                ),
+                splitComma = new RegExp(
+                    '^([\\W\\w]{1,' + self.get('maxChars') + '}[\\,\\:;])([\\W\\w]*)$'
+                ),
+                splitSpace = new RegExp(
+                    '^([\\W\\w]{1,' + self.get('maxChars') + '}\\s)([\\W\\w]*)$'
+                );
             if (self.get('voiceTools') ===
                     'webspeech' && speechSynthesis.speaking) {
                 speechSynthesis.cancel();
@@ -89,6 +100,26 @@ define([
             ]).each(function (v) {
                 textList = textList.concat(v.speechScript);
             });
+            if (self.get('voiceTools') === 'mespeak') {
+                textList = _(textList).reduce(function (memo, text) {
+                    var results;
+                    while (text.length > self.get('maxChars')) {
+                        if (splitPeriod.test(text)) {
+                            results = splitPeriod.exec(text);
+                        } else if (splitComma.test(text)) {
+                            results = splitComma.exec(text);
+                        } else if (splitSpace.test(text)) {
+                            results = splitSpace.exec(text);
+                        } else {
+                            text = '...';
+                        }
+                        memo.push(results[1]);
+                        text = results[2];
+                    }
+                    memo.push(text);
+                    return memo;
+                }, []);
+            }
             self.speakTextList(textList);
         },
         speakTextList: function (textList, i) {
@@ -97,17 +128,27 @@ define([
             if (i < 0) { i = 0; }
             if (self.get('voiceTools') === 'mespeak') {
                 if (self.get('haltSpeech')) {
+                    logger.log('models/Speaker.speakTextList', 'haltSpeech');
                     self.set({'haltSpeech': false});
                     self.set({'speakingState': false});
                     return;
                 }
+
                 if (i < textList.length) {
+                    logger.log('models/Speaker.speakTextList', 'speaking '
+                        + i
+                        + ' of 0 to '
+                        + (textList.length - 1)
+                        + ': '
+                        + textList[i]);
                     self.set({'speakingState': true});
                     testval = meSpeak.speak(textList[i], {},
                             function () {
+                            logger.log('models/Speaker.speakTextList', 'meSpeak.speak completed');
                             self.speakTextList(textList, i + 1);
                         });
                 } else {
+                    logger.log('models/Speaker.speakTextList', 'setting speakingState to false');
                     self.set({'speakingState': false});
 
                 }

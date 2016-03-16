@@ -72,7 +72,8 @@ define([
                 this.$('.alerts-list').append(item.render().$el);
                 this.speechScript.push(x.get('description'));
             }, this);
-            this.lastHeight = this.$el.height();            while (this.fontSize > 1 && this.lastHeight > window.innerHeight) {
+            this.lastHeight = this.$el.height();
+            while (this.fontSize > 1 && this.lastHeight > window.innerHeight) {
                 this.fontSize -= 1;
                 this.$('.alerts-list').css('fontSize', this.fontSize + '%');
                 this.lastHeight = Math.max(this.$el.height(), 1);

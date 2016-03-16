@@ -69,7 +69,7 @@ function listen(server) {
 function speak(path, id, response) {
     if (!lastButtonpress[id] || lastButtonpress[id] + 1000 < Date.now()) {
         lastButtonpress[id] = Date.now();
-        console.log('speech triggered for ' + path);
+        console.log('speech triggered for ' + id);
         io.sockets.in(id).emit('speak');
     } else {
         console.log('Additional buttonpress ignored for ' + path);
