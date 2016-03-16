@@ -16,13 +16,16 @@ define([
 
         defaults: {
             alertsSources: [],
+            featuredAlertsSources: [],
             departuresSources: [],
             alerts: undefined,
             departures: undefined,
+            featuredAlerts: undefined
         },
         initialize: function () {
             this.set('departures', new Departures());
             this.set('alerts', new Alerts());
+            this.set('featuredAlerts', new Alerts());
         },
         refresh: function (coll) {
             var newColl = [];

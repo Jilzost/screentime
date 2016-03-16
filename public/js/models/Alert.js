@@ -53,7 +53,8 @@ define([
                 success = false,
                 affecteds = this.get('affecteds');
 
-            input = input.replace(/http:\/\//, '');
+            input = input.replace(/http:\/\//g, '');
+            input = input.replace(/\r/g, '<br>');
 
             allRegexes = _(tests).reduce(function (memo, test) {
                 memo.push(affecteds.reduce(function (memo2, affected) {

@@ -24,12 +24,13 @@ define([
     'views/AlertsView',
     'views/AlertViewElevator',
     'views/AlertViewSimple',
-    'views/AlertViewTimeframe'
+    'views/AlertViewTimeframe',
+    'views/AlertViewFeatured'
 
 ], function ($, _, Backbone, filterProperties, agencyModelIndex,
     Clock, Heartbeat, ScreenData, ScreenModel,
     ScreenshotManager, Speaker, DeparturesView, AlertsView, AlertViewElevator,
-    AlertViewSimple, AlertViewTimeframe) {
+    AlertViewSimple, AlertViewTimeframe, AlertViewFeatured) {
     var Sign = Backbone.Model.extend({
         defaults: {
             clock: {},
@@ -151,6 +152,11 @@ define([
                 sortOrder: 'byElevatorStation',
                 collection: this.get('screenData').get('alerts')
             });
+            models.featuredAlerts = new ScreenModel({
+                titleText: 'Important Notice',
+                titleFormat: 'CSS_FeaturedAlertsTitle',
+                collection: this.get('screenData').get('featuredAlerts')
+            });
 
             this.set({screenModels: models});
 
@@ -171,10 +177,13 @@ define([
                     _(configData.agencies).each(function (aName) {
                         config = filterProperties(configData, aName, '_');
 
-                        newAgency = new agencyModelIndex[config.sourceType](config);
+                        newAgency =
+                            new agencyModelIndex[config.sourceType](config);
                         this.get('agencies')[aName] = newAgency;
 
-                        _(['alerts', 'departures']).each(function (x) {
+                        _(['alerts',
+                            'featuredAlerts',
+                            'departures']).each(function (x) {
                             if (newAgency.get(x)) {
                                 this.get('screenData').get(x + 'Sources').push(
                                     newAgency.get(x)
@@ -222,6 +231,11 @@ define([
                             el: '#elevatorAlerts',
                             model: self.get('screenModels').elevatorAlerts,
                             AlertView: AlertViewElevator
+                        }),
+                        featuredAlerts: new AlertsView({
+                            el: '#featuredAlerts',
+                            model: self.get('screenModels').featuredAlerts,
+                            AlertView: AlertViewFeatured
                         })
                     }});
 
@@ -263,6 +277,7 @@ define([
 
                     self.runSlideshow(
                         [
+                            self.get('screenViews').featuredAlerts,
                             self.get('screenViews').departures,
                             self.get('screenViews').currentAlerts,
                             self.get('screenViews').upcomingAlerts,

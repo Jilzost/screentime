@@ -85,10 +85,11 @@ define([
             sourceType: 'MBTA-realtime',
             stops: [],
             routes: undefined,
-            routesMaxAge: 86400000,
             departures: undefined,
-            departuresMaxAge: 30000,
             alerts: undefined,
+            featuredAlerts: undefined,
+            routesMaxAge: 86400000,
+            departuresMaxAge: 30000,
             alertsMaxAge: 60000,
             outputLocalAlerts: true,
             outputSubwayAlerts: true,
@@ -154,6 +155,7 @@ define([
             agency.set({localRoutesSources: localRoutesSources});
 
             agency.set({alerts: new Alerts()});
+            agency.set({featuredAlerts: new Alerts()});
             if (agency.get('outputLocalAlerts') ||
                     agency.get('outputSubwayAlerts') ||
                     agency.get('outputAllAlerts')) {
@@ -288,6 +290,7 @@ define([
                 newAlerts = [], //Coll. of new alerts built here & applied
                 newDelayAlerts = new Alerts(),
                 newAlert,
+                newFeaturedAlert,
                 isLocal,
                 isSubway,
                 isSystemwide,
@@ -549,13 +552,27 @@ define([
                 } else if (newAlert.get('isRelevant')) {
                     newAlerts.push(newAlert);
                 }
+
+                if (source.get('banner_text')) {
+                    newFeaturedAlert = newAlert.clone();
+                    newFeaturedAlert.set({
+                        description: source.get('banner_text'),
+                        details: '',
+                        affecteds: newAlert.get('affecteds').clone()
+                    });
+                }
+
+
             }, this);
 
             if (newDelayAlerts.length > 0) {
                 newAlerts.push(combinedDelayAlert(newDelayAlerts));
             }
 
+            // if (newAlert) {newFeaturedAlert = newAlert; } //TODO TESTCODE
             thisAgency.get('alerts').reset(newAlerts);
+            thisAgency.get('featuredAlerts').reset(newFeaturedAlert);
+
         },
         buildAffected: function (thisAgency) {
             return;

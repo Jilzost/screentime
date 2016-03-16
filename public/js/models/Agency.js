@@ -18,6 +18,7 @@ define([
             routes: undefined,
             departures: undefined,
             alerts: undefined,
+            featuredAlerts: undefined
         }
     });
 
