@@ -18,7 +18,7 @@ define([
         try {
             logger.entriesCounted = logger.entriesCounted || 0;
             //Are we sure we haven't sent too many entries recently?
-            if (logger.entriesCounted < 20) {
+            if (logger.entriesCounted < 60) {
                 logger.entriesCounted += 1;
                 entry = {
                     logTime: new Date(),
@@ -34,7 +34,7 @@ define([
                     || Date.now();
             //We've sent too many entries; are we sure it's not time 
             //to start sending again?
-            } else if (logger.countingEntriesSince + 300000 > Date.now()) {
+            } else if (logger.countingEntriesSince + 1200000 > Date.now()) {
                 logger.unsentEntries = logger.unsentEntries || 0;
                 logger.unsentEntries += 1;
             //resume sending log entries. 
