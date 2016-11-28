@@ -95,9 +95,9 @@ define([
             }
             _([
                 self.get('sign').get('screenViews').departures,
-                self.get('sign').get('screenViews').currentAlerts//, //mespeak experiments
-                //self.get('sign').get('screenViews').upcomingAlerts,//mespeak experiments
-                //self.get('sign').get('screenViews').elevatorAlerts//mespeak experiments
+                self.get('sign').get('screenViews').currentAlerts,
+                self.get('sign').get('screenViews').upcomingAlerts,
+                self.get('sign').get('screenViews').elevatorAlerts
             ]).each(function (v) {
                 // console.log(v.speechScript);
                 // console.log(v.speechScript.join('; '));
