@@ -23,7 +23,8 @@ define([
             speakingState: false,
             haltSpeech: false,
             chunkerCancel: false,
-            maxChars: 50,
+            maxChars: 50000,//mespeak experiments
+            stringTogether: true, //mespeak experiments
             sign: {}
         },
         initialize: function () {
@@ -94,11 +95,14 @@ define([
             }
             _([
                 self.get('sign').get('screenViews').departures,
-                self.get('sign').get('screenViews').currentAlerts,
-                self.get('sign').get('screenViews').upcomingAlerts,
-                self.get('sign').get('screenViews').elevatorAlerts
+                self.get('sign').get('screenViews').currentAlerts//, //mespeak experiments
+                //self.get('sign').get('screenViews').upcomingAlerts,//mespeak experiments
+                //self.get('sign').get('screenViews').elevatorAlerts//mespeak experiments
             ]).each(function (v) {
-                textList = textList.concat(v.speechScript);
+                // console.log(v.speechScript);
+                // console.log(v.speechScript.join('; '));
+                //textList = textList.concat(v.speechScript);//mespeak pre-experiments
+                textList = textList.concat(v.speechScript.join('; '));//mespeak experiments
             });
             if (self.get('voiceTools') === 'mespeak') {
                 textList = _(textList).reduce(function (memo, text) {

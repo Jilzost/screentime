@@ -13,12 +13,13 @@ define([
 
     logger.log = function (sourceFunctionName, message) {
         var unsent, entry, signId;
-        signId = logger.signId;
+        signId = logger.signId ||
+        window.location.search.replace(/[\?\&]id=([^\?\&]*)/i, '$1');
 
         try {
             logger.entriesCounted = logger.entriesCounted || 0;
             //Are we sure we haven't sent too many entries recently?
-            if (logger.entriesCounted < 60) {
+            if (logger.entriesCounted < 120) {
                 logger.entriesCounted += 1;
                 entry = {
                     logTime: new Date(),

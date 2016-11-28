@@ -4,9 +4,9 @@ speechSynthesis, document, window */
 'use strict';
 
 // Filename: models/Sign
-// 
-// NEXT STEPS: 
-// loadstart should start the carousel. 
+//
+// NEXT STEPS:
+// loadstart should start the carousel.
 // start screenshotManager
 define([
     'jquery',
@@ -38,7 +38,7 @@ define([
             logging: true,
             heartbeat: true,
             signId: '',
-            status: '', //FUTURE WORK Store sign's status and show as needed 
+            status: '', //FUTURE WORK Store sign's status and show as needed
             heartbeatRate: 200000,
             lastUpdate: Date(0),
             lastHeartbeat: Date(0),
@@ -78,16 +78,16 @@ define([
             // Represents something shown on a slide, which has a header, a body
             // Has information on the header; the collection; filter info;
             // info on what view to use for collection; probably the element.
-            // Spiritual successor to ScreenModel.  
+            // Spiritual successor to ScreenModel.
             // new view: InsightView.
-            // departures, service updates, etc. all InsightViews. 
+            // departures, service updates, etc. all InsightViews.
 
             ///notes from earlier:
-            //...again raises the question of where exactly the change from 
-            //"alerts" to specifics should take place. 
+            //...again raises the question of where exactly the change from
+            //"alerts" to specifics should take place.
             //Perhaps screenData could have currentAlerts, upcomingServiceAlerts
             //etc. and have them reference its own "alerts".
-            //This would also give ScreenData something to do. 
+            //This would also give ScreenData something to do.
             //
             //But is it possible to do it even later, at the view?
             //
@@ -96,17 +96,17 @@ define([
             //model. (Agg for Aggregate.)
             //
             //It could even be only invoked when there are multiple agencies.
-            //Otherwise the views just reference the agency directly. 
-            //I'm liking this. 
+            //Otherwise the views just reference the agency directly.
+            //I'm liking this.
             //
-            //Next steps: 
-            //Modify view so that it checks for condition property 
+            //Next steps:
+            //Modify view so that it checks for condition property
             //(could be function) and uses it if available
             //
-            //Modify this file so that it provides those things to 
+            //Modify this file so that it provides those things to
             //each of the different views
             //
-            //Modify this file so that the views reference the 1 agency 
+            //Modify this file so that the views reference the 1 agency
             //directly (with a note to add AggAgency later)
             //
             //Test!
@@ -201,8 +201,8 @@ define([
                     }, self);
 
                     //FUTURE WORK
-                    //The following is not finished and is not used yet. 
-                    //targetAgency will be either the one agency or AggAgency. 
+                    //The following is not finished and is not used yet.
+                    //targetAgency will be either the one agency or AggAgency.
                     if (_(self.get('agencies')).keys().length === 1) {
                         _(self.get('agencies')).each(function (a) {
                             targetAgency = a;
@@ -263,6 +263,10 @@ define([
                         }(self), self.get('heartbeatRate'));
                     }
 
+                    if (self.get('type')) {
+                        $('#sign').attr('id', 'sign_l');
+                    }
+
                     //configure screenshotManager
                     config = filterProperties(
                         configData,
@@ -306,6 +310,15 @@ define([
                     }
                     return {topGroup: topGroup, bottomGroup: bottomGroup};
                 },
+                waitFactor = function (slideCount, factor) {
+                    var waitTime = 0, i;
+                    factor = factor || 0.85;
+                    slideCount = slideCount || 1;
+                    for (i = 0; i < slideCount; i += 1) {
+                        waitTime += Math.pow(factor, i);
+                    }
+                    return waitTime;
+                },
                 slides = [],
                 screenHeight = window.innerHeight,
                 t = 0,
@@ -313,31 +326,40 @@ define([
                 self = this,
                 i = 0,
                 groups = false,
-                wait = self.get('slideDuration'),
+                normalWait = self.get('slideDuration'),
+                wait = normalWait,
                 shortWait = self.get('shortSlideDuration');
 
             self.set({lastUpdated: Date.now()});
 
-            //1. Identify the list of slides to be shown. 
+            //1. Identify the list of slides to be shown.
             slides = _(allSlides).filter(
                 function (s) {return s.hasContent; }
             );
 
             //2. If there are 0 or 1 slides to show, just show them.
             if (slides.length <= 1) {
+                if (slides.length === 1) {
+                    wait = normalWait * waitFactor(_(slides).first().subSlides); //NEXT STEP use waitFactor below
+                } else {
+                    wait = shortWait;
+                }
                 setTimeout(function () {
-                    self.showSlide(slides, allSlides);
+                    self.showSlide({showSlides: slides,
+                        allSlides: allSlides,
+                        duration: wait
+                        });
                 }, t);
-                t += 2000;
+                t += wait;
                 setTimeout(function () {
                     self.runSlideshow(allSlides);
                 }, t);
                 return;
             }
 
-            //3. determine if first slide(s) are to be shown 
+            //3. determine if first slide(s) are to be shown
             //on a screen by themselves (solo). If so show them.
-            //At the end we have the list of remaining slides. 
+            //At the end we have the list of remaining slides.
             slides = _(slides).rest().reduce(function (memo, next) {
                 var slide;
                 //If we are currently paging and the current slide must be
@@ -345,12 +367,16 @@ define([
                 if (memo.mustPage &&
                         memo.curr.lastHeight + next.lastHeight > screenHeight) {
                     slide = memo.curr;
-                    setTimeout(function () {
-                        self.showSlide(
-                            [slide],
-                            allSlides
-                        );
-                    }, t);
+                    wait = normalWait * waitFactor(slide.subSlides);
+                    (function (wt) {
+                        setTimeout(function () {
+                            self.showSlide({
+                                showSlides: [slide],
+                                allSlides: allSlides,
+                                duration: wt
+                            });
+                        }, t);
+                    }(wait));
                     t += wait;
                     memo.curr = next;
                     memo.remaining = [next];
@@ -368,14 +394,15 @@ define([
 
             //4. If there is 1 remaining slides to show, just show it.
             if (slides.length === 1) {
+                wait = normalWait * waitFactor(_(slides).first().subSlides);
                 setTimeout(function () {
-                    self.showSlide(
-                        slides,
-                        allSlides
-                    );
+                    self.showSlide({
+                        showSlides: slides,
+                        allSlides: allSlides,
+                        duration: wait
+                    });
                 }, t);
                 t += wait;
-                if (t === wait) { t = shortWait; }
                 setTimeout(function () {
                     self.runSlideshow(allSlides);
                 }, t);
@@ -383,9 +410,9 @@ define([
             }
 
             //5. Try to cycle remaining slides in groups, holding top
-            //constant while bottom rotates. 
-            //For n = 1 to the total number of slides - 1, 
-            //can we hold n - 1 slides on top, 
+            //constant while bottom rotates.
+            //For n = 1 to the total number of slides - 1,
+            //can we hold n - 1 slides on top,
             //and rotate through the remaining n slides on the bottom?
             //(If n = 1 that means showing all slides at once.)
             for (i = 1; i < slides.length; i += 1) {
@@ -399,11 +426,12 @@ define([
                     var toShow = groups.topGroup.concat([bottomView]),
                         bottomGroup = groups.bottomGroup;
                     setTimeout(function () {
-                        self.showSlide(
-                            toShow,
-                            allSlides,
-                            bottomGroup
-                        );
+                        self.showSlide({
+                            showSlides: toShow,
+                            allSlides: allSlides,
+                            allBottomSlides: bottomGroup,
+                            duration: wait
+                        });
                     }, t);
                     t += wait;
                 });
@@ -423,8 +451,14 @@ define([
                     return memo;
                 }
                 toShow = memo.views;
+
+                wait = normalWait * waitFactor(_(toShow).first().subSlides);
                 setTimeout(function () {
-                    self.showSlide(toShow, allSlides);
+                    self.showSlide({
+                        showSlides: toShow,
+                        allSlides: allSlides,
+                        duration: wait
+                    });
                 }, memo.t);
                 return {
                     views: [view],
@@ -435,32 +469,39 @@ define([
                 height: _(slides).first().lastHeight, t: t});
 
             t = nextSlideInfo.t;
+            wait = normalWait
+                * waitFactor(_(nextSlideInfo.views).first().subSlides);
             if (nextSlideInfo.views.length > 0) {
                 setTimeout(function () {
-                    self.showSlide(nextSlideInfo.views, allSlides);
+                    self.showSlide({
+                        showSlides: nextSlideInfo.views,
+                        allSlides: allSlides,
+                        duration: wait
+                    });
                 }, t);
                 t += wait;
             }
             setTimeout(function () {
                 self.runSlideshow(allSlides);
             }, t);
+            //console.log(self);
         },
-        showSlide: function (showViews, allViews, allBottomViews) {
+        showSlide: function (input) {
             var hasContent = false,
                 totalHeights = 0,
                 screenHeight = window.innerHeight,
                 gapHeight = 0,
                 bottomHeight = false;
 
-            if (allBottomViews) {
+            if (input.allBottomSlides) {
                 bottomHeight =
-                    _(allBottomViews).reduce(function (memo, view) {
+                    _(input.allBottomSlides).reduce(function (memo, view) {
                         return Math.max(memo, view.lastHeight);
                     }, 0);
             }
-            totalHeights = _(showViews).reduce(function (memo, view) {
+            totalHeights = _(input.showSlides).reduce(function (memo, view) {
                 view.$el.css({'padding-bottom': 0});
-                if (bottomHeight && _(allBottomViews).contains(view)) {
+                if (bottomHeight && _(input.allBottomSlides).contains(view)) {
                     return bottomHeight + memo;
                 }
                 if (view.$el.html() === '') {return memo; }
@@ -470,13 +511,19 @@ define([
             if (totalHeights * 1.01 < screenHeight) {
                 gapHeight = Math.floor(
                     (screenHeight - totalHeights) /
-                        Math.max(showViews.length, 1)
+                        Math.max(input.showSlides.length, 1)
                 );
             }
 
-            _(allViews).each(function (v) {
-                if (_(showViews).contains(v)) {
+            _(input.allSlides).each(function (v) {
+                if (_(input.showSlides).contains(v)) {
                     v.$el.show();
+                    v.renderDuration = input.duration;
+                    //console.log(v.renderDuration);
+                    v.renderRefreshAll = true;
+                    v.lastModified = Date.now();
+                    //console.log(v.renderRefreshAll);
+                    //console.log(v);
                     v.render();
                     v.$el.css({'padding-bottom': gapHeight});
                     if (v.$el.html() !== '') {
@@ -497,7 +544,7 @@ define([
         //FUTURE WORK there is much about sendHeartbeat that should be improved.
         //Really there should be a sign-state object, which is defined the
         //same way on both client and server, and the sign uses backbone's
-        //native features to update it. 
+        //native features to update it.
         //FUTURE WORK the *2.1 is to provide a buffer so one hb can be missed,
         //but that should REALLY be handled server-side
 

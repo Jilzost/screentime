@@ -6,6 +6,14 @@ body {
     overflow: hidden;
 }
 
+#sign_l {
+/*    padding: 50px;*/
+/*    font: 70px Helvetica, Arial, sans-serif;*/
+    font: 75px Helvetica, Arial, sans-serif;
+    color: #F7F7F7;
+    background-color: black;
+    overflow: hidden;
+}
 
 .CSS_FeaturedAlertsTitle {
     background-color: #fc8b00;
@@ -26,6 +34,24 @@ body {
     font-weight: bolder;
 }
 
+#sign_l .CSS_FeaturedAlertsTitle {
+    background-color: #fc8b00;
+    color: black;
+    border-color: red;
+    border-style: solid;
+    border-width: 7px;
+    border-radius: 37px;
+    display: block;
+    width: 50%;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 30px;
+    padding-left: 7px;
+    padding-right: 7px;
+    font-size: 75%;
+    font-weight: bolder;
+}
 
 .CSS_DeparturesTitle {
     background-color: yellow;
@@ -43,6 +69,22 @@ body {
     font-weight: bolder;
 }
 
+#sign_l .CSS_DeparturesTitle {
+    background-color: yellow;
+    color: black;
+    border-radius: 37px;
+    display: block;
+    width: 50%;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 7px;
+    padding-right: 7px;
+    margin-bottom: 30px;
+    font-size: 75%;
+    font-weight: bolder;
+}
+
 .CSS_CurrentAlertsTitle {
     background-color: #FF6464;
     color: black;
@@ -55,6 +97,22 @@ body {
     margin-bottom: 20px;
     padding-left: 5px;
     padding-right: 5px;
+    font-size: 75%;
+    font-weight: bolder;
+}
+
+#sign_l .CSS_CurrentAlertsTitle {
+    background-color: #FF6464;
+    color: black;
+    border-radius: 37px;
+    display: block;
+    width: 50%;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 30px;
+    padding-left: 7px;
+    padding-right: 7px;
     font-size: 75%;
     font-weight: bolder;
 }
@@ -78,12 +136,44 @@ body {
     font-weight: bolder;
 }
 
+#sign_l .CSS_UpcomingAlertsTitle {
+    background-color: black;
+    color: #FF6464;
+    border-radius: 37px;
+    border-color: #FF6464;
+    border-style: solid;
+    border-width: 7px;
+    display: block;
+    width: 50%;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 30px;
+    padding-left: 7px;
+    padding-right: 7px;
+    font-size: 75%;
+    font-weight: bolder;
+}
+
 .AlertTimeframe {
 /*    font-variant: small-caps;*/
 /*    font-weight: bold; */
 
 /*    font-style: italic; */
     display: inline;
+    color: #FF6464;
+    /*color: #FF0000;*/
+    font-weight: lighter;
+
+}
+
+#sign_l .AlertTimeframe {
+/*    font-variant: small-caps;*/
+/*    font-weight: bold; */
+
+/*    font-style: italic; */
+    display: block;
+    text-align: center;
     color: #FF6464;
     /*color: #FF0000;*/
     font-weight: lighter;
@@ -142,8 +232,14 @@ td.minutes_away {
 
 .alert {
     font-size: 100%;
-    padding-bottom: 0.5em;
+    padding-bottom: 1.0em;
 }
+
+#sign_l .alert {
+    font-size: 120%;
+    padding-bottom: 1.5em;
+}
+
 
 .featuredAlertDescription {
     font-size: 150%;
@@ -173,6 +269,22 @@ td.minutes_away {
     margin-bottom: 20px;
 }
 
+#sign_l .CSS_ElevatorAlertsTitle {
+    background-color: lightskyblue;
+    color: black;
+    border-radius: 37px;
+    display: block;
+    width: 75%;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 7px;
+    padding-right: 7px;
+    font-size: 75%;
+    font-weight: bolder;
+    margin-bottom: 30px;
+}
+
 .elevatorNumber {
     color: black;
     border-style: solid;
@@ -181,6 +293,16 @@ td.minutes_away {
     border-bottom-width: 0px;
     border-left-width: 8px;
     border-right-width: 8px;
+}
+
+#sign_l .elevatorNumber {
+    color: black;
+    border-style: solid;
+    border-radius: 12px;
+    border-top-width: 0px;
+    border-bottom-width: 0px;
+    border-left-width: 12px;
+    border-right-width: 12px;
 }
 
 table.elevatorCurrent .elevatorStation {
@@ -221,6 +343,18 @@ table.elevatorUpcoming .elevatorNumber {
     border-right-width: 8px;
 }
 
+#sign_l .upcomingElevatorNumber {
+    color: black;
+    background-color: white;
+    border-style: solid;
+    border-color: white;
+    border-radius: 12px;
+    border-top-width: 0px;
+    border-bottom-width: 0px;
+    border-left-width: 12px;
+    border-right-width: 12px;
+}
+
 
 #status {
     margin-left: auto;
@@ -238,4 +372,5 @@ table.elevatorUpcoming .elevatorNumber {
     padding-top: 5px;
     padding-right: 5px;
 }
+
 

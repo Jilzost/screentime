@@ -569,7 +569,6 @@ define([
                 newAlerts.push(combinedDelayAlert(newDelayAlerts));
             }
 
-            // if (newAlert) {newFeaturedAlert = newAlert; } //TODO TESTCODE
             thisAgency.get('alerts').reset(newAlerts);
             thisAgency.get('featuredAlerts').reset(newFeaturedAlert);
 
