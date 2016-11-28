@@ -15,11 +15,11 @@ define([
         defaults: {
             modelType: 'Route',
             mode: 'Bus',
-            name: '',      //1         Red line   Green Line C       
+            name: '',      //1         Red line   Green Line C
             longName: '',  //Route 1   Red Line   Green Line C branch
-            trunkName: '', //1         Red Line   Green Line         
-            branchName: '',//''        ''         C                  
-            shortName: '', //1         Red        C                  
+            trunkName: '', //1         Red Line   Green Line
+            branchName: '',//''        ''         C
+            shortName: '', //1         Red        C
             color: '',
             isMode: false,
             isLocal: false,
@@ -50,7 +50,7 @@ define([
             }
             if (this.get('shortName') === '') {
                 if (this.get('branchName') !== '') {
-                    //FUTURE IMPROVEMENT: take only the beginning? 
+                    //FUTURE IMPROVEMENT: take only the beginning?
                     //This includes a "Short name" of "waterfront"
                     this.set({shortName: this.get('branchName')});
                 } else if (this.get('mode') === 'Commuter Rail') {
@@ -86,6 +86,7 @@ define([
                     new RegExp('\\b(' + result[2] + result[3] + ')\\b', 'gi')
                 );
             }
+            //console.log(r);
 
             return _(r).uniq();
         }

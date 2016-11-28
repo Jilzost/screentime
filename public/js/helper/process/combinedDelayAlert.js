@@ -38,8 +38,9 @@ define([
             branch = _(delay.branches).first();
         } else if (_(delay.branches).uniq().length === 2 &&
                 _(delay.branches).first() !== '') {
-            branch = _(delay.branches).first() +
-                ' and ' + _(delay.branches).last();
+            //console.log(delay.branches);
+            branch = _(_(delay.branches).uniq()).first() +
+                ' and ' + _(_(delay.branches).uniq()).last();
         }
 
         if (delay.isSevere) {
@@ -60,22 +61,22 @@ define([
 
 
         /**************************************************
-         For each alert, for each not-hidden route: 
-           Generate the serviceName. 
-           Is there a delayBundle with this serviceName? 
-             If not, create one. 
+         For each alert, for each not-hidden route:
+           Generate the serviceName.
+           Is there a delayBundle with this serviceName?
+             If not, create one.
                  serviceName (chop off everything after "line")
                  branch list (show 2 at most)
                  direction list (show 1 at most)
                  isRoute (if bus and doesn't contain "line")
                  severity
                  sort order
-             If there is, modify it if necessary. 
+             If there is, modify it if necessary.
                  add to branch list?
                  add to direction list?
                  change severity to true?
-             
-             Then create a list of each serviceName. 
+
+             Then create a list of each serviceName.
         ***************************************************/
         var delays = [],
             routeDelays = [],
@@ -89,6 +90,8 @@ define([
             routes = new Routes(),
             trains = new Trains(),
             newAlert;
+
+        //console.log(alerts);
 
         newAlert = new Alert({
             txid: 'CombinedDelayAlert',
