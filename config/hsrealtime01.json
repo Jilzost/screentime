@@ -12,7 +12,10 @@
 	},
     "signConfigs": {
         "bases": {
-            "mbta_lfd_1": {
+            "mbta_lfd_m": {
+                "MBTA_api_key": "tY0IKrIxSkeFLI3BckvuVQ"
+            },
+						"mbta_lfd_l": {
                 "MBTA_api_key": "tY0IKrIxSkeFLI3BckvuVQ"
             }
         }
