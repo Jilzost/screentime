@@ -16,7 +16,8 @@
                 "screenshots_takeScreenshotFreq": 70000,
                 "screenshots_syncScreenshotFreq": 1200000,
                 "screenshots_maxScreenshots": 500,
-                "sign_slideDuration": 12000
+                "sign_slideDuration": 12000,
+                "sign_satisfyWatchdog": true
             },
             "mbta_lfd_l": {
                 "agencies": ["MBTA"],
@@ -30,7 +31,8 @@
                 "screenshots_syncScreenshotFreq": 1200000,
                 "screenshots_maxScreenshots": 500,
                 "sign_slideDuration": 12000,
-                "sign_type": "sign_l"
+                "sign_type": "sign_l",
+                "sign_satisfyWatchdog": true
             }
         },
         "ashmont": {
@@ -65,7 +67,15 @@
                     {"stop_id": "64", "locationName": "Dudley Square"},
                     {"stop_id": "64000", "locationName": "Dudley Square"}
                 ],
-                "MBTA_destinationFilter": "^Dudley"
+                "MBTA_destinationFilter": "^Dudley",
+                "MBTA_routeOverrideTest": "^Ruggles",
+                "MBTA_routeOverride": {
+                  "txid": -1,
+                  "name": "",
+                  "mode": "Bus",
+                  "color": "#FFFF7C",
+                  "sortOrder": 9999
+              }
             }
         },
         "allalerts": {

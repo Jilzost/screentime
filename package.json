@@ -1,6 +1,6 @@
 {
     "name": "screentime",
-    "version": "0.2.8",
+    "version": "0.2.10",
     "description": "Transit Information Display",
     "dependencies": {
         "underscore": "~1.8.3",

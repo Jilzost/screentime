@@ -5,9 +5,6 @@ speechSynthesis, document, window */
 
 // Filename: models/Sign
 //
-// NEXT STEPS:
-// loadstart should start the carousel.
-// start screenshotManager
 define([
     'jquery',
     'underscore',
@@ -215,7 +212,7 @@ define([
 
                     self.set({screenViews: {
                         departures: new DeparturesView({
-                            model: self.get('screenModels').departures,
+                            model: self.get('screenModels').departures
                         }),
                         currentAlerts: new AlertsView({
                             el: '#currentAlerts',
@@ -265,6 +262,16 @@ define([
 
                     if (self.get('type')) {
                         $('#sign').attr('id', 'sign_l');
+                    }
+
+                    if (self.get('satisfyWatchdog')) {
+                        localStorage.clear();
+                        localStorage.setItem('mainWatch', Date.now());
+                        setInterval(function () {
+                            var tmp = Date.now();
+                            localStorage.setItem('mainWatch', tmp);
+                            console.log('LS');
+                        }, 60 * 1000); // update localStorage each 60 sec.
                     }
 
                     //configure screenshotManager

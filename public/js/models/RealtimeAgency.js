@@ -1,4 +1,4 @@
-/*jslint devel: true nomen: true regexp: true indent: 4 maxlen: 80 */
+/*jslint devel: true nomen: true regexp: true indent: 4 maxlen: 80 node: true */
 /*global XMLHttpRequest, SpeechSynthesisUtterance, define,
 speechSynthesis, document, window */
 'use strict';
@@ -8,7 +8,7 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    'helper/logger',//TODO add logging
+    'helper/logger',//future: add logging
     'models/Alert',
     'models/AccessFeature',
     'models/Stop',
@@ -122,9 +122,16 @@ define([
             agency.buildAlerts = _.bind(agency.buildAlerts, agency);
             agency.buildAffected = _.bind(agency.buildAffected, agency);
 
-            agency.set({
-                destinationFilter: new RegExp(agency.get('destinationFilter'))
-            });
+            if (agency.get('destinationFilter')) {
+              agency.set({
+                  destinationFilter: new RegExp(agency.get('destinationFilter'))
+              });
+            }
+            if (agency.get('routeOverrideTest')) {
+              agency.set({
+                  routeOverrideTest: new RegExp(agency.get('routeOverrideTest'))
+              });
+            }
 
             initializeSource({
                 sourceName: 'src_routes',
@@ -582,7 +589,13 @@ define([
                 src = thisAgency.get(src);
                 src.each(function (dep) {
                     destination = deriveDestination(dep);
-                    if (thisAgency.get('routes').findWhere(
+                    if (thisAgency.get('routeOverrideTest') &&
+                            thisAgency.get('routeOverrideTest').test(
+                                destination.title
+                            )
+                            ) {
+                        route = new Route(thisAgency.get('routeOverride'));
+                    } else if (thisAgency.get('routes').findWhere(
                             {
                                 txid: dep.get('route_id')
                             }

@@ -1,4 +1,4 @@
-/*jslint devel: true nomen: true regexp: true indent: 4 maxlen: 80 */
+/*jslint devel: true regexp: true indent: 4 maxlen: 80 node: true nomen: true */
 /*global XMLHttpRequest, SpeechSynthesisUtterance, define,
 speechSynthesis, document, window */
 'use strict';
