@@ -9,10 +9,12 @@ define([
     'jquery',
     'underscore',
     'backbone',
+    'helper/logger',
     'helper/process/filterProperties',
     'helper/process/agencyModelIndex',
     'models/Clock',
     'models/Heartbeat',
+    'models/LampMonitor',
     'models/ScreenData',
     'models/ScreenModel',
     'models/ScreenshotManager',
@@ -24,8 +26,8 @@ define([
     'views/AlertViewTimeframe',
     'views/AlertViewFeatured'
 
-], function ($, _, Backbone, filterProperties, agencyModelIndex,
-    Clock, Heartbeat, ScreenData, ScreenModel,
+], function ($, _, Backbone, logger, filterProperties, agencyModelIndex,
+    Clock, Heartbeat, LampMonitor, ScreenData, ScreenModel,
     ScreenshotManager, Speaker, DeparturesView, AlertsView, AlertViewElevator,
     AlertViewSimple, AlertViewTimeframe, AlertViewFeatured) {
     var Sign = Backbone.Model.extend({
@@ -64,6 +66,9 @@ define([
             this.set({startTime: Date.now()});
 
             this.sendHeartbeat = _.bind(this.sendHeartbeat, this);
+            // this.checkLamp = _.bind(this.checkLamp, this);
+            // this.checkLamp2 = _.bind(this.checkLamp2, this);
+            //this.checkLampResults = _.bind(this.checkLampResults, this);
             this.loadStart = _.bind(this.loadStart, this);
             this.runSlideshow = _.bind(this.runSlideshow, this);
             this.showSlide = _.bind(this.showSlide, this);
@@ -270,9 +275,31 @@ define([
                         setInterval(function () {
                             var tmp = Date.now();
                             localStorage.setItem('mainWatch', tmp);
-                            console.log('LS');
                         }, 60 * 1000); // update localStorage each 60 sec.
                     }
+
+                    if (self.get('lampControl')) {
+                      self.set({lampMonitor: new LampMonitor(
+                          {
+                              url: self.get('lampControl').lampURL,
+                              expected: self.get('lampControl').expected
+                          }
+                      )});
+                    }
+
+                    // if (self.get('lampControl')) {
+                    //     self.get('lampControl').last
+                    //         = self.get('lampControl').expected;
+                    //     //In the future this should run every 3 minutes,
+                    //     //not just once.
+                    //     $.get(self.get('lampControl').lampURL)
+                    //         .done(function (data) {
+                    //             self.checkLampResults(data);
+                    //         })
+                    //         .fail(function () {
+                    //             logger.log('lampControl', 'Lamp check failed');
+                    //         });
+                    // }
 
                     //configure screenshotManager
                     config = filterProperties(
@@ -565,12 +592,68 @@ define([
                 {
                     sign: this.get('signId'),
                     uptime: Date.now() - this.get('startTime'),
-                    heartbeatRate: this.get('heartbeatRate') * 2.1
+                    heartbeatRate: this.get('heartbeatRate') * 3.1
                 }
             );
             $.post('postheartbeat', JSON.stringify(heartbeat));
             this.set({lastHeartbeat: Date.now()});
-        }
+        }//,
+
+        /*NOTES: checkLamp went through a few iterations.
+          What's here currently has one major flaw: it only checks once,
+          not at a set interval.
+
+        */
+
+
+        // checkLamp: function () {
+        //     if (!this.get('lampControl').last) {
+        //         this.get('lampControl').last = this.get('lampControl').expected;
+        //     }
+        //     $.get(this.get('lampControl').lampURL)
+        //         .done(function (data) {
+        //             console.log(data);
+        //
+        //             if (!_(data).isEqual(this.get('lampControl').last)) {
+        //                 if (_(data).isEqual(this.get('lampControl').expected)) {
+        //                     logger.log('lampControl',
+        //                         'Lamp check now returning expected ' +
+        //                         JSON.stringify(data));
+        //                 } else {
+        //                     logger.log('lampControl',
+        //                         'Lamp check returned unexpected ' +
+        //                         JSON.stringify(data));
+        //                 }
+        //                 this.get('lampControl').last = data;
+        //             }
+        //         })
+        //         .fail(function () {
+        //             logger.log('lampControl', 'Lamp check failed');
+        //         });
+        // },
+        // checkLamp2: function () {
+        //     $.get(this.get('lampControl').lampURL)
+        //         .done(function (data) {
+        //             this.checkLampResults(data);
+        //         })
+        //         .fail(function () {
+        //             logger.log('lampControl', 'Lamp check failed');
+        //         });
+        // },
+        // checkLampResults: function (data) {
+        //     if (!_(data).isEqual(this.get('lampControl').last)) {
+        //         if (_(data).isEqual(this.get('lampControl').expected)) {
+        //             logger.log('lampControl',
+        //                 'Lamp check now returning expected ' +
+        //                 JSON.stringify(data));
+        //         } else {
+        //             logger.log('lampControl',
+        //                 'Lamp check returned unexpected ' +
+        //                 JSON.stringify(data));
+        //         }
+        //         this.get('lampControl').last = data;
+        //     }
+        // }
     });
     return Sign;
 });
