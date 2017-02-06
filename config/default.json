@@ -59,7 +59,7 @@
                     {"stop_id": "1123", "locationName": "Green Street"},
                     {"stop_id": "72", "locationName": "This bus stop"}
                 ],
-                "MBTA_destinationFilter": "^Central\\sSquare"
+                "MBTA_destinationFilter": "^Central"
             }
         },
         "default": {
