@@ -32,7 +32,7 @@ function start(route, handle) {
                 'server.start.onRequest', 'Failed: ' + err);
         }
     }
-    port = config.get('port');
+    port = (process.env.PORT || config.get('port'));
     server = http.createServer(onRequest).listen(port);
     console.log('Server is listening on port ' + port + '.');
     logger.log('server', 'server', 4, 'server.start', 'Server started');

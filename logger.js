@@ -92,7 +92,7 @@ function recordLogEntry(entry, overrideThreshold) {
         dd = today.getDate();
         if (dd < 10) {dd = '0' + dd; }
 
-        logPath = 'log/log-' + yyyy + '-' + mm + '-' + dd + '.csv';
+        logPath = 'public/log/log-' + yyyy + '-' + mm + '-' + dd + '.csv';
 
         if (fs.existsSync(logPath)) {
             fs.appendFileSync(logPath, csvrow);
