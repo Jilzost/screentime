@@ -4,6 +4,8 @@ body {
     color: #F7F7F7;
     background-color: black;
     overflow: hidden;
+    height:100vh; /* This is needed to overcome a Chrome bug. */
+    width:100vw;  /* As above. */
 }
 
 #sign_l {
@@ -356,6 +358,26 @@ table.elevatorUpcoming .elevatorNumber {
 }
 
 
+.psa {
+  position: fixed;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+}
+
+.psa img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  min-width: 50%;
+  min-height: 50%;
+}
+
+
 #status {
     margin-left: auto;
     margin-right: auto;
@@ -372,5 +394,3 @@ table.elevatorUpcoming .elevatorNumber {
     padding-top: 5px;
     padding-right: 5px;
 }
-
-

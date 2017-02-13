@@ -24,12 +24,14 @@ define([
     'views/AlertViewElevator',
     'views/AlertViewSimple',
     'views/AlertViewTimeframe',
-    'views/AlertViewFeatured'
+    'views/AlertViewFeatured',
+    'views/PsasView',
+    'views/PsaView'
 
 ], function ($, _, Backbone, logger, filterProperties, agencyModelIndex,
     Clock, Heartbeat, LampMonitor, ScreenData, ScreenModel,
     ScreenshotManager, Speaker, DeparturesView, AlertsView, AlertViewElevator,
-    AlertViewSimple, AlertViewTimeframe, AlertViewFeatured) {
+    AlertViewSimple, AlertViewTimeframe, AlertViewFeatured, PsasView, PsaView) {
     var Sign = Backbone.Model.extend({
         defaults: {
             clock: {},
@@ -159,7 +161,11 @@ define([
                 titleFormat: 'CSS_FeaturedAlertsTitle',
                 collection: this.get('screenData').get('featuredAlerts')
             });
-
+            models.psas = new ScreenModel({
+                titleText: 'PSA',
+                titleFormat: '',
+                collection: this.get('screenData').get('psas')
+            });
             this.set({screenModels: models});
 
             this.loadStart();
@@ -182,24 +188,6 @@ define([
                         newAgency =
                             new agencyModelIndex[config.sourceType](config);
                         this.get('agencies')[aName] = newAgency;
-
-                        _(['alerts',
-                            'featuredAlerts',
-                            'departures']).each(function (x) {
-                            if (newAgency.get(x)) {
-                                this.get('screenData').get(x + 'Sources').push(
-                                    newAgency.get(x)
-                                );
-                                this.get('screenData').get(x).listenTo(
-                                    newAgency.get(x),
-                                    'reset sync change',
-                                    function () {
-                                        return self.get('screenData')
-                                            .refresh(x);
-                                    }
-                                );
-                            }
-                        }, this);
                     }, self);
 
                     //FUTURE WORK
@@ -210,9 +198,30 @@ define([
                             targetAgency = a;
                         });
                     } else {
-                        console.log('WARNING: unsupported number of agencies');
-                        //future: AggAgency here
+                        targetAgency = new agencyModelIndex['AggAgency']();
+                        _(self.get('agencies')).each(function (a) {
+                            targetAgency.addAgency(a);
+                        });
                     }
+
+                    _(['alerts',
+                        'psas',
+                        'featuredAlerts',
+                        'departures']).each(function (x) {
+                        if (targetAgency.get(x)) {
+                            this.get('screenData').get(x + 'Sources').push(
+                                targetAgency.get(x)
+                            );
+                            this.get('screenData').get(x).listenTo(
+                                targetAgency.get(x),
+                                'reset sync change',
+                                function () {
+                                    return self.get('screenData')
+                                        .refresh(x);
+                                }
+                            );
+                        }
+                    }, self);
 
 
                     self.set({screenViews: {
@@ -238,6 +247,10 @@ define([
                             el: '#featuredAlerts',
                             model: self.get('screenModels').featuredAlerts,
                             AlertView: AlertViewFeatured
+                        }),
+                        psas: new PsasView({
+                            el: '#psas',
+                            model: self.get('screenModels').psas
                         })
                     }});
 
@@ -316,6 +329,7 @@ define([
                     self.runSlideshow(
                         [
                             self.get('screenViews').featuredAlerts,
+                            self.get('screenViews').psas,
                             self.get('screenViews').departures,
                             self.get('screenViews').currentAlerts,
                             self.get('screenViews').upcomingAlerts,
@@ -469,7 +483,7 @@ define([
                     }, t);
                     t += wait;
                 });
-                if (t === wait) { t = shortWait; }
+                //if (t === wait) { t = shortWait; }
                 setTimeout(function () {
                     self.runSlideshow(allSlides);
                 }, t);

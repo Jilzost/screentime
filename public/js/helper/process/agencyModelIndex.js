@@ -8,10 +8,14 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    'models/RealtimeAgency'
-], function ($, _, Backbone, RealtimeAgency) {
+    'models/AggAgency',
+    'models/RealtimeAgency',
+    'models/PsaAgency'
+], function ($, _, Backbone, AggAgency, RealtimeAgency, PsaAgency) {
     var agencyModelIndex = {
-        'MBTA-realtime': RealtimeAgency
+        'AggAgency': AggAgency,
+        'MBTA-realtime': RealtimeAgency,
+        'psa-only': PsaAgency
     };
 
     return agencyModelIndex;

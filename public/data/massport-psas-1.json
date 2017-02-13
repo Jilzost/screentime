@@ -1,0 +1,12 @@
+{
+  "images": [
+    {
+      "url": "/images/CrowdPlow-1080x1920.jpg",
+      "displayOrder": 2
+    },
+    {
+      "url": "/images/PoliceExam-1080x1920.jpg",
+      "displayOrder": 1
+    }
+  ]
+}

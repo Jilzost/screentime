@@ -42,7 +42,7 @@
 									"expected": {"lamps": "1"}
 								}
             },
-            "mbta_10pp": {
+            "mbta_10pp_v1": {
                 "agencies": ["MBTA"],
                 "MBTA_name": "MBTA",
                 "MBTA_sourceType": "MBTA-realtime",
@@ -55,11 +55,96 @@
                 "screenshots_maxScreenshots": 500,
                 "sign_slideDuration": 12000,
                 "sign_satisfyWatchdog": true
+            },
+						"mbta_10pp": {
+                "agencies": ["MBTA","MassDOT"],
+								"MassDOT_name": "MassDOT",
+                "MassDOT_sourceType": "psa-only",
+                "MBTA_name": "MBTA",
+                "MBTA_sourceType": "MBTA-realtime",
+                "MBTA_baseURL": "http://realtime.mbta.com/developer/api/v2/",
+                "MBTA_api_key": "tY0IKrIxSkeFLI3BckvuVQ",
+                "speaker_voiceTools": "mespeak",
+                "speaker_triggerTypes": "key",
+                "screenshots_takeScreenshotFreq": 70000000,
+                "screenshots_syncScreenshotFreq": 1200000000,
+                "screenshots_maxScreenshots": 50,
+                "sign_slideDuration": 12000,
+                "sign_satisfyWatchdog": true
+            },
+						"psa_test": {
+                "agencies": ["MassDOT"],
+                "MassDOT_name": "MassDOT",
+                "MassDOT_sourceType": "psa-only",
+                "speaker_voiceTools": "mespeak",
+                "speaker_triggerTypes": "key",
+                "screenshots_takeScreenshotFreq": 70000,
+                "screenshots_syncScreenshotFreq": 1200000,
+                "screenshots_maxScreenshots": 500,
+                "sign_slideDuration": 12000,
+                "sign_satisfyWatchdog": true
+            },
+						"agg_test": {
+                "agencies": ["MassDOT","MBTA"],
+                "MassDOT_name": "MassDOT",
+                "MassDOT_sourceType": "psa-only",
+								"MBTA_name": "MBTA",
+                "MBTA_sourceType": "MBTA-realtime",
+                "MBTA_baseURL": "http://realtime.mbta.com/developer/api/v2/",
+                "MBTA_api_key": "tY0IKrIxSkeFLI3BckvuVQ",
+                "speaker_voiceTools": "mespeak",
+                "speaker_triggerTypes": "key",
+                "screenshots_takeScreenshotFreq": 7000000,
+                "screenshots_syncScreenshotFreq": 8000000,
+                "screenshots_maxScreenshots": 500,
+                "sign_slideDuration": 12000,
+                "sign_satisfyWatchdog": true
             }
         },
-        "10pp-charles": {
+				"agg": {
+            "base": "agg_test",
+            "values": {
+                "MassDOT_psas": "/data/massport-psas-1.json",
+								"MBTA_stops": [{"stop_id": "place-asmnl", "locationName": "Ashmont Station"}],
+                "MBTA_destinationFilter": "^Ashmont"            }
+        },
+				"psa": {
+            "base": "psa_test",
+            "values": {
+                "MassDOT_psas": "/data/massport-psas-1.json"
+            }
+        },
+        "10pp-charles-v1": {
+            "base": "mbta_10pp_v1",
+            "values": {
+                "MBTA_stops": [
+                    {"stop_id": "Back Bay", "locationName": "Back Bay"},
+                    {"stop_id": "145", "locationName": "Arlington and Saint James (cross street, follow Park Plaza"},
+                    {"stop_id": "1241", "locationName": "Charles Street (to the right)"}
+                ],
+                "MBTA_destinationFilter": "^South\\sStation"
+            }
+        },
+        "10pp-stuart-v1": {
+            "base": "mbta_10pp_v1",
+            "values": {
+                "MBTA_stops": [
+                    {"stop_id": "6542", "locationName": "Kneeland Street (to the left)"},
+                    {"stop_id": "9983", "locationName": "Charles Street (to the right)"},
+                    {"stop_id": "place-tumnl", "locationName": "Tufts Medical (left, right on Washington"},
+                    {"stop_id": "70016", "locationName": "Tufts Medical (left, right on Washington"},
+                    {"stop_id": "70017", "locationName": "Tufts Medical (left, right on Washington"},
+                    {"stop_id": "8279", "locationName": "Tremont and Boylston (left, left on Tremont)"},
+                    {"stop_id": "place-boyls", "locationName": "Boylston Station (left, left on Tremont)"},
+                    {"stop_id": "South Station", "locationName": "South Station"}
+                ],
+                "MBTA_destinationFilter": "^South\\sStation"
+            }
+        },
+				"10pp-charles": {
             "base": "mbta_10pp",
             "values": {
+								"MassDOT_psas": "/data/massport-psas-1.json",
                 "MBTA_stops": [
                     {"stop_id": "Back Bay", "locationName": "Back Bay"},
                     {"stop_id": "145", "locationName": "Arlington and Saint James (cross street, follow Park Plaza"},
@@ -71,6 +156,7 @@
         "10pp-stuart": {
             "base": "mbta_10pp",
             "values": {
+								"MassDOT_psas": "/data/massport-psas-1.json",
                 "MBTA_stops": [
                     {"stop_id": "6542", "locationName": "Kneeland Street (to the left)"},
                     {"stop_id": "9983", "locationName": "Charles Street (to the right)"},

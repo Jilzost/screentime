@@ -10,29 +10,33 @@ define([
     'underscore',
     'backbone',
     'collections/Alerts',
-    'collections/Departures'
-], function ($, _, Backbone, Alerts, Departures) {
+    'collections/Departures',
+    'collections/Psas'
+], function ($, _, Backbone, Alerts, Departures, Psas) {
     var ScreenData = Backbone.Model.extend({
 
         defaults: {
             alertsSources: [],
             featuredAlertsSources: [],
             departuresSources: [],
+            psasSources: [],
             alerts: undefined,
             departures: undefined,
-            featuredAlerts: undefined
+            featuredAlerts: undefined,
+            psas: undefined
         },
         initialize: function () {
             this.set('departures', new Departures());
             this.set('alerts', new Alerts());
             this.set('featuredAlerts', new Alerts());
+            this.set('psas', new Psas());
         },
         refresh: function (coll) {
             var newColl = [];
             _(this.get(coll + 'Sources')).each(function (c) {
                 newColl = newColl.concat(c.toArray());
             });
-            this.get(coll).reset(newColl);
+            this.get(coll).reset(newColl); 
         }
     });
     return ScreenData;

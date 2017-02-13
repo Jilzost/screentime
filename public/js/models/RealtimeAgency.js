@@ -18,12 +18,13 @@ define([
     'collections/Routes',
     'collections/Trains',
     'collections/Departures',
+    'collections/Psas',
     'collections/RealtimeSource',
     'helper/input/inputLoop',
     'helper/mbta/pickRouteColor',//Future work: tie to agency generically
     'helper/process/combinedDelayAlert'
 ], function ($, _, Backbone, logger, Alert, AccessFeature, Stop, Route,
-    Train, Alerts, Routes, Trains, Departures, RealtimeSource, inputLoop,
+  Train, Alerts, Routes, Trains, Departures, Psas, RealtimeSource, inputLoop,
     pickRouteColor, combinedDelayAlert) {
 
     var deriveDestination = function (departure) {
@@ -161,6 +162,7 @@ define([
             }
             agency.set({localRoutesSources: localRoutesSources});
 
+            agency.set({psas: new Psas()});
             agency.set({alerts: new Alerts()});
             agency.set({featuredAlerts: new Alerts()});
             if (agency.get('outputLocalAlerts') ||
