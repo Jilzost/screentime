@@ -33,7 +33,8 @@ define([
             psas: undefined,
             psasSources: [],
             featuredAlerts: undefined,
-            featuredAlertsSources: []
+            featuredAlertsSources: [],
+            featuringAlerts: false
         },
         initialize: function () {
             var agency = this,
@@ -82,10 +83,29 @@ define([
             console.log('AggAgency error: unsupported collection');
             return this;
           }
-          if (aggTarget === 'psas' && featuredAlerts.length > 0) {
-            thisAgency.get('psas').reset();
-            return this;
+
+          _(thisAgency.get(aggTarget + 'Sources')).each(function (source) {
+            newCollection = newCollection.concat(source.toArray());
+          });
+
+          if (thisAgency.get('featuringAlerts') && aggTarget === 'psas') {
+            thisAgency.get(aggTarget).reset();
+          } else {
+            thisAgency.get(aggTarget).reset(newCollection);
           }
+
+          if ((aggTarget === 'featuredAlerts' || aggTarget === 'psas') &&
+                !thisAgency.get('featuringAlerts') &&
+                thisAgency.get('featuredAlerts').length > 0) {
+              thisAgency.set({featuringAlerts: true});
+              thisAgency.get('psas').reset();
+          } else if ((aggTarget === 'featuredAlerts' || aggTarget === 'psas') &&
+                thisAgency.get('featuringAlerts') &&
+                thisAgency.get('featuredAlerts').length === 0) {
+              thisAgency.set({featuringAlerts: false});
+              thisAgency.buildAggregate(thisAgency, 'psas');
+          }
+
 
           _(thisAgency.get(aggTarget + 'Sources')).each(function (source) {
             newCollection = newCollection.concat(source.toArray());
