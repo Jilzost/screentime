@@ -17,6 +17,7 @@ define([
             tripId: undefined,
             serviceGroup: undefined,
             locationName: '',
+            showLocationName: false,
             destinationTitle: '',
             destinationSubtitle: '',
             scheduledTime: 0,
@@ -68,7 +69,7 @@ define([
                     this.get('time') < Date.now() + 60000 * 65);
         },
         /**
-         * Returns an integer number of minutes to display. 
+         * Returns an integer number of minutes to display.
          * @return {[type]} minutes away (integer)
          */
         minsAway: function () {
@@ -77,10 +78,10 @@ define([
                 0
             );
         },
-        //TODO the following should be moved to a view. 
+        //TODO the following should be moved to a view.
         /**
-         * Returns string suitable for speech synthesis. 
-         * @return {string} String for speech synthesis. 
+         * Returns string suitable for speech synthesis.
+         * @return {string} String for speech synthesis.
          */
         vocalize: function () {
             var text = '', minutes = this.minsAway();

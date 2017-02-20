@@ -32,7 +32,13 @@ define([
         nests: [],
         sourceType: 'MBTA-realtime',
         parse: function (data) {
-            return unnest(data, this.nests);
+            var parsed = unnest(data, this.nests);
+            if (this.extraProperties) {
+              parsed = _(parsed).map(function (target) {
+                return _.defaults(target, this.extraProperties);
+              }, this);
+            }
+            return parsed;
         }
     });
 

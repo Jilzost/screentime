@@ -194,7 +194,11 @@ define([
                             include_service_alerts: 'false'
                             }).defaults(defaultParams)
                     }, agency);
-                    agency.get(sourceName).locationName = stop.locationName;
+                    agency.get(sourceName).extraProperties =
+                    {
+                      locationName: stop.locationName,
+                      showLocationName: stop.showLocationName
+                    };
                     allSources.push(sourceName);
                     departureSources.push(sourceName);
                 });
@@ -635,7 +639,8 @@ define([
                             destinationSubtitle: destination.subtitle,
                             scheduledTime: dep.get('sch_dep_dt') * 1000,
                             predictedTime: dep.get('pre_dt') * 1000,
-                            locationName: src.locationName
+                            locationName: dep.get('locationName'),
+                            showLocationName: dep.get('showLocationName')
                         });
                     }
                 });

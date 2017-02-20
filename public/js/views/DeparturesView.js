@@ -70,15 +70,8 @@ define([
                 renderDuration = this.renderDuration, //duration
                 renderOnly = this.renderOnly; //render only these deps
 
-            // console.log(this);
-
             this.renderRefreshAll = this.renderDuration = false;
             this.renderOnly = false;
-
-            // console.log(renderRefreshAll);
-            // console.log(renderDuration);
-            // console.log(renderOnly);
-            // console.log(this.subSlides);
 
             //if there was no input.duration (meaning this was triggered by
             //something other than showSlide), and there's > 1 subSlide
@@ -110,7 +103,6 @@ define([
             this.$('tbody').css('fontSize', this.fontSize + '%');
             this.$el.html(html);
             originalHeight = this.$el.height();
-            // console.log(originalHeight);
             if (renderRefreshAll) {
                 this.speechScript.push(this.model.get('titleText'));
             }
@@ -124,8 +116,6 @@ define([
                 soonDeps = _(deps).filter(function (x) {
                     return (x.isSoon());
                 });
-                // console.log(deps.length);
-                // console.log(soonDeps.length);
                 if (soonDeps.length > 0) {
                     deps = new Departures(soonDeps);
                 } else {

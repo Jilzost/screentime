@@ -208,6 +208,7 @@ td.route {
   vertical-align: middle;
   font-weight: bold;
   text-align: center;
+  vertical-align: text-top;
   font-size: 75%;
 }
 
@@ -219,6 +220,7 @@ td.destination {
     vertical-align: middle;
     font-size: 75%;
     line-height: 70%;
+    vertical-align: text-top;
 }
 
 .destinationSubtitle {
@@ -226,9 +228,15 @@ td.destination {
     font-weight: lighter;
 }
 
+.locationName {
+    font-size: 50%;
+    font-weight: lighter;
+}
+
 td.minutes_away {
     vertical-align: middle;
     text-align: center;
+    vertical-align: text-top;
 }
 
 

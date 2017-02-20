@@ -119,7 +119,7 @@
             "values": {
                 "MBTA_stops": [
                     {"stop_id": "Back Bay", "locationName": "Back Bay"},
-                    {"stop_id": "145", "locationName": "Arlington and Saint James (cross street, follow Park Plaza"},
+                    {"stop_id": "145", "locationName": "Arlington and Saint James (cross street, follow Park Plaza)"},
                     {"stop_id": "1241", "locationName": "Charles Street (to the right)"}
                 ],
                 "MBTA_destinationFilter": "^South\\sStation"
@@ -129,14 +129,13 @@
             "base": "mbta_10pp_v1",
             "values": {
                 "MBTA_stops": [
-                    {"stop_id": "6542", "locationName": "Kneeland Street (to the left)"},
-                    {"stop_id": "9983", "locationName": "Charles Street (to the right)"},
-                    {"stop_id": "place-tumnl", "locationName": "Tufts Medical (left, right on Washington"},
-                    {"stop_id": "70016", "locationName": "Tufts Medical (left, right on Washington"},
-                    {"stop_id": "70017", "locationName": "Tufts Medical (left, right on Washington"},
-                    {"stop_id": "8279", "locationName": "Tremont and Boylston (left, left on Tremont)"},
-                    {"stop_id": "place-boyls", "locationName": "Boylston Station (left, left on Tremont)"},
-                    {"stop_id": "South Station", "locationName": "South Station"}
+                    {"stop_id": "6542", "locationName": "Kneeland Street (to the left)", "showLocationName": true},
+                    {"stop_id": "9983", "locationName": "Charles Street (to the right)", "showLocationName": true},
+                    {"stop_id": "place-tumnl", "locationName": "Tufts Medical (left, right on Washington)", "showLocationName": true},
+                    {"stop_id": "70016", "locationName": "Tufts Medical (left, right on Washington)", "showLocationName": true},
+                    {"stop_id": "70017", "locationName": "Tufts Medical (left, right on Washington)", "showLocationName": true},
+                    {"stop_id": "8279", "locationName": "Tremont and Boylston (left, left on Tremont)", "showLocationName": true},
+                    {"stop_id": "South Station", "locationName": "South Station", "showLocationName": true}
                 ],
                 "MBTA_destinationFilter": "^South\\sStation"
             }
@@ -146,9 +145,9 @@
             "values": {
 								"MassDOT_psas": "/data/massport-psas-1.json",
                 "MBTA_stops": [
-                    {"stop_id": "Back Bay", "locationName": "Back Bay"},
-                    {"stop_id": "145", "locationName": "Arlington and Saint James (cross street, follow Park Plaza"},
-                    {"stop_id": "1241", "locationName": "Charles Street (to the right)"}
+                    {"stop_id": "Back Bay", "locationName": "Board at Back Bay Station", "showLocationName": true},
+                    {"stop_id": "145", "locationName": "Board at Arlington and Saint James (walk up Park Plaza)", "showLocationName": true},
+                    {"stop_id": "1241", "locationName": "Board at Charles Street (to the right)", "showLocationName": true}
                 ],
                 "MBTA_destinationFilter": "^South\\sStation"
             }
@@ -158,14 +157,13 @@
             "values": {
 								"MassDOT_psas": "/data/massport-psas-1.json",
                 "MBTA_stops": [
-                    {"stop_id": "6542", "locationName": "Kneeland Street (to the left)"},
-                    {"stop_id": "9983", "locationName": "Charles Street (to the right)"},
-                    {"stop_id": "place-tumnl", "locationName": "Tufts Medical (left, right on Washington"},
-                    {"stop_id": "70016", "locationName": "Tufts Medical (left, right on Washington"},
-                    {"stop_id": "70017", "locationName": "Tufts Medical (left, right on Washington"},
-                    {"stop_id": "8279", "locationName": "Tremont and Boylston (left, left on Tremont)"},
-                    {"stop_id": "place-boyls", "locationName": "Boylston Station (left, left on Tremont)"},
-                    {"stop_id": "South Station", "locationName": "South Station"}
+                    {"stop_id": "6542", "locationName": "Board at Kneeland Street (to the left)", "showLocationName": true},
+                    {"stop_id": "9983", "locationName": "Board at Charles Street (to the right)", "showLocationName": true},
+                    {"stop_id": "place-tumnl", "locationName": "Board at Tufts Medical (left, then right on Washington)", "showLocationName": true},
+                    {"stop_id": "70016", "locationName": "Board at Tufts Medical Station (left, then right on Washington)", "showLocationName": true},
+                    {"stop_id": "70017", "locationName": "Board at Tufts Medical Station (left, then right on Washington)", "showLocationName": true},
+                    {"stop_id": "8279", "locationName": "Board at Tremont/Boylston (left, then left on Tremont)", "showLocationName": true},
+                    {"stop_id": "South Station", "locationName": "Board at South Station", "showLocationName": true}
                 ],
                 "MBTA_destinationFilter": "^South\\sStation"
             }
@@ -181,10 +179,12 @@
             "base": "mbta_lfd_m",
             "values": {
                 "MBTA_stops": [
-                    {"stop_id": "place-cntsq", "locationName": "Central Square"},
-                    {"stop_id": "1060", "locationName": "Magazine Street"},
-                    {"stop_id": "1123", "locationName": "Green Street"},
-                    {"stop_id": "72", "locationName": "This bus stop"}
+  									{"stop_id": "70069", "locationName": "Board downstairs", "showLocationName": true},
+                    {"stop_id": "70070", "locationName": "Board across street, downstairs", "showLocationName": true},
+										{"stop_id": "102", "locationName": "Board across street", "showLocationName": true},
+                    {"stop_id": "1060", "locationName": "Board from Magazine Street to your left", "showLocationName": true},
+                    {"stop_id": "1123", "locationName": "Board from Green Street to your left and around the corner", "showLocationName": true},
+                    {"stop_id": "72", "locationName": "Board to the right", "showLocationName": true}
                 ],
                 "MBTA_destinationFilter": "^Central"
             }
@@ -232,7 +232,7 @@
             "values": {
                 "MBTA_stops": [
                     {"stop_id": "place-harsq", "locationName": "Harvard Station"},
-                    {"stop_id": "110", "locationName": "Up the stairs and across Mass. Ave."}
+                    {"stop_id": "110", "locationName": "Board outside station across Mass. Ave.", "showLocationName": true}
                 ],
                 "MBTA_destinationFilter": "^Harvard"
             }
