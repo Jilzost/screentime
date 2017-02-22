@@ -9,7 +9,7 @@ require.config({
         "underscore": "libs/underscore",
         "backbone": "libs/backbone",
         "mespeak": "libs/mespeak/mespeak.full",
-        "io": "//cdn.socket.io/socket.io-1.3.7"
+        "io": "libs/socket.io"
     }
 });
 
