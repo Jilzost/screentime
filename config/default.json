@@ -118,9 +118,9 @@
             "base": "mbta_10pp_v1",
             "values": {
                 "MBTA_stops": [
-                    {"stop_id": "Back Bay", "locationName": "Back Bay"},
-                    {"stop_id": "145", "locationName": "Arlington and Saint James (cross street, follow Park Plaza)"},
-                    {"stop_id": "1241", "locationName": "Charles Street (to the right)"}
+									{"stop_id": "Back Bay", "locationName": "From Back Bay Station", "showLocationName": true},
+									{"stop_id": "145", "locationName": "From Arlington / St James bus stop", "showLocationName": true},
+									{"stop_id": "1241", "locationName": "From Park Plaza bus stop (to the right)", "showLocationName": true}
                 ],
                 "MBTA_destinationFilter": "^South\\sStation"
             }
@@ -129,13 +129,10 @@
             "base": "mbta_10pp_v1",
             "values": {
                 "MBTA_stops": [
-                    {"stop_id": "6542", "locationName": "Kneeland Street (to the left)", "showLocationName": true},
-                    {"stop_id": "9983", "locationName": "Charles Street (to the right)", "showLocationName": true},
-                    {"stop_id": "place-tumnl", "locationName": "Tufts Medical (left, right on Washington)", "showLocationName": true},
-                    {"stop_id": "70016", "locationName": "Tufts Medical (left, right on Washington)", "showLocationName": true},
-                    {"stop_id": "70017", "locationName": "Tufts Medical (left, right on Washington)", "showLocationName": true},
-                    {"stop_id": "8279", "locationName": "Tremont and Boylston (left, left on Tremont)", "showLocationName": true},
-                    {"stop_id": "South Station", "locationName": "South Station", "showLocationName": true}
+									{"stop_id": "6542", "locationName": "From Kneeland Street bus stop (to the left)", "showLocationName": true},
+									{"stop_id": "9983", "locationName": "From Charles Street bus stop (to the right)", "showLocationName": true},
+									{"stop_id": "place-tumnl", "locationName": "From Tufts Medical Center", "showLocationName": true},
+									{"stop_id": "South Station", "locationName": "From South Station", "showLocationName": true}
                 ],
                 "MBTA_destinationFilter": "^South\\sStation"
             }
@@ -147,7 +144,7 @@
                 "MBTA_stops": [
                     {"stop_id": "Back Bay", "locationName": "From Back Bay Station", "showLocationName": true},
                     {"stop_id": "145", "locationName": "From Arlington / St James bus stop", "showLocationName": true},
-                    {"stop_id": "1241", "locationName": "From Charles Street bus stop (to the right)", "showLocationName": true}
+                    {"stop_id": "1241", "locationName": "From Park Plaza bus stop (to the right)", "showLocationName": true}
                 ],
                 "MBTA_destinationFilter": "^South\\sStation"
             }
@@ -239,8 +236,8 @@
             "values": {
                 "MBTA_stops": [
                     {"stop_id": "place-haecl", "locationName": "Haymarket Station"},
-                    {"stop_id": "4511", "locationName": "New Sudbury Street"},
-                    {"stop_id": "117", "locationName": "Congress Street"}
+                    {"stop_id": "4511", "locationName": "Board from New Sudbury Street", "showLocationName": true},
+                    {"stop_id": "117", "locationName": "Board from Congress Street", "showLocationName": true}
                 ],
                 "MBTA_destinationFilter": "^Haymarket"
             }
