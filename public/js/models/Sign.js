@@ -52,15 +52,29 @@ define([
             shortSlideDuration: 2000
         },
         initialize: function () {
-            var models = {};
+            var models = {},
+            // Courtesy http://stackoverflow.com/questions/901115/how-can-i-get-query-string-values-in-javascript
+            getParameterByName = function(name, url) {
+              if (!url) {
+                url = window.location.href;
+              }
+              name = name.replace(/[\[\]]/g, "\\$&");
+              var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+                  results = regex.exec(url);
+              if (!results) return null;
+              if (!results[2]) return '';
+              return decodeURIComponent(results[2].replace(/\+/g, " "));
+          };
 
             if (this.get('signId') === '') {
-                this.set({
-                    signId: window
-                        .location
-                        .search
-                        .replace(/[\?\&]id=([^\?\&]*)/i, '$1')
-                });
+                this.set({signId: getParameterByName('id')});
+
+                // this.set({
+                //     signId: window
+                //         .location
+                //         .search
+                //         .replace(/[\?\&]id=([^\?\&]*)/i, '$1')
+                // });
             }
 
             this.set({clock: new Clock()});
