@@ -153,7 +153,10 @@ define([
                                   ' to ' +
                                   x.get('destinationTitle') + ', ' +
                                   x.minsAway() +
-                                  (x.minsAway() === 1 ? ' minute' : ' minutes')
+                                  (x.minsAway() === 1 ? ' minute' : ' minutes') +
+                                  (x.get('showLocationName') ?
+                                    ', ' + x.get('locationName') :
+                                    '')
                           );
                       }
                     } else {
@@ -165,7 +168,10 @@ define([
                                   ' ' +
                                   x.get('destinationTitle') + ', ' +
                                   x.minsAway() +
-                                  (x.minsAway() === 1 ? ' minute' : ' minutes')
+                                  (x.minsAway() === 1 ? ' minute' : ' minutes') +
+                                  (x.get('showLocationName') ?
+                                    ', ' + x.get('locationName') :
+                                    '')
                           );
                       }
                     }
