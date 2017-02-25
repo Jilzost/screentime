@@ -1,8 +1,8 @@
 {
-	"port": 6276,
-	"emailIsOn": false,
-	"emailThreshold": 1,
-	"logThreshold": 4,
+  "port": 6276,
+  "emailIsOn": false,
+  "emailThreshold": 1,
+  "logThreshold": 4,
     "signConfigs": {
         "bases": {
             "mbta_lfd_m": {
@@ -18,10 +18,10 @@
                 "screenshots_maxScreenshots": 500,
                 "sign_slideDuration": 12000,
                 "sign_satisfyWatchdog": true,
-								"sign_lampControl": {
-									"lampURL": "http://localhost/cgi-bin/lamps.cgi",
-									"expected": {"lamps": "1"}
-								}
+                "sign_lampControl": {
+                  "lampURL": "http://localhost/cgi-bin/lamps.cgi",
+                  "expected": {"lamps": "1"}
+                }
             },
             "mbta_lfd_l": {
                 "agencies": ["MBTA"],
@@ -36,11 +36,11 @@
                 "screenshots_maxScreenshots": 500,
                 "sign_slideDuration": 12000,
                 "sign_type": "sign_l",
-								"sign_satisfyWatchdog": true,
-								"sign_lampControl": {
-									"lampURL": "http://localhost/cgi-bin/lamps.cgi",
-									"expected": {"lamps": "1"}
-								}
+                "sign_satisfyWatchdog": true,
+                "sign_lampControl": {
+                  "lampURL": "http://localhost/cgi-bin/lamps.cgi",
+                  "expected": {"lamps": "1"}
+                }
             },
             "mbta_10pp_v1": {
                 "agencies": ["MBTA"],
@@ -54,11 +54,12 @@
                 "screenshots_syncScreenshotFreq": 1200000,
                 "screenshots_maxScreenshots": 500,
                 "sign_slideDuration": 12000,
-                "sign_satisfyWatchdog": true
+                "sign_satisfyWatchdog": true,
+                "sign_innerHeight": 1920
             },
-						"mbta_10pp": {
+            "mbta_10pp": {
                 "agencies": ["MBTA","MassDOT"],
-								"MassDOT_name": "MassDOT",
+                "MassDOT_name": "MassDOT",
                 "MassDOT_sourceType": "psa-only",
                 "MBTA_name": "MBTA",
                 "MBTA_sourceType": "MBTA-realtime",
@@ -70,9 +71,10 @@
                 "screenshots_syncScreenshotFreq": 1200000000,
                 "screenshots_maxScreenshots": 50,
                 "sign_slideDuration": 12000,
-                "sign_satisfyWatchdog": true
+                "sign_satisfyWatchdog": true,
+                "sign_innerHeight": 1920
             },
-						"psa_test": {
+            "psa_test": {
                 "agencies": ["MassDOT"],
                 "MassDOT_name": "MassDOT",
                 "MassDOT_sourceType": "psa-only",
@@ -84,11 +86,11 @@
                 "sign_slideDuration": 12000,
                 "sign_satisfyWatchdog": true
             },
-						"agg_test": {
+            "agg_test": {
                 "agencies": ["MassDOT","MBTA"],
                 "MassDOT_name": "MassDOT",
                 "MassDOT_sourceType": "psa-only",
-								"MBTA_name": "MBTA",
+                "MBTA_name": "MBTA",
                 "MBTA_sourceType": "MBTA-realtime",
                 "MBTA_baseURL": "http://realtime.mbta.com/developer/api/v2/",
                 "MBTA_api_key": "tY0IKrIxSkeFLI3BckvuVQ",
@@ -101,14 +103,14 @@
                 "sign_satisfyWatchdog": true
             }
         },
-				"agg": {
+        "agg": {
             "base": "agg_test",
             "values": {
                 "MassDOT_psas": "/data/massport-psas-1.json",
-								"MBTA_stops": [{"stop_id": "place-asmnl", "locationName": "Ashmont Station"}],
+                "MBTA_stops": [{"stop_id": "place-asmnl", "locationName": "Ashmont Station"}],
                 "MBTA_destinationFilter": "^Ashmont"            }
         },
-				"psa": {
+        "psa": {
             "base": "psa_test",
             "values": {
                 "MassDOT_psas": "/data/massport-psas-1.json"
@@ -118,9 +120,9 @@
             "base": "mbta_10pp_v1",
             "values": {
                 "MBTA_stops": [
-									{"stop_id": "Back Bay", "locationName": "Board at Back Bay Station", "showLocationName": true},
-									{"stop_id": "145", "locationName": "Board at Arlington / St James bus stop", "showLocationName": true},
-									{"stop_id": "1241", "locationName": "Board at Park Plaza bus stop (to the right)", "showLocationName": true}
+                  {"stop_id": "Back Bay", "locationName": "Board at Back Bay Station", "showLocationName": true},
+                  {"stop_id": "145", "locationName": "Board at Arlington / St James bus stop", "showLocationName": true},
+                  {"stop_id": "1241", "locationName": "Board at Park Plaza bus stop (to the right)", "showLocationName": true}
                 ],
                 "MBTA_destinationFilter": "^South\\sStation"
             }
@@ -129,18 +131,18 @@
             "base": "mbta_10pp_v1",
             "values": {
                 "MBTA_stops": [
-									{"stop_id": "6542", "locationName": "Board at Kneeland Street bus stop (to the left)", "showLocationName": true},
-									{"stop_id": "9983", "locationName": "Board at Charles Street bus stop (to the right)", "showLocationName": true},
-									{"stop_id": "place-tumnl", "locationName": "Board at Tufts Medical Center", "showLocationName": true},
-									{"stop_id": "South Station", "locationName": "Board at South Station", "showLocationName": true}
+                  {"stop_id": "6542", "locationName": "Board at Kneeland Street bus stop (to the left)", "showLocationName": true},
+                  {"stop_id": "9983", "locationName": "Board at Charles Street bus stop (to the right)", "showLocationName": true},
+                  {"stop_id": "place-tumnl", "locationName": "Board at Tufts Medical Center", "showLocationName": true},
+                  {"stop_id": "South Station", "locationName": "Board at South Station", "showLocationName": true}
                 ],
                 "MBTA_destinationFilter": "^South\\sStation"
             }
         },
-				"10pp-charles": {
+        "10pp-charles": {
             "base": "mbta_10pp",
             "values": {
-								"MassDOT_psas": "/data/massport-psas-1.json",
+                "MassDOT_psas": "/data/massport-psas-1.json",
                 "MBTA_stops": [
                     {"stop_id": "Back Bay", "locationName": "Board at Back Bay Station", "showLocationName": true},
                     {"stop_id": "145", "locationName": "Board at Arlington / St James bus stop", "showLocationName": true},
@@ -152,7 +154,7 @@
         "10pp-stuart": {
             "base": "mbta_10pp",
             "values": {
-								"MassDOT_psas": "/data/massport-psas-1.json",
+                "MassDOT_psas": "/data/massport-psas-1.json",
                 "MBTA_stops": [
                     {"stop_id": "6542", "locationName": "Board at Kneeland Street bus stop (to the left)", "showLocationName": true},
                     {"stop_id": "9983", "locationName": "Board at Charles Street bus stop (to the right)", "showLocationName": true},
@@ -173,9 +175,9 @@
             "base": "mbta_lfd_m",
             "values": {
                 "MBTA_stops": [
-  									{"stop_id": "70069", "locationName": "Board downstairs", "showLocationName": true},
+                    {"stop_id": "70069", "locationName": "Board downstairs", "showLocationName": true},
                     {"stop_id": "70070", "locationName": "Board across street, downstairs", "showLocationName": true},
-										{"stop_id": "102", "locationName": "Board across street", "showLocationName": true},
+                    {"stop_id": "102", "locationName": "Board across street", "showLocationName": true},
                     {"stop_id": "1060", "locationName": "Board from Magazine Street to your left", "showLocationName": true},
                     {"stop_id": "1123", "locationName": "Board from Green Street around the corner", "showLocationName": true},
                     {"stop_id": "72", "locationName": "Board to the right", "showLocationName": true}

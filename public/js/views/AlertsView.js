@@ -42,22 +42,23 @@ define([
                 height,
                 renderRefreshAll = this.renderRefreshAll, //plan to show all
                 renderDuration = this.renderDuration, //duration
-                renderOnly = this.renderOnly; //render only these alerts
+                renderOnly = this.renderOnly, //render only these alerts
+                innerHeight = this.innerHeight || window.innerHeight;
 
             this.renderRefreshAll = this.renderDuration = false;
             this.renderOnly = false;
 
-            //if there was no input.duration (meaning this was triggered by 
-            //something other than showSlide), and there's > 1 subSlide 
+            //if there was no input.duration (meaning this was triggered by
+            //something other than showSlide), and there's > 1 subSlide
             //meaning whe may be in the midst of showing some of the
-            //information bit by bit), do nothing. 
+            //information bit by bit), do nothing.
 
             if ((!renderRefreshAll && !renderOnly)
                     && (this.subSlides > 1)) {
                 return this;
             }
 
-            //if there is no model, set to blank. 
+            //if there is no model, set to blank.
 
             if (renderRefreshAll) { this.speechScript = []; }
             if (this.model === undefined ||
@@ -121,7 +122,7 @@ define([
             //shrink as needed to fit
 
             height = this.$el.height();
-            while (this.fontSize > 1 && height > window.innerHeight) {
+            while (this.fontSize > 1 && height > innerHeight) {
                 this.fontSize -= 1;
                 this.$('.alerts-list').css('fontSize', this.fontSize + '%');
                 height = Math.max(this.$el.height(), 1);

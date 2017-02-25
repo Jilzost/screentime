@@ -29,8 +29,8 @@ define([
         render: function () {
             var psa,
                 psaView,
-                html;
-
+                html,
+                innerHeight = this.innerHeight || window.innerHeight;
 
             if (this.model.get('collection').length === 0) {
                 this.$el.html('');
@@ -40,7 +40,7 @@ define([
             }
 
             this.hasContent = true;
-            this.lastHeight = window.innerHeight;
+            this.lastHeight = innerHeight;
 
             html = this.template(this.model.toJSON());
             this.$el.html(html);

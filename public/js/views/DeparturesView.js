@@ -70,7 +70,8 @@ define([
                 renderDuration = this.renderDuration, //duration
                 renderOnly = this.renderOnly, //render only these deps
                 hasRoutes = false,
-                hasTrains = false;
+                hasTrains = false,
+                innerHeight = this.innerHeight || window.innerHeight;
 
             this.renderRefreshAll = this.renderDuration = false;
             this.renderOnly = false;
@@ -185,7 +186,7 @@ define([
                 originalHeight = height - originalHeight;
                 // console.log(originalHeight);
                 while (this.fontSize > 1
-                        && height > window.innerHeight) {
+                        && height > innerHeight) {
                     // console.log(height);
                     this.fontSize -= 1;
                     this.$('tbody').css('fontSize', this.fontSize + '%');
@@ -220,7 +221,7 @@ define([
                     subSlides = this.subSlidesByDeps[deps.length];
                     //console.log("Old: " + deps.length + " " + subSlides);
                 } else {
-                    subSlides = Math.ceil(originalHeight / window.innerHeight);
+                    subSlides = Math.ceil(originalHeight / innerHeight);
                     this.subSlidesByDeps[deps.length] = subSlides;
                     //console.log("New: " + deps.length + " " + subSlides);
                 }

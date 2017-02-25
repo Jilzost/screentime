@@ -196,6 +196,14 @@ define([
                         x;
                     configData = JSON.parse(data);
 
+                    //retrieve sign configuration
+                    config = filterProperties(configData, 'sign', '_');
+                    for (x in config) {
+                        if (config.hasOwnProperty(x)) {
+                            self.set(x, config[x]);
+                        }
+                    }
+
                     //Configure agencies
                     _(configData.agencies).each(function (aName) {
                         config = filterProperties(configData, aName, '_');
@@ -241,31 +249,37 @@ define([
 
                     self.set({screenViews: {
                         departures: new DeparturesView({
-                            model: self.get('screenModels').departures
+                            model: self.get('screenModels').departures,
+                            innerHeight: self.get('innerHeight')
                         }),
                         currentAlerts: new AlertsView({
                             el: '#currentAlerts',
                             model: self.get('screenModels').serviceAlerts,
-                            AlertView: AlertViewSimple
+                            AlertView: AlertViewSimple,
+                            innerHeight: self.get('innerHeight')
                         }),
                         upcomingAlerts: new AlertsView({
                             el: '#upcomingAlerts',
                             model: self.get('screenModels').upcomingAlerts,
-                            AlertView: AlertViewTimeframe
+                            AlertView: AlertViewTimeframe,
+                            innerHeight: self.get('innerHeight')
                         }),
                         elevatorAlerts: new AlertsView({
                             el: '#elevatorAlerts',
                             model: self.get('screenModels').elevatorAlerts,
-                            AlertView: AlertViewElevator
+                            AlertView: AlertViewElevator,
+                            innerHeight: self.get('innerHeight')
                         }),
                         featuredAlerts: new AlertsView({
                             el: '#featuredAlerts',
                             model: self.get('screenModels').featuredAlerts,
-                            AlertView: AlertViewFeatured
+                            AlertView: AlertViewFeatured,
+                            innerHeight: self.get('innerHeight')
                         }),
                         psas: new PsasView({
                             el: '#psas',
-                            model: self.get('screenModels').psas
+                            model: self.get('screenModels').psas,
+                            innerHeight: self.get('innerHeight')
                         })
                     }});
 
@@ -279,13 +293,6 @@ define([
                     self.set({speaker: new Speaker(config)});
 
                     //configure sign
-                    config = filterProperties(configData, 'sign', '_');
-                    for (x in config) {
-                        if (config.hasOwnProperty(x)) {
-                            self.set(x, config[x]);
-                        }
-                    }
-
                     if (self.get('heartbeat')) {
                         //FUTURE WORK is using function (self) best practice?
                         setInterval(function (self) {
@@ -383,7 +390,7 @@ define([
                     return waitTime;
                 },
                 slides = [],
-                screenHeight = window.innerHeight,
+                screenHeight = this.get('innerHeight') || window.innerHeight,
                 t = 0,
                 nextSlideInfo = {},
                 self = this,
@@ -552,7 +559,7 @@ define([
         showSlide: function (input) {
             var hasContent = false,
                 totalHeights = 0,
-                screenHeight = window.innerHeight,
+                screenHeight = this.get('innerHeight') || window.innerHeight,
                 gapHeight = 0,
                 bottomHeight = false;
 
