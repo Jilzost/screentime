@@ -146,18 +146,28 @@ define([
                     if (x.get('train')) {
                       this.$('#route-departures-header').before(item.render().$el);
                       hasTrains = true;
+                      if (renderRefreshAll) {
+                          this.speechScript.push(
+                                  'Train ' +
+                                  x.get('train') +
+                                  ' to ' +
+                                  x.get('destinationTitle') + ', ' +
+                                  x.minsAway() +
+                                  (x.minsAway() === 1 ? ' minute' : ' minutes')
+                          );
+                      }
                     } else {
                       this.$('#departurestable tbody').append(item.render().$el);
                       hasRoutes = true;
-                    }
-                    if (renderRefreshAll) {
-                        this.speechScript.push(
-                            x.get('route').get('longName').replace('/', ' ')
-                                + ' ' +
-                                x.get('destinationTitle') + ', ' +
-                                x.minsAway() +
-                                (x.minsAway() === 1 ? ' minute' : ' minutes')
-                        );
+                      if (renderRefreshAll) {
+                          this.speechScript.push(
+                              x.get('route').get('longName').replace('/', ' ') +
+                                  ' ' +
+                                  x.get('destinationTitle') + ', ' +
+                                  x.minsAway() +
+                                  (x.minsAway() === 1 ? ' minute' : ' minutes')
+                          );
+                      }
                     }
                 }, this);
                 if (!hasTrains) {this.$('#train-departures-header').hide(); }
