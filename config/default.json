@@ -118,9 +118,9 @@
             "base": "mbta_10pp_v1",
             "values": {
                 "MBTA_stops": [
-									{"stop_id": "Back Bay", "locationName": "From Back Bay Station", "showLocationName": true},
-									{"stop_id": "145", "locationName": "From Arlington / St James bus stop", "showLocationName": true},
-									{"stop_id": "1241", "locationName": "From Park Plaza bus stop (to the right)", "showLocationName": true}
+									{"stop_id": "Back Bay", "locationName": "Board at Back Bay Station", "showLocationName": true},
+									{"stop_id": "145", "locationName": "Board at Arlington / St James bus stop", "showLocationName": true},
+									{"stop_id": "1241", "locationName": "Board at Park Plaza bus stop (to the right)", "showLocationName": true}
                 ],
                 "MBTA_destinationFilter": "^South\\sStation"
             }
@@ -129,10 +129,10 @@
             "base": "mbta_10pp_v1",
             "values": {
                 "MBTA_stops": [
-									{"stop_id": "6542", "locationName": "From Kneeland Street bus stop (to the left)", "showLocationName": true},
-									{"stop_id": "9983", "locationName": "From Charles Street bus stop (to the right)", "showLocationName": true},
-									{"stop_id": "place-tumnl", "locationName": "From Tufts Medical Center", "showLocationName": true},
-									{"stop_id": "South Station", "locationName": "From South Station", "showLocationName": true}
+									{"stop_id": "6542", "locationName": "Board at Kneeland Street bus stop (to the left)", "showLocationName": true},
+									{"stop_id": "9983", "locationName": "Board at Charles Street bus stop (to the right)", "showLocationName": true},
+									{"stop_id": "place-tumnl", "locationName": "Board at Tufts Medical Center", "showLocationName": true},
+									{"stop_id": "South Station", "locationName": "Board at South Station", "showLocationName": true}
                 ],
                 "MBTA_destinationFilter": "^South\\sStation"
             }
@@ -142,9 +142,9 @@
             "values": {
 								"MassDOT_psas": "/data/massport-psas-1.json",
                 "MBTA_stops": [
-                    {"stop_id": "Back Bay", "locationName": "From Back Bay Station", "showLocationName": true},
-                    {"stop_id": "145", "locationName": "From Arlington / St James bus stop", "showLocationName": true},
-                    {"stop_id": "1241", "locationName": "From Park Plaza bus stop (to the right)", "showLocationName": true}
+                    {"stop_id": "Back Bay", "locationName": "Board at Back Bay Station", "showLocationName": true},
+                    {"stop_id": "145", "locationName": "Board at Arlington / St James bus stop", "showLocationName": true},
+                    {"stop_id": "1241", "locationName": "Board at Park Plaza bus stop (to the right)", "showLocationName": true}
                 ],
                 "MBTA_destinationFilter": "^South\\sStation"
             }
@@ -154,10 +154,10 @@
             "values": {
 								"MassDOT_psas": "/data/massport-psas-1.json",
                 "MBTA_stops": [
-                    {"stop_id": "6542", "locationName": "From Kneeland Street bus stop (to the left)", "showLocationName": true},
-                    {"stop_id": "9983", "locationName": "From Charles Street bus stop (to the right)", "showLocationName": true},
-                    {"stop_id": "place-tumnl", "locationName": "From Tufts Medical Center", "showLocationName": true},
-                    {"stop_id": "South Station", "locationName": "From South Station", "showLocationName": true}
+                    {"stop_id": "6542", "locationName": "Board at Kneeland Street bus stop (to the left)", "showLocationName": true},
+                    {"stop_id": "9983", "locationName": "Board at Charles Street bus stop (to the right)", "showLocationName": true},
+                    {"stop_id": "place-tumnl", "locationName": "Board at Tufts Medical Center", "showLocationName": true},
+                    {"stop_id": "South Station", "locationName": "Board at South Station", "showLocationName": true}
                 ],
                 "MBTA_destinationFilter": "^South\\sStation"
             }
