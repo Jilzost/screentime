@@ -2,7 +2,12 @@
 <div class="<%= titleFormat %>"><%- titleText %></div>
 <table id="departurestable">
     <tbody>
-        <tr>
+        <tr id="train-departures-header">
+            <th class="train"><%- trainColHeader %></th>
+            <th class="destination"><%- destinationColHeader %></th>
+            <th class="minutes_away"><%- minutesAwayColHeader %></th>
+        </tr>
+        <tr id="route-departures-header">
             <th class="route"><%- routeColHeader %></th>
             <th class="destination"><%- destinationColHeader %></th>
             <th class="minutes_away"><%- minutesAwayColHeader %></th>

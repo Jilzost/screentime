@@ -29,7 +29,7 @@ define([
 
     var deriveDestination = function (departure) {
 
-        var dest = {title: '', subtitle: '' },
+        var dest = {title: '', subtitle: '', train: undefined },
             headsign = '',
             testVia = /\svia\s/, //Does destination sign contain "via"?
             getBeforeVia = /\svia\s[\W\w]+$/, //Text before word "via"
@@ -69,8 +69,8 @@ define([
         if (departure.get('trip_headsign')) {
             //commuter rail, with headsign
             dest.title = departure.get('trip_headsign');
-            dest.subtitle = 'Train '
-                + departure.get('trip_name').replace(getBeforeSpace, '');
+            //dest.subtitle = departure.get('route_name');
+            dest.train = departure.get('trip_name').replace(getBeforeSpace, '');
             return dest;
         }
         dest.title = departure.get('direction_name');
@@ -637,6 +637,7 @@ define([
                             tripId: dep.get('trip_id'),
                             destinationTitle: destination.title,
                             destinationSubtitle: destination.subtitle,
+                            train: destination.train,
                             scheduledTime: dep.get('sch_dep_dt') * 1000,
                             predictedTime: dep.get('pre_dt') * 1000,
                             locationName: dep.get('locationName'),

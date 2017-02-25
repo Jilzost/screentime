@@ -193,7 +193,6 @@ body {
 
 #departurestable tr {
     font-size: 150%;
-
 }
 
 th.destination {
@@ -207,6 +206,13 @@ td {
 td.route {
   vertical-align: middle;
   font-weight: bold;
+  text-align: center;
+  vertical-align: text-top;
+  font-size: 75%;
+}
+
+td.train {
+  vertical-align: middle;
   text-align: center;
   vertical-align: text-top;
   font-size: 75%;

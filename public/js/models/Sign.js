@@ -132,6 +132,7 @@ define([
             models.departures = new ScreenModel({
                 titleText: 'Departures',
                 titleFormat: 'CSS_DeparturesTitle',
+                trainColHeader: 'Train',
                 routeColHeader: 'Route',
                 destinationColHeader: 'Destination',
                 minutesAwayColHeader: 'Mins',

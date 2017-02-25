@@ -68,7 +68,9 @@ define([
                 depsPerSubSlide,
                 renderRefreshAll = this.renderRefreshAll, //plan to show all
                 renderDuration = this.renderDuration, //duration
-                renderOnly = this.renderOnly; //render only these deps
+                renderOnly = this.renderOnly, //render only these deps
+                hasRoutes = false,
+                hasTrains = false;
 
             this.renderRefreshAll = this.renderDuration = false;
             this.renderOnly = false;
@@ -141,7 +143,13 @@ define([
                     var item = new DepartureView(
                         {model: x, className: x.get('route').get('mode')}
                     );
-                    this.$('tbody').append(item.render().$el);
+                    if (x.get('train')) {
+                      this.$('#route-departures-header').before(item.render().$el);
+                      hasTrains = true;
+                    } else {
+                      this.$('#departurestable tbody').append(item.render().$el);
+                      hasRoutes = true;
+                    }
                     if (renderRefreshAll) {
                         this.speechScript.push(
                             x.get('route').get('longName').replace('/', ' ')
@@ -152,6 +160,8 @@ define([
                         );
                     }
                 }, this);
+                if (!hasTrains) {this.$('#train-departures-header').hide(); }
+                if (!hasRoutes) {this.$('#route-departures-header').hide(); }
 
                 //shrink as needed to fit
 

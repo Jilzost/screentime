@@ -54,7 +54,7 @@ define([
                     //This includes a "Short name" of "waterfront"
                     this.set({shortName: this.get('branchName')});
                 } else if (this.get('mode') === 'Commuter Rail') {
-                    this.set({shortName: 'Rail'});
+                    this.set({shortName: ''});
                 } else if (this.get('mode') === 'Boat') {
                     this.set({shortName: 'Boat'});
                 } else {

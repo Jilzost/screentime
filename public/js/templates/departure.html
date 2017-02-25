@@ -1,5 +1,12 @@
 <!-- Filename: templates/departure.html -->
-<td class="route" style="color:<%= route.color %>"><%- route.shortName %></td>
+  <% if (this.model.get('train')) { %>
+    <td class="train" style="color:<%= route.color %>">
+    <%- train %>
+    <% } else { %>
+    <td class="route" style="color:<%= route.color %>">
+  <%- route.shortName %>
+  <% } %>
+</td>
 <td class="destination" style="color:<%= route.color %>"><%- destinationTitle %><br>
 <% if (!this.model.get('showLocationName')) { %>
     <span class="destinationSubtitle"><%- destinationSubtitle %></span>
