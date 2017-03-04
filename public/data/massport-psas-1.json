@@ -2,11 +2,15 @@
   "images": [
     {
       "url": "/images/CrowdPlow-1080x1920.jpg",
-      "displayOrder": 2
+      "displayOrder": 1
     },
     {
       "url": "/images/PoliceExam-1080x1920.jpg",
-      "displayOrder": 1
+      "displayOrder": 2
+    },
+    {
+      "url": "/images/Tailgating-1080x1920.jpg",
+      "displayOrder": 3
     }
   ]
 }
