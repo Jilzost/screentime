@@ -7,16 +7,29 @@ speechSynthesis, document, window */
 define([
     'jquery',
     'underscore',
-    'backbone',
+    'backbone'
 ], function ($, _, Backbone) {
     var logger = {};
 
     logger.log = function (sourceFunctionName, message) {
-        var unsent, entry, signId;
-        signId = logger.signId ||
-        window.location.search.replace(/[\?\&]id=([^\?\&]*)/i, '$1');
+        var unsent, entry, signId, url, regex;
+        signId = logger.signId;
 
         try {
+            if (!signId) {
+              // Courtesy http://stackoverflow.com/questions/901115/how-can-i-get-query-string-values-in-javascript
+                url = window.location.href;
+                regex = new RegExp("[?&]" + "id" + "(=([^&#]*)|&|#|$)");
+                signId = regex.exec(url);
+                if (!signId) {
+                    signId = 'Unknown';
+                } else if (!signId[2]) {
+                    signId = 'Unknown';
+                } else {
+                   signId = decodeURIComponent(signId[2].replace(/\+/g, " "));
+                }
+            }
+
             logger.entriesCounted = logger.entriesCounted || 0;
             //Are we sure we haven't sent too many entries recently?
             if (logger.entriesCounted < 120) {
@@ -33,12 +46,12 @@ define([
                 $.post('postlog', JSON.stringify(entry));
                 logger.countingEntriesSince = logger.countingEntriesSince
                     || Date.now();
-            //We've sent too many entries; are we sure it's not time 
+            //We've sent too many entries; are we sure it's not time
             //to start sending again?
             } else if (logger.countingEntriesSince + 1200000 > Date.now()) {
                 logger.unsentEntries = logger.unsentEntries || 0;
                 logger.unsentEntries += 1;
-            //resume sending log entries. 
+            //resume sending log entries.
             } else {
                 logger.countingEntriesSince = Date.now();
                 logger.entriesCounted = 0;
