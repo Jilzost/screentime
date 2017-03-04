@@ -302,7 +302,8 @@
                     {"stop_id": "4511", "locationName": "Board from New Sudbury Street", "showLocationName": true},
                     {"stop_id": "117", "locationName": "Board from Congress Street", "showLocationName": true}
                 ],
-                "MBTA_destinationFilter": "^Haymarket"
+                "MBTA_destinationFilter": "^Haymarket",
+                "MBTA_suppressDepartures": ["Subway"]
             }
         },
         "maverick": {
