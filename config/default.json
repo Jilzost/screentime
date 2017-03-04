@@ -234,6 +234,42 @@
               }
             }
         },
+        "dudley-a": {
+            "base": "mbta_lfd_l",
+            "values": {
+                "MBTA_stops": [
+                    {"stop_id": "64", "locationName": "Dudley Square"},
+                    {"stop_id": "64000", "locationName": "Dudley Square"}
+                ],
+                "MBTA_destinationFilter": "^Dudley",
+                "MBTA_routeOverrideTest": "^Ruggles",
+                "MBTA_routeOverride": {
+                  "txid": -1,
+                  "name": "",
+                  "mode": "Bus",
+                  "color": "#FFFF7C",
+                  "sortOrder": 9999
+              }
+            }
+        },
+        "dudley-c": {
+            "base": "mbta_lfd_l",
+            "values": {
+                "MBTA_stops": [
+                    {"stop_id": "64", "locationName": "Dudley Square"},
+                    {"stop_id": "64000", "locationName": "Dudley Square"}
+                ],
+                "MBTA_destinationFilter": "^Dudley",
+                "MBTA_routeOverrideTest": "^Ruggles",
+                "MBTA_routeOverride": {
+                  "txid": -1,
+                  "name": "",
+                  "mode": "Bus",
+                  "color": "#FFFF7C",
+                  "sortOrder": 9999
+              }
+            }
+        },
         "allalerts": {
             "base": "mbta_lfd_m",
             "values": {
