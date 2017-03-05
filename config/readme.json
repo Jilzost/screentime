@@ -38,7 +38,7 @@
                 "sign_heartbeat": "boolean. Whether sign sends a heartbeat.",
                 "sign_heartbeatRate": "int. Heartbeat frequency in ms.",
                 "sign_slideDuration": "Int. Time a slide should be shown, in ms.",
-                "sign_shortSlideDuration": "Int. Time a slide should be shown if it's the only slide, in ms.",
+								"sign_shortSlideDuration": "Int. Time a slide should be shown if it's the only slide, in ms.",
 								"sign_lampControl": {
                   "lampURL": "http://localhost/cgi-bin/lamps.cgi",
                   "expected": {"lamps": "1"}
