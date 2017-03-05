@@ -310,7 +310,8 @@
             "base": "mbta_lfd_m",
             "values": {
                 "MBTA_stops": [{"stop_id": "place-rugg", "locationName": "Ruggles Station"}],
-                "MBTA_destinationFilter": "^Ruggles"
+                "MBTA_destinationFilter": "^Ruggles",
+                "MBTA_suppressDepartures": ["Commuter Rail", "Subway"]
             }
         },
         "rugglesfull": {
