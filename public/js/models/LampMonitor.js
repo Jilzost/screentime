@@ -32,8 +32,9 @@ define([
                 .done(function (data) {
                     self.checkLampResults(data);
                 })
-                .fail(function () {
-                    logger.log('lampControl', 'Lamp check failed');
+                .fail(function (jqXHR, textStatus, errorThrown) {
+                    logger.log('lampControl', 'Lamp check failed ' +
+                      errorThrown);
                 });
         },
         checkLampResults: function (data) {

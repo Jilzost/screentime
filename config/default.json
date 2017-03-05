@@ -17,11 +17,7 @@
                 "screenshots_syncScreenshotFreq": 1200000,
                 "screenshots_maxScreenshots": 500,
                 "sign_slideDuration": 12000,
-                "sign_satisfyWatchdog": true,
-                "sign_lampControl": {
-                  "lampURL": "http://localhost/cgi-bin/lamps.cgi",
-                  "expected": {"lamps": "1"}
-                }
+                "sign_satisfyWatchdog": true
             },
             "mbta_lfd_l": {
                 "agencies": ["MBTA"],
@@ -36,10 +32,7 @@
                 "screenshots_maxScreenshots": 500,
                 "sign_slideDuration": 12000,
                 "sign_type": "sign_l",
-                "sign_satisfyWatchdog": true,
-                "sign_lampControl": {
-                  "lampURL": "http://localhost/cgi-bin/lamps.cgi",
-                  "expected": {"lamps": "1"}
+                "sign_satisfyWatchdog": true
                 }
             },
             "mbta_10pp_v1": {
