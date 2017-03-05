@@ -11,7 +11,6 @@ var logger = require("./logger");
 var sampleHandlers = require("./sampleHandlers");
 var speechSampleHandlers = require("./speechSampleHandlers");
 var socketServer = require("./socketServer");
-var config = require('config');
 
 
 var handle = {};
@@ -42,9 +41,3 @@ handle["/speak.mp3"] = socketServer.speak;
 
 server.start(router.route, handle);
 logger.startLogging();
-logger.log('server', 'server', 4, 'server.start', 'NODE_ENV: ' + config.util.getEnv('NODE_ENV'));
-logger.log('server', 'server', 4, 'server.start', 'NODE_CONFIG_DIR: ' + config.util.getEnv('NODE_CONFIG_DIR'));
-logger.log('server', 'server', 4, 'server.start', 'NODE_CONFIG: ' + config.util.getEnv('NODE_CONFIG'));
-logger.log('server', 'server', 4, 'server.start', 'HOSTNAME: ' + config.util.getEnv('HOSTNAME'));
-logger.log('server', 'server', 4, 'server.start', 'NODE_APP_INSTANCE: ' + config.util.getEnv('NODE_APP_INSTANCE'));
-logger.log('server', 'server', 4, 'server.start', 'NODE_ENV: ' + config.util.getEnv('NODE_ENV'));
