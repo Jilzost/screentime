@@ -33,7 +33,6 @@
                 "sign_slideDuration": 12000,
                 "sign_type": "sign_l",
                 "sign_satisfyWatchdog": true
-                }
             },
             "mbta_10pp_v1": {
                 "agencies": ["MBTA"],
