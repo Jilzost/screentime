@@ -4,7 +4,7 @@
 		"to": "dbarker@mbta.com, developer@mbta.com",
 		"subject": "Screentime events",
 		"transport": {
-			"host": "smtp.mbta.com",
+			"host": "smtprelay.mbta.com",
 			"tls": {
 				"rejectUnauthorized": false
 			}
