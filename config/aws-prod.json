@@ -1,4 +1,5 @@
 {
+	"configFilename": "aws-prod",
 	"emailIsOn": true,
 	"emailThreshold": 2,
 	"logThreshold": 4,
