@@ -1,4 +1,5 @@
 {
+	"configFilename": "hsrealtime01",
 	"emailSettings": {
 		"from": "MBTA ScreenTime <screentime@mbta.com>",
 		"to": "dbarker@mbta.com, developer@mbta.com",

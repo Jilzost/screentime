@@ -1,9 +1,11 @@
 {
-	"configFilename": "sharpie",
+	"emailIsOn": true,
+	"emailThreshold": 2,
+	"logThreshold": 4,
 	"emailSettings": {
 		"from": "MBTA G ScreenTime <mbta.screentime@gmail.com>",
 		"to": "dpb@alum.mit.edu",
-		"subject": "Screentime events - test",
+		"subject": "Screentime events - AWS-prod",
 		"transport": {
 	        "service": "Gmail",
 	        "auth": {

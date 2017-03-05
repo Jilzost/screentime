@@ -35,11 +35,12 @@ function start(route, handle) {
     port = (process.env.PORT || config.get('port'));
     server = http.createServer(onRequest).listen(port);
     console.log('Server is listening on port ' + port + '.');
-    logger.log('server', 'server', 4, 'server.start', 'Server started');
-    logger.log('server', 'server', 4, 'server.start', 'NODE_ENV: ' + config.util.getEnv('NODE_ENV'));
+    logger.log('server', 'server', 4, 'server.start',
+        'Server started, configuration ' + config.get('configFilename'));
+    //logger.log('server', 'server', 4, 'server.start', 'NODE_ENV: ' + config.util.getEnv('NODE_ENV'));
     //logger.log('server', 'server', 4, 'server.start', 'NODE_CONFIG_DIR: ' + config.util.getEnv('NODE_CONFIG_DIR'));
-    logger.log('server', 'server', 4, 'server.start', 'NODE_CONFIG: ' + config.util.getEnv('NODE_CONFIG'));
-    logger.log('server', 'server', 4, 'server.start', 'HOSTNAME: ' + config.util.getEnv('HOSTNAME'));
+    //logger.log('server', 'server', 4, 'server.start', 'NODE_CONFIG: ' + config.util.getEnv('NODE_CONFIG'));
+    //logger.log('server', 'server', 4, 'server.start', 'HOSTNAME: ' + config.util.getEnv('HOSTNAME'));
     //logger.log('server', 'server', 4, 'server.start', 'NODE_APP_INSTANCE: ' + config.util.getEnv('NODE_APP_INSTANCE'));
     socketServer.listen(server);
 }

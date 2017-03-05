@@ -1,4 +1,5 @@
 {
+  "configFilename": "default",
   "port": 6276,
   "emailIsOn": false,
   "emailThreshold": 1,
