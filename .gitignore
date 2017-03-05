@@ -3,6 +3,7 @@ node_modules/
 samples/
 public/log/
 .DS_Store
+npm-debug.log
 
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
