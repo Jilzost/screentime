@@ -19,7 +19,7 @@ define([
             triggerTypes: 'key', //'key' 'socket', 'key socket'
             triggerKey: 83, //83 = 's'
             signId: '',
-            voiceTools: 'mespeak', //'webspeech' or 'mespeak' 
+            voiceTools: 'mespeak', //'webspeech' or 'mespeak'
             speakingState: false,
             haltSpeech: false,
             chunkerCancel: false,
@@ -132,27 +132,27 @@ define([
             if (i < 0) { i = 0; }
             if (self.get('voiceTools') === 'mespeak') {
                 if (self.get('haltSpeech')) {
-                    logger.log('models/Speaker.speakTextList', 'haltSpeech');
+                    logger.log('models/Speaker.speakTextList', 'Stopping speaking');
                     self.set({'haltSpeech': false});
                     self.set({'speakingState': false});
                     return;
                 }
 
                 if (i < textList.length) {
-                    logger.log('models/Speaker.speakTextList', 'speaking '
-                        + i
-                        + ' of 0 to '
-                        + (textList.length - 1)
-                        + ': '
-                        + textList[i]);
-                    self.set({'speakingState': true});
+                    // logger.log('models/Speaker.speakTextList', 'speaking '
+                    //     + i
+                    //     + ' of 0 to '
+                    //     + (textList.length - 1)
+                    //     + ': '
+                    //     + textList[i]);
+                    // self.set({'speakingState': true});
                     testval = meSpeak.speak(textList[i], {},
                             function () {
-                            logger.log('models/Speaker.speakTextList', 'meSpeak.speak completed');
+                            //logger.log('models/Speaker.speakTextList', 'meSpeak.speak completed');
                             self.speakTextList(textList, i + 1);
                         });
                 } else {
-                    logger.log('models/Speaker.speakTextList', 'setting speakingState to false');
+                    logger.log('models/Speaker.speakTextList', 'Done speaking');
                     self.set({'speakingState': false});
 
                 }
@@ -169,5 +169,3 @@ define([
     });
     return Speaker;
 });
-
-
