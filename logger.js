@@ -88,7 +88,7 @@ function recordLogEntry(entry, overrideThreshold) {
 
         csvrow = entry.csvrow();
 
-        logPath = 'public/log/screentime.csv';
+        logPath = 'public/log/screentime.log';
 
         if (fs.existsSync(logPath)) {
             fs.appendFileSync(logPath, csvrow);
@@ -184,8 +184,8 @@ function renameCurrentFile() {
     dd = today.getDate();
     if (dd < 10) {dd = '0' + dd; }
 
-    oldLogPath = 'public/log/screentime.csv';
-    newLogPath = 'public/log/screentime-' + yyyy + '-' + mm + '-' + dd + '.csv';
+    oldLogPath = 'public/log/screentime.log';
+    newLogPath = 'public/log/screentime-' + yyyy + '-' + mm + '-' + dd + '.log';
 
     if (fs.existsSync(oldLogPath) &&
             !fs.existsSync(newLogPath)) {
