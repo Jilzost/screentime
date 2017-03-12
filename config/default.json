@@ -221,6 +221,8 @@
                 "MBTA_routeOverride": {
                   "txid": -1,
                   "name": "",
+                  "shortName": "",
+                  "longName": "Next bus to",
                   "mode": "Bus",
                   "color": "#FFFF7C",
                   "sortOrder": 9999
