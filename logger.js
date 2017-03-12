@@ -144,6 +144,7 @@ function log(source, sign, logLevel, process, message, forceEmailOptional, sourc
     forceEmailOptional = forceEmailOptional || false;
     sourceTimeOptional = sourceTimeOptional || new Date();
     var entry = new Entry(source, sign, logLevel, process, message, sourceTimeOptional);
+    console.log(message);
     recordLogEntry(entry);
     addLogEntryToEmail(entry, forceEmailOptional);
 }
