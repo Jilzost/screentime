@@ -85,7 +85,6 @@ define([
 
             if ((!renderRefreshAll && !renderOnly)
                     && (this.subSlides > 1)) {
-                //console.log(this);
                 return this;
             }
 
@@ -146,7 +145,6 @@ define([
                     || renderOnly) {
 
                 //render
-                //console.log("Rendering " + deps.length);
                 deps.each(function (x) {
                     var item = new DepartureView(
                         {model: x, className: x.get('route').get('mode')}
@@ -161,51 +159,13 @@ define([
                 }, this);
                 if (!hasTrains) {this.$('#train-departures-header').hide(); }
                 if (!hasRoutes) {this.$('#route-departures-header').hide(); }
-            }
-            if (buildingSpeech) {
 
-                if (buildingSpeech) {
-                    deps.each(function (x) {
-                        var routeName;
-                        if (x.get('train')) {
-                            this.speechScript.push(
-                                'Train ' +
-                                    x.get('train') +
-                                    ' to ' +
-                                    x.get('destinationTitle') + ', ' +
-                                    x.minsAway() +
-                                    (x.minsAway() === 1 ? ' minute' : ' minutes') +
-                                    (x.get('showLocationName') ?
-                                            ', ' + x.get('locationName') :
-                                            '')
-                            );
-                        } else {
-                            routeName =
-                                x.get('route').get('longName').replace('/', ' ');
-                            if (routeName === '') {
-                                routeName = 'Next service to';
-                            }
-                            this.speechScript.push(
-                                routeName +
-                                    ' ' +
-                                    x.get('destinationTitle') + ', ' +
-                                    x.minsAway() +
-                                    (x.minsAway() === 1 ? ' minute' : ' minutes') +
-                                    (x.get('showLocationName') ?
-                                            ', ' + x.get('locationName') :
-                                            '')
-                            );
-                        }
-                    }, this);
-                }
                 //shrink as needed to fit
 
                 height = Math.max(this.$el.height(), 1);
                 originalHeight = height - originalHeight;
-                // console.log(originalHeight);
                 while (this.fontSize > 1
                         && height > innerHeight) {
-                    // console.log(height);
                     this.fontSize -= 1;
                     this.$('tbody').css('fontSize', this.fontSize + '%');
                     height = Math.max(this.$el.height(), 1);
@@ -213,17 +173,45 @@ define([
                 if (!renderOnly) {this.lastHeight = height; }
             }
 
+            if (buildingSpeech) {
+                deps.each(function (x) {
+                    var routeName;
+                    if (x.get('train')) {
+                        this.speechScript.push(
+                            'Train ' +
+                                x.get('train') +
+                                ' to ' +
+                                x.get('destinationTitle') + ', ' +
+                                x.minsAway() +
+                                (x.minsAway() === 1 ? ' minute' : ' minutes') +
+                                (x.get('showLocationName') ?
+                                        ', ' + x.get('locationName') :
+                                        '')
+                        );
+                    } else {
+                        routeName =
+                            x.get('route').get('longName').replace('/', ' ');
+                        if (routeName === '') {
+                            routeName = 'Next service to';
+                        }
+                        this.speechScript.push(
+                            routeName +
+                                ' ' +
+                                x.get('destinationTitle') + ', ' +
+                                x.minsAway() +
+                                (x.minsAway() === 1 ? ' minute' : ' minutes') +
+                                (x.get('showLocationName') ?
+                                        ', ' + x.get('locationName') :
+                                        '')
+                        );
+                    }
+                }, this);
+            }
+
             //if we already know we have to make subslides, or
             //if too much shrinking was necessary and conditions right to
             //make subslides,
-            //do so
-
-            // console.log(this.fontSize);
-            // console.log(this.minFontSize);
-            // console.log(renderRefreshAll);
-            // console.log(renderDuration);
-            // console.log(deps.length);
-
+            //then do so
             if ((this.subSlidesByDeps[deps.length]
                     && this.subSlidesByDeps[deps.length] >= 2) ||
                     (this.fontSize <= this.minFontSize
@@ -231,30 +219,18 @@ define([
                         && renderDuration && deps.length > 0)) {
                 this.fontSize = 100;
 
-                // console.log(this.fontSize);
-
                 //calculate number of subslides
                 this.$('.tbody').css('fontSize', this.fontSize + '%');
                 if (this.subSlidesByDeps[deps.length]) {
                     subSlides = this.subSlidesByDeps[deps.length];
-                    //console.log("Old: " + deps.length + " " + subSlides);
                 } else {
                     subSlides = Math.ceil(originalHeight / innerHeight);
                     this.subSlidesByDeps[deps.length] = subSlides;
-                    //console.log("New: " + deps.length + " " + subSlides);
                 }
-
-                // console.log(this.$el.height());
-                // console.log(window.innerHeight);
-
-
-                // console.log(subSlides);
 
                 //calculate departures per subslide (round up)
 
                 depsPerSubSlide = Math.ceil(deps.length / subSlides);
-
-                // console.log(depsPerSubSlide);
 
                 //iterate through the departures, building lists;
                 //each time you have depsPerSubSlide deps
@@ -264,15 +240,12 @@ define([
                     memo.nextDepGroup.push(dep);
                     if (memo.nextDepGroup.length >= memo.depsPerSubSlide
                             || memo.depsRemainingAfterThis <= 0) {
-                        // console.log(memo);
                         setTimeout(function () {
-                            // console.log('click');
                             self.renderOnly = new Departures(memo.nextDepGroup);
                             self.render();
                         }, memo.nextWait);
                         return {
                             nextWait: memo.nextWait + memo.eachDuration,
-//                            nextDepGroup: new Departures(),
                             nextDepGroup: [],
                             depsPerSubSlide: memo.depsPerSubSlide,
                             depsRemainingAfterThis:
@@ -290,15 +263,11 @@ define([
                     };
                 }, {
                     nextWait: 0,
-//                    nextDepGroup: new Departures(),
                     nextDepGroup: [],
                     depsPerSubSlide: depsPerSubSlide,
                     depsRemainingAfterThis: deps.length - 1,
                     eachDuration: renderDuration / subSlides
                 });
-                // console.log(renderDuration);
-                // console.log(subSlides);
-                // console.log(renderDuration / subSlides);
                 self.subSlides = subSlides;
             } else {
                 if (renderRefreshAll) {
