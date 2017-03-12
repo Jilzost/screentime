@@ -71,7 +71,9 @@ define([
                 renderOnly = this.renderOnly, //render only these deps
                 hasRoutes = false,
                 hasTrains = false,
-                innerHeight = this.innerHeight || window.innerHeight;
+                innerHeight = this.innerHeight || window.innerHeight,
+                buildingSpeech = false;
+
 
             this.renderRefreshAll = this.renderDuration = false;
             this.renderOnly = false;
@@ -89,7 +91,12 @@ define([
 
             //if there is no model, set to blank.
 
-            if (renderRefreshAll) { this.speechScript = []; }
+            if (renderRefreshAll) {
+                this.speechScript = [];
+                buildingSpeech = true;
+            } else {
+                buildingSpeech = false;
+            }
             if (!renderOnly &&
                     (this.model === undefined ||
                     this.model.get('collection') === undefined ||
@@ -97,7 +104,6 @@ define([
                 this.$el.html('');
                 this.lastHeight = 0;
                 this.hasContent = false;
-                //console.log(this);
                 return this;
             }
             this.hasContent = true;
@@ -106,7 +112,7 @@ define([
             this.$('tbody').css('fontSize', this.fontSize + '%');
             this.$el.html(html);
             originalHeight = this.$el.height();
-            if (renderRefreshAll) {
+            if (buildingSpeech) {
                 this.speechScript.push(this.model.get('titleText'));
             }
 
@@ -133,7 +139,8 @@ define([
             //if we know from experience that we will need subslides
             //then don't bother rendering
 
-            //console.log("To show: " + deps.length  + " " + this.subSlidesByDeps[deps.length]);
+            //console.log("To show: " + deps.length  + " "
+            //+ this.subSlidesByDeps[deps.length]);
             if (!this.subSlidesByDeps[deps.length]
                     || this.subSlidesByDeps[deps.length] < 2
                     || renderOnly) {
@@ -145,41 +152,52 @@ define([
                         {model: x, className: x.get('route').get('mode')}
                     );
                     if (x.get('train')) {
-                      this.$('#route-departures-header').before(item.render().$el);
-                      hasTrains = true;
-                      if (renderRefreshAll) {
-                          this.speechScript.push(
-                                  'Train ' +
-                                  x.get('train') +
-                                  ' to ' +
-                                  x.get('destinationTitle') + ', ' +
-                                  x.minsAway() +
-                                  (x.minsAway() === 1 ? ' minute' : ' minutes') +
-                                  (x.get('showLocationName') ?
-                                    ', ' + x.get('locationName') :
-                                    '')
-                          );
-                      }
+                        this.$('#route-departures-header').before(item.render().$el);
+                        hasTrains = true;
                     } else {
-                      this.$('#departurestable tbody').append(item.render().$el);
-                      hasRoutes = true;
-                      if (renderRefreshAll) {
-                          this.speechScript.push(
-                              x.get('route').get('longName').replace('/', ' ') +
-                                  ' ' +
-                                  x.get('destinationTitle') + ', ' +
-                                  x.minsAway() +
-                                  (x.minsAway() === 1 ? ' minute' : ' minutes') +
-                                  (x.get('showLocationName') ?
-                                    ', ' + x.get('locationName') :
-                                    '')
-                          );
-                      }
+                        this.$('#departurestable tbody').append(item.render().$el);
+                        hasRoutes = true;
                     }
                 }, this);
                 if (!hasTrains) {this.$('#train-departures-header').hide(); }
                 if (!hasRoutes) {this.$('#route-departures-header').hide(); }
+            }
+            if (buildingSpeech) {
 
+                if (buildingSpeech) {
+                    deps.each(function (x) {
+                        var routeName;
+                        if (x.get('train')) {
+                            this.speechScript.push(
+                                'Train ' +
+                                    x.get('train') +
+                                    ' to ' +
+                                    x.get('destinationTitle') + ', ' +
+                                    x.minsAway() +
+                                    (x.minsAway() === 1 ? ' minute' : ' minutes') +
+                                    (x.get('showLocationName') ?
+                                            ', ' + x.get('locationName') :
+                                            '')
+                            );
+                        } else {
+                            routeName =
+                                x.get('route').get('longName').replace('/', ' ');
+                            if (routeName === '') {
+                                routeName = 'Next service to';
+                            }
+                            this.speechScript.push(
+                                routeName +
+                                    ' ' +
+                                    x.get('destinationTitle') + ', ' +
+                                    x.minsAway() +
+                                    (x.minsAway() === 1 ? ' minute' : ' minutes') +
+                                    (x.get('showLocationName') ?
+                                            ', ' + x.get('locationName') :
+                                            '')
+                            );
+                        }
+                    }, this);
+                }
                 //shrink as needed to fit
 
                 height = Math.max(this.$el.height(), 1);
@@ -287,7 +305,6 @@ define([
                     self.subSlides = 1;
                 }
             }
-            //console.log(this);
             return this;
 
         }

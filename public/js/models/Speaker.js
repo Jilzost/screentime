@@ -145,7 +145,7 @@ define([
                     //     + (textList.length - 1)
                     //     + ': '
                     //     + textList[i]);
-                    // self.set({'speakingState': true});
+                    self.set({'speakingState': true});
                     testval = meSpeak.speak(textList[i], {},
                             function () {
                             //logger.log('models/Speaker.speakTextList', 'meSpeak.speak completed');
