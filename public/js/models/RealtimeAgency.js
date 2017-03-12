@@ -354,6 +354,8 @@ define([
                 switch (source.get('severity')) {
                 case 'Informational':
                 case 'Information':
+                case 'None':
+                case 'FYI':
                     newAlert.set({severityPct: 10});
                     break;
                 case 'Minor':
