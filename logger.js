@@ -6,7 +6,6 @@ var fs = require('fs');
 var nodemailer = require('nodemailer');
 var cron = require('cron');
 var config = require('config');
-var findRemoveSync = require('find-remove');
 
 var csvheader = '"serverTime","source","sign","sourceTime","logLevel","process","message"\r\n';
 var tabheader = 'sign\tsourceTime\tprocess\tmessage\r\n';
@@ -21,8 +20,6 @@ if (email && config.has('emailSettings')) {
 } else {
     email = false;
 }
-
-var logAgeSec = 60 * 60 * 24 * 31;
 
 var baseEmailFrequency = 60000;
 var currentEmailFrequency = baseEmailFrequency;
@@ -82,13 +79,20 @@ function formatDuration(ms) {
 }
 
 function recordLogEntry(entry, overrideThreshold) {
-    var logPath, csvrow;
+    var logPath, yyyy, mm, dd, csvrow, today;
 
     if (entry.logLevel <= logThreshold || overrideThreshold) {
 
         csvrow = entry.csvrow();
 
-        logPath = 'public/log/screentime.log';
+        today = new Date();
+        yyyy = today.getFullYear();
+        mm = today.getMonth() + 1;
+        if (mm < 10) {mm = '0' + mm; }
+        dd = today.getDate();
+        if (dd < 10) {dd = '0' + dd; }
+
+        logPath = 'public/log/log-' + yyyy + '-' + mm + '-' + dd + '.csv';
 
         if (fs.existsSync(logPath)) {
             fs.appendFileSync(logPath, csvrow);
@@ -163,42 +167,12 @@ function logUptimes() {
     }
 }
 
-function deleteOldFiles() {
-    var result,
-        frOps = {
-            extensions: ['.bak', '.log', '.csv'],
-            age: {seconds: logAgeSec}
-        };
-    result = findRemoveSync('public/log', frOps);
-    console.log(result);
-}
-
-function renameCurrentFile() {
-    var oldLogPath, newLogPath, yyyy, mm, dd, today;
-
-    today = new Date();
-    yyyy = today.getFullYear();
-    mm = today.getMonth() + 1;
-    if (mm < 10) {mm = '0' + mm; }
-    dd = today.getDate();
-    if (dd < 10) {dd = '0' + dd; }
-
-    oldLogPath = 'public/log/screentime.log';
-    newLogPath = 'public/log/screentime-' + yyyy + '-' + mm + '-' + dd + '.log';
-
-    if (fs.existsSync(oldLogPath) &&
-            !fs.existsSync(newLogPath)) {
-        fs.renameSync(oldLogPath, newLogPath);
-    }
-}
-
 function startLogging() {
-    var logUptimeJob = new cron.CronJob('34 56 8 * * *', function () {logUptimes(); }, null, true),
-        deleteOldFilesJob = new cron.CronJob('10 0 12 * * *', function () {deleteOldFiles(); }, null, true),
-        renameCurrentFileJob = new cron.CronJob('50 59 23 * * *', function () {renameCurrentFile(); }, null, true);
+    var logUptimeJob = new cron.CronJob('34 56 8 * * *', function () {logUptimes(); }, null, true);
     serverStartTime = new Date();
 }
 
 exports.formatDuration = formatDuration;
 exports.log = log;
 exports.startLogging = startLogging;
+
