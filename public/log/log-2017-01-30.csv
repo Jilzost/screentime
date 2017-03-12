@@ -1,8 +1,0 @@
-"serverTime","source","sign","sourceTime","logLevel","process","message"
-"Mon Jan 30 2017 22:15:23 GMT-0500 (EST)","server","server","Mon Jan 30 2017 22:15:23 GMT-0500 (EST)","4","sampleHandlers","starting new samples/samples.json"
-"Mon Jan 30 2017 22:15:23 GMT-0500 (EST)","server","server","Mon Jan 30 2017 22:15:23 GMT-0500 (EST)","4","sampleHandlers","starting new speechsamples/speechsamples.json"
-"Mon Jan 30 2017 22:15:23 GMT-0500 (EST)","server","server","Mon Jan 30 2017 22:15:23 GMT-0500 (EST)","4","server.start","Server started"
-"Mon Jan 30 2017 22:16:48 GMT-0500 (EST)","server","server","Mon Jan 30 2017 22:16:48 GMT-0500 (EST)","4","sampleHandlers","starting new samples/samples.json"
-"Mon Jan 30 2017 22:16:48 GMT-0500 (EST)","server","server","Mon Jan 30 2017 22:16:48 GMT-0500 (EST)","4","sampleHandlers","starting new speechsamples/speechsamples.json"
-"Mon Jan 30 2017 22:16:48 GMT-0500 (EST)","server","server","Mon Jan 30 2017 22:16:48 GMT-0500 (EST)","4","server.start","Server started"
-"Mon Jan 30 2017 22:20:11 GMT-0500 (EST)","server","10pp-charles","Mon Jan 30 2017 22:20:11 GMT-0500 (EST)","4","checkHeartbeat","First heartbeat from existing sign"
