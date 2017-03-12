@@ -44,7 +44,7 @@ function returnFile(response, filePath, fileContents) {
 }
 
 /**
- * Serves a file from the cache, loading it first if necessary. 
+ * Serves a file from the cache, loading it first if necessary.
  * @param  {[type]} response response handle for web request
  * @param  {[type]} absPath  path requested
  */
@@ -58,8 +58,7 @@ function serveStatic(response, absPath, id) {
                     if (err) {
                         logger.log('server', 'server', 2,
                             'fileRequestHandlers.serveStatic',
-                            'serveStatic had error loading file ' + absPath,
-                            new Date(), new Date(), false);
+                            'serveStatic had error loading file ' + absPath);
                         send500(response);
                     } else {
                         cache[absPath] = data;
@@ -69,8 +68,7 @@ function serveStatic(response, absPath, id) {
             } else {
                 logger.log('server', id, 4,
                     'fileRequestHandlers.serveStatic',
-                    'Could not find file ' + absPath,
-                    new Date(), new Date(), false);
+                    'Could not find file ' + absPath);
                 send404(response);
             }
         });
@@ -84,7 +82,7 @@ function serveStatic(response, absPath, id) {
  * @param  {obj} response Web request response handle
  */
 function sendFile(path, id, response) {
-//TODO: "id" may no longer be necessary to handle at all. 
+//TODO: "id" may no longer be necessary to handle at all.
     var absPath;
     if (path === '/' || path === '/index.htm') {
         absPath = './public/index.html';
