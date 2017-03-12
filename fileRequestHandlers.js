@@ -49,7 +49,7 @@ function returnFile(response, filePath, fileContents) {
  * @param  {[type]} absPath  path requested
  */
 function serveStatic(response, absPath, id) {
-    if (cache[absPath]) {
+    if (cache[absPath] && !(absPath.substr(absPath.length-4, 4) === '.log')) {
         returnFile(response, absPath, cache[absPath]);
     } else {
         fs.exists(absPath, function (exists) {
