@@ -6,7 +6,7 @@ var fs = require('fs');
 var nodemailer = require('nodemailer');
 var cron = require('cron');
 var config = require('config');
-//var findRemoveSync = require('find-remove');
+var findRemoveSync = require('find-remove');
 
 var csvheader = '"serverTime","source","sign","sourceTime","logLevel","process","message"\r\n';
 var tabheader = 'sign\tsourceTime\tprocess\tmessage\r\n';
@@ -170,7 +170,7 @@ function deleteOldFiles() {
             extensions: ['.bak', '.log', '.csv'],
             age: {seconds: logAgeSec}
         };
-    //result = findRemoveSync('public/log', frOps);
+    result = findRemoveSync('public/log', frOps);
     console.log(result);
 }
 
