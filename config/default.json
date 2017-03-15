@@ -99,14 +99,14 @@
         "agg": {
             "base": "agg_test",
             "values": {
-                "MassDOT_psas": "/data/massport-psas-1.json",
+                "MassDOT_psas": "/data/massdot-psas-1.json",
                 "MBTA_stops": [{"stop_id": "place-asmnl", "locationName": "Ashmont Station"}],
                 "MBTA_destinationFilter": "^Ashmont"            }
         },
         "psa": {
             "base": "psa_test",
             "values": {
-                "MassDOT_psas": "/data/massport-psas-1.json"
+                "MassDOT_psas": "/data/massdot-psas-1.json"
             }
         },
         "10pp-charles-v1": {
@@ -135,7 +135,7 @@
         "10pp-charles": {
             "base": "mbta_10pp",
             "values": {
-                "MassDOT_psas": "/data/massport-psas-1.json",
+                "MassDOT_psas": "/data/massdot-psas-1.json",
                 "MBTA_stops": [
                     {"stop_id": "Back Bay", "locationName": "Board at Back Bay Station", "showLocationName": true},
                     {"stop_id": "145", "locationName": "Board at Arlington / St James bus stop", "showLocationName": true},
@@ -147,7 +147,7 @@
         "10pp-stuart": {
             "base": "mbta_10pp",
             "values": {
-                "MassDOT_psas": "/data/massport-psas-1.json",
+                "MassDOT_psas": "/data/massdot-psas-1.json",
                 "MBTA_stops": [
                     {"stop_id": "6542", "locationName": "Board at Kneeland Street bus stop (to the left)", "showLocationName": true},
                     {"stop_id": "9983", "locationName": "Board at Charles Street bus stop (to the right)", "showLocationName": true},
@@ -160,7 +160,7 @@
         "10pp-charles-v2": {
             "base": "mbta_10pp",
             "values": {
-                "MassDOT_psas": "/data/massport-psas-1.json",
+                "MassDOT_psas": "/data/massdot-psas-1.json",
                 "MBTA_stops": [
                     {"stop_id": "Back Bay", "locationName": "Board at Back Bay Station", "showLocationName": true},
                     {"stop_id": "145", "locationName": "Board at Arlington / St James bus stop", "showLocationName": true},
@@ -172,7 +172,7 @@
         "10pp-stuart-v2": {
             "base": "mbta_10pp",
             "values": {
-                "MassDOT_psas": "/data/massport-psas-1.json",
+                "MassDOT_psas": "/data/massdot-psas-1.json",
                 "MBTA_stops": [
                     {"stop_id": "6542", "locationName": "Board at Kneeland Street bus stop (to the left)", "showLocationName": true},
                     {"stop_id": "9983", "locationName": "Board at Charles Street bus stop (to the right)", "showLocationName": true},
