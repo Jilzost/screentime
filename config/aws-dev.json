@@ -1,0 +1,32 @@
+{
+	"configFilename": "aws-dev",
+	"emailIsOn": false,
+	"emailThreshold": 2,
+	"logThreshold": 4,
+	"emailSettings": {
+		"from": "MBTA G ScreenTime <mbta.screentime@gmail.com>",
+		"to": "dpb@alum.mit.edu",
+		"subject": "Screentime events - AWS-dev",
+		"transport": {
+	        "service": "Gmail",
+	        "auth": {
+	            "user": "mbta.screentime@gmail.com",
+	            "pass": "Xv84Z2DdqRGbm59g"
+	        }
+		}
+	},
+	"signConfigs": {
+			"bases": {
+					"mbta_lfd_m": {
+							"MBTA_api_key": "Sr7RFBNx5EqgPds6R8eZmA",
+							"sign_heartbeat": false,
+							"screenshots_takeScreenshots": false
+					},
+					"mbta_lfd_l": {
+							"MBTA_api_key": "Sr7RFBNx5EqgPds6R8eZmA",
+							"sign_heartbeat": false,
+							"screenshots_takeScreenshots": false
+					}
+			}
+	}
+}
