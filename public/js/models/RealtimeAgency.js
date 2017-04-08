@@ -24,7 +24,7 @@ define([
     'helper/mbta/pickRouteColor',//Future work: tie to agency generically
     'helper/process/combinedDelayAlert'
 ], function ($, _, Backbone, logger, Alert, AccessFeature, Stop, Route,
-  Train, Alerts, Routes, Trains, Departures, Psas, RealtimeSource, inputLoop,
+    Train, Alerts, Routes, Trains, Departures, Psas, RealtimeSource, inputLoop,
     pickRouteColor, combinedDelayAlert) {
 
     var deriveDestination = function (departure) {
@@ -108,6 +108,7 @@ define([
                 localRoutesSources = [],
                 alertSources = [],
                 departureSources = [],
+                destOverride,
                 initializeSource = function (config, agency) {
                     var source = new RealtimeSource();
                     source.url = agency.get('baseURL') + config.command +
@@ -124,15 +125,24 @@ define([
             agency.buildAffected = _.bind(agency.buildAffected, agency);
 
             if (agency.get('destinationFilter')) {
-              agency.set({
-                  destinationFilter: new RegExp(agency.get('destinationFilter'))
-              });
+                agency.set({
+                    destinationFilter: new RegExp(agency.get('destinationFilter'))
+                });
             }
             if (agency.get('routeOverrideTest')) {
-              agency.set({
-                  routeOverrideTest: new RegExp(agency.get('routeOverrideTest'))
-              });
+                agency.set({
+                    routeOverrideTest: new RegExp(agency.get('routeOverrideTest'))
+                });
             }
+            if (agency.get('destOverride')) {
+              destOverride = agency.get('destOverride');
+              _(destOverride).each(function(over) {
+                over.test = new RegExp(over.test);
+              });
+              agency.set('destOverride', destOverride);
+            }
+            agency.get('destOverride');
+
 
             initializeSource({
                 sourceName: 'src_routes',
@@ -194,10 +204,9 @@ define([
                             include_service_alerts: 'false'
                             }).defaults(defaultParams)
                     }, agency);
-                    agency.get(sourceName).extraProperties =
-                    {
-                      locationName: stop.locationName,
-                      showLocationName: stop.showLocationName
+                    agency.get(sourceName).extraProperties = {
+                        locationName: stop.locationName,
+                        showLocationName: stop.showLocationName
                     };
                     allSources.push(sourceName);
                     departureSources.push(sourceName);
@@ -596,6 +605,13 @@ define([
             _(thisAgency.get('departureSources')).each(function (src) {
                 src = thisAgency.get(src);
                 src.each(function (dep) {
+                    if (thisAgency.get('destOverride') && dep.get('trip_headsign')) {
+                        _(thisAgency.get('destOverride')).each(function (over) {
+                            if (over.test.test(dep.get('trip_headsign')) && over.replacement) {
+                                dep.set('trip_headsign', over.replacement);
+                            }
+                        });
+                    }
                     destination = deriveDestination(dep);
                     if (thisAgency.get('routeOverrideTest') &&
                             thisAgency.get('routeOverrideTest').test(

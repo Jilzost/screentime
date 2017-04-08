@@ -124,12 +124,18 @@
             "base": "mbta_10pp_v1",
             "values": {
                 "MBTA_stops": [
-                  {"stop_id": "6542", "locationName": "Board at Kneeland Street bus stop (to the left)", "showLocationName": true},
-                  {"stop_id": "9983", "locationName": "Board at Charles Street bus stop (to the right)", "showLocationName": true},
+                  {"stop_id": "6542", "locationName": "Board at Kneeland St bus stop (to the left)", "showLocationName": true},
+                  {"stop_id": "9983", "locationName": "Board at Charles St bus stop (to the right)", "showLocationName": true},
                   {"stop_id": "place-tumnl", "locationName": "Board at Tufts Medical Center", "showLocationName": true},
                   {"stop_id": "South Station", "locationName": "Board at South Station", "showLocationName": true}
                 ],
-                "MBTA_destinationFilter": "^South\\sStation"
+                "MBTA_destinationFilter": "^South\\sStation",
+                "MBTA_destOverride": [
+                  {
+                    "test": "Middleborough\/Lakeville",
+                    "replacement": "Middle/Lake"
+                  }
+                ]
             }
         },
         "10pp-charles": {
@@ -149,12 +155,18 @@
             "values": {
                 "MassDOT_psas": "/data/massdot-psas-1.json",
                 "MBTA_stops": [
-                    {"stop_id": "6542", "locationName": "Board at Kneeland Street bus stop (to the left)", "showLocationName": true},
-                    {"stop_id": "9983", "locationName": "Board at Charles Street bus stop (to the right)", "showLocationName": true},
+                    {"stop_id": "6542", "locationName": "Board at Kneeland St bus stop (to the left)", "showLocationName": true},
+                    {"stop_id": "9983", "locationName": "Board at Charles St bus stop (to the right)", "showLocationName": true},
                     {"stop_id": "place-tumnl", "locationName": "Board at Tufts Medical Center", "showLocationName": true},
                     {"stop_id": "South Station", "locationName": "Board at South Station", "showLocationName": true}
                 ],
-                "MBTA_destinationFilter": "^South\\sStation"
+                "MBTA_destinationFilter": "^South\\sStation",
+                "MBTA_destOverride": [
+                  {
+                    "test": "Middleborough\/Lakeville",
+                    "replacement": "Middle/Lake"
+                  }
+                ]
             }
         },
         "10pp-charles-v2": {
