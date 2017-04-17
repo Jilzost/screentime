@@ -523,13 +523,17 @@ define([
                 toShow = memo.views;
 
                 wait = normalWait * waitFactor(_(toShow).first().subSlides);
-                setTimeout(function () {
-                    self.showSlide({
-                        showSlides: toShow,
-                        allSlides: allSlides,
-                        duration: wait
-                    });
-                }, memo.t);
+
+                (function (wt) {
+                    setTimeout(function () {
+                        self.showSlide({
+                            showSlides: toShow,
+                            allSlides: allSlides,
+                            duration: wt
+                        });
+                    }, memo.t);
+                }(wait));
+
                 return {
                     views: [view],
                     height: view.lastHeight,
@@ -542,13 +546,16 @@ define([
             wait = normalWait
                 * waitFactor(_(nextSlideInfo.views).first().subSlides);
             if (nextSlideInfo.views.length > 0) {
-                setTimeout(function () {
-                    self.showSlide({
-                        showSlides: nextSlideInfo.views,
-                        allSlides: allSlides,
-                        duration: wait
-                    });
-                }, t);
+
+                (function (wt) {
+                    setTimeout(function () {
+                        self.showSlide({
+                            showSlides: nextSlideInfo.views,
+                            allSlides: allSlides,
+                            duration: wt
+                        });
+                    }, t);
+                }(wait));
                 t += wait;
             }
             setTimeout(function () {
@@ -633,63 +640,8 @@ define([
             );
             $.post('postheartbeat', JSON.stringify(heartbeat));
             this.set({lastHeartbeat: Date.now()});
-        }//,
+        }
 
-        /*NOTES: checkLamp went through a few iterations.
-          What's here currently has one major flaw: it only checks once,
-          not at a set interval.
-
-        */
-
-
-        // checkLamp: function () {
-        //     if (!this.get('lampControl').last) {
-        //         this.get('lampControl').last = this.get('lampControl').expected;
-        //     }
-        //     $.get(this.get('lampControl').lampURL)
-        //         .done(function (data) {
-        //             console.log(data);
-        //
-        //             if (!_(data).isEqual(this.get('lampControl').last)) {
-        //                 if (_(data).isEqual(this.get('lampControl').expected)) {
-        //                     logger.log('lampControl',
-        //                         'Lamp check now returning expected ' +
-        //                         JSON.stringify(data));
-        //                 } else {
-        //                     logger.log('lampControl',
-        //                         'Lamp check returned unexpected ' +
-        //                         JSON.stringify(data));
-        //                 }
-        //                 this.get('lampControl').last = data;
-        //             }
-        //         })
-        //         .fail(function () {
-        //             logger.log('lampControl', 'Lamp check failed');
-        //         });
-        // },
-        // checkLamp2: function () {
-        //     $.get(this.get('lampControl').lampURL)
-        //         .done(function (data) {
-        //             this.checkLampResults(data);
-        //         })
-        //         .fail(function () {
-        //             logger.log('lampControl', 'Lamp check failed');
-        //         });
-        // },
-        // checkLampResults: function (data) {
-        //     if (!_(data).isEqual(this.get('lampControl').last)) {
-        //         if (_(data).isEqual(this.get('lampControl').expected)) {
-        //             logger.log('lampControl',
-        //                 'Lamp check now returning expected ' +
-        //                 JSON.stringify(data));
-        //         } else {
-        //             logger.log('lampControl',
-        //                 'Lamp check returned unexpected ' +
-        //                 JSON.stringify(data));
-        //         }
-        //         this.get('lampControl').last = data;
-        //     }
-        // }
     });
     return Sign;
 });
