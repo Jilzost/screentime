@@ -194,7 +194,7 @@ function renameCurrentFile() {
 
 function startLogging() {
     var logUptimeJob = new cron.CronJob('34 56 8 * * *', function () {logUptimes(); }, null, true),
-        deleteOldFilesJob = new cron.CronJob('10 0 12 * * *', function () {deleteOldFiles(); }, null, true),
+        deleteOldFilesJob = new cron.CronJob('10 28 * * * *', function () {deleteOldFiles(); }, null, true),
         renameCurrentFileJob = new cron.CronJob('50 59 23 * * *', function () {renameCurrentFile(); }, null, true);
     serverStartTime = new Date();
 }
