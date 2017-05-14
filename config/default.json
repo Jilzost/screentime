@@ -14,9 +14,7 @@
                 "MBTA_api_key": "Sr7RFBNx5EqgPds6R8eZmA",
                 "speaker_voiceTools": "mespeak",
                 "speaker_triggerTypes": "key socket",
-                "screenshots_takeScreenshotFreq": 70000,
-                "screenshots_syncScreenshotFreq": 1200000,
-                "screenshots_maxScreenshots": 500,
+                "screenshots_takeScreenshots": false,
                 "sign_slideDuration": 12000,
                 "sign_satisfyWatchdog": true
             },
@@ -28,9 +26,7 @@
                 "MBTA_api_key": "Sr7RFBNx5EqgPds6R8eZmA",
                 "speaker_voiceTools": "mespeak",
                 "speaker_triggerTypes": "key socket",
-                "screenshots_takeScreenshotFreq": 70000,
-                "screenshots_syncScreenshotFreq": 1200000,
-                "screenshots_maxScreenshots": 500,
+                "screenshots_takeScreenshots": false,
                 "sign_slideDuration": 12000,
                 "sign_type": "sign_l",
                 "sign_satisfyWatchdog": true
@@ -43,9 +39,7 @@
                 "MBTA_api_key": "tY0IKrIxSkeFLI3BckvuVQ",
                 "speaker_voiceTools": "mespeak",
                 "speaker_triggerTypes": "key",
-                "screenshots_takeScreenshotFreq": 70000,
-                "screenshots_syncScreenshotFreq": 1200000,
-                "screenshots_maxScreenshots": 500,
+                "screenshots_takeScreenshots": false,
                 "sign_slideDuration": 12000,
                 "sign_satisfyWatchdog": true,
                 "sign_innerHeight": 1920
@@ -60,9 +54,7 @@
                 "MBTA_api_key": "tY0IKrIxSkeFLI3BckvuVQ",
                 "speaker_voiceTools": "mespeak",
                 "speaker_triggerTypes": "key",
-                "screenshots_takeScreenshotFreq": 70000000,
-                "screenshots_syncScreenshotFreq": 1200000000,
-                "screenshots_maxScreenshots": 50,
+                "screenshots_takeScreenshots": false,
                 "sign_slideDuration": 12000,
                 "sign_satisfyWatchdog": true,
                 "sign_innerHeight": 1920
@@ -73,9 +65,7 @@
                 "MassDOT_sourceType": "psa-only",
                 "speaker_voiceTools": "mespeak",
                 "speaker_triggerTypes": "key",
-                "screenshots_takeScreenshotFreq": 70000,
-                "screenshots_syncScreenshotFreq": 1200000,
-                "screenshots_maxScreenshots": 500,
+                "screenshots_takeScreenshots": false,
                 "sign_slideDuration": 12000,
                 "sign_satisfyWatchdog": true
             },
@@ -89,9 +79,7 @@
                 "MBTA_api_key": "tY0IKrIxSkeFLI3BckvuVQ",
                 "speaker_voiceTools": "mespeak",
                 "speaker_triggerTypes": "key",
-                "screenshots_takeScreenshotFreq": 7000000,
-                "screenshots_syncScreenshotFreq": 8000000,
-                "screenshots_maxScreenshots": 500,
+                "screenshots_takeScreenshots": false,
                 "sign_slideDuration": 12000,
                 "sign_satisfyWatchdog": true
             }
