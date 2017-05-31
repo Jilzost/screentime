@@ -1,7 +1,6 @@
 node_modules/
 .elasticbeanstalk/
 samples/
-public/log/
 .DS_Store
 npm-debug.log
 
