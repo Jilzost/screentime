@@ -10,12 +10,15 @@ define([
     'backbone',
     'models/AggAgency',
     'models/RealtimeAgency',
-    'models/PsaAgency'
-], function ($, _, Backbone, AggAgency, RealtimeAgency, PsaAgency) {
+    'models/PsaAgency',
+    'models/NextbusAgency'
+], function ($, _, Backbone, AggAgency, RealtimeAgency,
+      PsaAgency, NextbusAgency) {
     var agencyModelIndex = {
         'AggAgency': AggAgency,
         'MBTA-realtime': RealtimeAgency,
-        'psa-only': PsaAgency
+        'psa-only': PsaAgency,
+        'nextbus': NextbusAgency
     };
 
     return agencyModelIndex;

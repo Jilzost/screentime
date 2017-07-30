@@ -18,6 +18,20 @@
                 "sign_slideDuration": 12000,
                 "sign_satisfyWatchdog": true
             },
+            "mbta_lfd_mbat": {
+                "agencies": ["MBTA","BAT"],
+                "MBTA_name": "MBTA",
+                "MBTA_sourceType": "MBTA-realtime",
+                "MBTA_baseURL": "http://realtime.mbta.com/developer/api/v2/",
+                "MBTA_api_key": "Sr7RFBNx5EqgPds6R8eZmA",
+                "BAT_name": "BAT",
+                "BAT_sourceType": "nextbus",
+                "speaker_voiceTools": "mespeak",
+                "speaker_triggerTypes": "key socket",
+                "screenshots_takeScreenshots": false,
+                "sign_slideDuration": 12000,
+                "sign_satisfyWatchdog": true
+            },
             "mbta_lfd_l": {
                 "agencies": ["MBTA"],
                 "MBTA_name": "MBTA",
@@ -79,6 +93,16 @@
                 "MBTA_api_key": "tY0IKrIxSkeFLI3BckvuVQ",
                 "speaker_voiceTools": "mespeak",
                 "speaker_triggerTypes": "key",
+                "screenshots_takeScreenshots": false,
+                "sign_slideDuration": 12000,
+                "sign_satisfyWatchdog": true
+            },
+            "nextbus_base": {
+                "agencies": ["BAT"],
+                "BAT_name": "BAT",
+                "BAT_sourceType": "nextbus",
+                "speaker_voiceTools": "mespeak",
+                "speaker_triggerTypes": "key socket",
                 "screenshots_takeScreenshots": false,
                 "sign_slideDuration": 12000,
                 "sign_satisfyWatchdog": true
@@ -198,6 +222,44 @@
             "values": {
                 "MBTA_stops": [{"stop_id": "place-asmnl", "locationName": "Ashmont Station"}],
                 "MBTA_destinationFilter": "^Ashmont"
+            }
+        },
+        "ashmont-bat": {
+            "base": "mbta_lfd_mbat",
+            "values": {
+                "MBTA_stops": [{"stop_id": "place-asmnl", "locationName": "Ashmont Station"}],
+                "MBTA_destinationFilter": "^Ashmont",
+                "BAT_sourceParams": {
+                    "agency": "brockton",
+                    "stop": "738"
+                }
+            }
+        },
+        "nextbus": {
+            "base": "nextbus_base",
+            "values": {
+                "BAT_sourceParams": {
+                    "agency": "mbta",
+                    "stop": "64"
+                }
+            }
+        },
+        "testbat": {
+            "base": "nextbus_base",
+            "values": {
+                "BAT_sourceParams": {
+                    "agency": "brockton",
+                    "stop": "001"
+                }
+            }
+        },
+        "testart": {
+            "base": "nextbus_base",
+            "values": {
+                "BAT_sourceParams": {
+                    "agency": "art",
+                    "stop": "200"
+                }
             }
         },
         "central": {

@@ -9,6 +9,7 @@ var configHandlers = require("./configHandlers");
 var logHandlers = require("./logHandlers");
 var logger = require("./logger");
 var sampleHandlers = require("./sampleHandlers");
+var nextbusHandlers = require("./nextbusHandlers");
 var speechSampleHandlers = require("./speechSampleHandlers");
 var socketServer = require("./socketServer");
 
@@ -23,6 +24,8 @@ handle["/stylesheet.css"] = fileRequestHandlers.sendFile;
 handle["/sign/software/mespeak/mespeak_config.json"] = fileRequestHandlers.sendFile;
 handle["/sign/software/mespeak/voices/en/en-us.json"] = fileRequestHandlers.sendFile;
 
+handle["/nextbus/routes"] = nextbusHandlers.routes;
+handle["/nextbus/departures"] = nextbusHandlers.departures;
 handle["/getsignconfig"] = configHandlers.getSignConfig;
 handle["/postheartbeat"] = heartbeatHandlers.heartbeat;
 handle["/postlog"] = logHandlers.receiveLog;

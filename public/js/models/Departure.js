@@ -7,8 +7,9 @@ speechSynthesis, document, window */
 define([
     'jquery',
     'underscore',
-    'backbone'
-], function ($, _, Backbone) {
+    'backbone',
+    'models/Route'
+], function ($, _, Backbone, Route) {
     var Departure = Backbone.Model.extend({
         defaults: {
             modelType: 'Departure',
@@ -26,6 +27,9 @@ define([
             isPrediction: false
         },
         initialize: function () {
+            if (!(this.get('route') instanceof Backbone.Model)) {
+                this.set('route', new Route(this.get('route')));
+            }
             if (this.get('predictedTime') > 0) {
                 this.set({time: this.get('predictedTime'),
                     isPrediction: true});
