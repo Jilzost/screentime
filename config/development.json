@@ -7,12 +7,12 @@
         "bases": {
             "mbta_lfd_m": {
                 "MBTA_api_key": "Sr7RFBNx5EqgPds6R8eZmA",
-                "sign_heartbeat": false,
+                "sign_heartbeat": true,
                 "screenshots_takeScreenshots": false
             },
             "mbta_lfd_l": {
                 "MBTA_api_key": "Sr7RFBNx5EqgPds6R8eZmA",
-                "sign_heartbeat": false,
+                "sign_heartbeat": true,
                 "screenshots_takeScreenshots": false
             }
         }
