@@ -22,7 +22,8 @@ setTimeout(function () {
     var headID = document.getElementsByTagName("head")[0],
         newScript = document.createElement('script');
     newScript.src = 'js/libs/require.js';
-    newScript.setAttribute('data-main', 'js/main');
+    //newScript.setAttribute('data-main', 'js/main');
+    newScript.setAttribute('data-main', 'main-built');
     headID.appendChild(newScript);
     document.getElementById('status').html = 'Loading..';
 }, delay);
