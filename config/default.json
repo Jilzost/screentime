@@ -209,11 +209,7 @@
         "ashmont": {
             "base": "mbta_lfd_m",
             "values": {
-                "MBTA_stops": [
-                    {"stop_id": "397", "locationName": "Dorchester Avenue and Ashmont"},
-                    {"stop_id": "70094", "locationName": "Ashmont Red Line inbound platform"},
-                    {"stop_id": "334", "locationName": "Ashmont"}
-                ],
+                "MBTA_stops": [{"stop_id": "place-asmnl", "locationName": "Ashmont Station"}],
                 "MBTA_destinationFilter": "^Ashmont"
             }
         },
