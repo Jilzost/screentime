@@ -17,6 +17,7 @@ function checkHeartbeat(beat) {
 }
 
 function heartbeat(pathname, id, response, postData) {
+    id = id.id;
     try {
         var beat = JSON.parse(postData);
 

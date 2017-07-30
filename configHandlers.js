@@ -33,6 +33,7 @@ function send404(response) {
 
 function getSignConfig(path, id, response) {
     var vals;
+    id = id.id;
     if (!config.signConfigs[id]) {
         send404(response);
     } else {

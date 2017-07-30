@@ -6,7 +6,7 @@ var logger = require('./logger');
 
 function receiveLog(pathname, id, response, postData) {
     var entry;
-
+    id = id.id;
     response.writeHead(200, {"Content-Type": "text/plain"});
     response.write('ok');
     response.end();
@@ -18,4 +18,3 @@ function receiveLog(pathname, id, response, postData) {
 }
 
 exports.receiveLog = receiveLog;
-

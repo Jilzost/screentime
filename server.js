@@ -13,11 +13,12 @@ function start(route, handle) {
     function onRequest(request, response) {
         var postData,
             pathname,
-            id;
+            options;
         try {
             postData = '';
             pathname = url.parse(request.url).pathname;
-            id = querystring.parse(url.parse(request.url).query).id;
+            options = querystring.parse(url.parse(request.url).query);
+
             request.setEncoding("utf8");
 
             request.addListener("data", function (postDataChunk) {
@@ -25,10 +26,10 @@ function start(route, handle) {
             });
 
             request.addListener("end", function () {
-                route(handle, pathname, id, response, postData);
+                route(handle, pathname, options, response, postData);
             });
         } catch (err) {
-            logger.log('server', id, 1,
+            logger.log('server', options.id, 1,
                 'server.start.onRequest', 'Failed: ' + err);
         }
     }

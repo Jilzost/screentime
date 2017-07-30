@@ -78,12 +78,13 @@ function newSamplePage(pathname, id, response, postData) {
             //     regex: /(<td class="minutes_away"[^>]{0,25}>)0[0-9]/g,
             //     replacement: '$100'
             // },
-            //Set clock to 12:34, for consolidation. 
+            //Set clock to 12:34, for consolidation.
             {
                 regex: /<div id="clock">[\d\:]{4,5}<\/div>/,
                 replacement: '<div id="clock">12:34</div>'
             }
         ];
+        id = id.id;
 
     try {
         samplePageData = JSON.parse(postData);
@@ -133,6 +134,7 @@ function newSamplePage(pathname, id, response, postData) {
 
 function newSampleStat(pathname, id, response, postData) {
     var sampleStat;
+    id = id.id;
     try {
         sampleStat = JSON.parse(postData);
         if (samplestats.hasOwnProperty(sampleStat.serverId)) {
@@ -162,6 +164,7 @@ function newSampleStat(pathname, id, response, postData) {
 
 function showSamples(pathname, id, response, postData) {
     var i, responseHtml;
+    id = id.id;
 
     try {
         responseHtml = "<!DOCTYPE html>" +
@@ -203,7 +206,9 @@ function showSamples(pathname, id, response, postData) {
 }
 
 function showSample(pathname, id, response, postData) {
-    var index = JSON.parse(id);
+    var index;
+    id = id.id;
+    index = JSON.parse(id);
     if (samplestats.hasOwnProperty(index)) {
         fileRequestHandlers.returnFile(response, 'sample' + id + '.html',
             samplestats[index].actualText);

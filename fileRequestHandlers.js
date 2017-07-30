@@ -49,7 +49,7 @@ function returnFile(response, filePath, fileContents) {
  * @param  {[type]} absPath  path requested
  */
 function serveStatic(response, absPath, id) {
-    if (cache[absPath] && !(absPath.substr(absPath.length-4, 4) === '.log')) {
+    if (cache[absPath] && !(absPath.substr(absPath.length - 4, 4) === '.log')) {
         returnFile(response, absPath, cache[absPath]);
     } else {
         fs.exists(absPath, function (exists) {
@@ -82,8 +82,8 @@ function serveStatic(response, absPath, id) {
  * @param  {obj} response Web request response handle
  */
 function sendFile(path, id, response) {
-//TODO: "id" may no longer be necessary to handle at all.
     var absPath;
+    id = id.id;
     if (path === '/' || path === '/index.htm') {
         absPath = './public/index.html';
     } else if (path === '/sign') {

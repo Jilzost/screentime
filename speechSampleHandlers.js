@@ -161,6 +161,7 @@ function showSamples(pathname, id, response, postData) {
 }
 
 function showSample(pathname, id, response, postData) {
+    id = id.id;
     fileRequestHandlers.send404(response);
 }
 

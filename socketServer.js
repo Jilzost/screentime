@@ -67,6 +67,7 @@ function listen(server) {
 }
 
 function speak(path, id, response) {
+    id = id.id;
     if (!lastButtonpress[id] || lastButtonpress[id] + 1000 < Date.now()) {
         lastButtonpress[id] = Date.now();
         console.log('speech triggered for ' + id);
