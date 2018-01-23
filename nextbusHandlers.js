@@ -57,7 +57,11 @@ function parseOneRoute(options, theirBody) {
         }
 
         routes = theirBody.body.route;
+        logger.log('server', 'server', 2,
+              'nextbusHandlers.parseOneRoute', 'options pre-loop: ' + options);
         _und(routes).each(function (route) {
+            logger.log('server', 'server', 2,
+                  'nextbusHandlers.parseOneRoute', 'options  in-loop: ' + options);
             r = {
                 txid: route.$.tag,
                 name: route.$.shortTitle || route.$.title.length > 12 ? route.$.tag : route.$.title,
@@ -83,7 +87,7 @@ function parseRoutes(path, options, ourResponse, theirBody, fromRouteConfig) {
     try {
         if (theirBody.body.Error) {
             logger.log('server', 'server', 2,
-                  'nextbusHandlers.parseOneRoute', 'Failed, NextBus error: ' + theirBody.body.Error[0]._);
+                  'nextbusHandlers.parseRoutes', 'Failed, NextBus error: ' + theirBody.body.Error[0]._);
         }
         routes = theirBody.body.route;
         _und(routes).each(function (route) {
@@ -141,7 +145,7 @@ function routeList(path, options, ourResponse) {
         });
         theirResponse.on('error', function (err) {
             logger.log('server', 'server', 2,
-                'nextbusHandlers.routes', 'Failed: ' + err);
+                'nextbusHandlers.routeList', 'Failed: ' + err);
             send500(ourResponse);
         });
     });
