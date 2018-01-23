@@ -254,7 +254,7 @@ function parseDepartures(path, options, ourResponse, theirBody) {
         sendResponse(path, options, ourResponse, ourBody);
     } catch (err) {
         logger.log('server', 'server', 2,
-              'nextbusHandlers.parseRoutes', 'Failed: ' + err);
+              'nextbusHandlers.parseDepartures', 'Failed: ' + err);
         send500(ourResponse);
     }
 }
