@@ -221,9 +221,13 @@ function cacheOneRoute(options) {
 function parseDepartures(path, options, ourResponse, theirBody) {
     var ourBody = [], routes, cachedRoutes = {}, cachedRoute;
     try {
+        if (!theirBody.body) {
+          logger.log('server', 'server', 2,
+                'nextbusHandlers.parseDepartures', 'Incomplete NextBus response: ' + theirBody);          
+        }
         if (theirBody.body.Error) {
             logger.log('server', 'server', 2,
-                  'nextbusHandlers.parseOneRoute', 'Failed, NextBus error: ' + theirBody.body.Error[0]._);
+                  'nextbusHandlers.parseDepartures', 'Failed, NextBus error: ' + theirBody.body.Error[0]._);
         }
         if (cache.routes[options.agency]) {
             cachedRoutes = cache.routes[options.agency];

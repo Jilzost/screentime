@@ -7,11 +7,15 @@
     "signConfigs": {
         "bases": {
             "mbta_lfd_m": {
-                "agencies": ["MBTA"],
+                "agencies": ["MBTA","MBTAV3"],
                 "MBTA_name": "MBTA",
                 "MBTA_sourceType": "MBTA-realtime",
                 "MBTA_baseURL": "http://realtime.mbta.com/developer/api/v2/",
                 "MBTA_api_key": "Sr7RFBNx5EqgPds6R8eZmA",
+                "MBTAV3_name": "MBTAV3",
+                "MBTAV3_sourceType": "V3-API",
+                "MBTAV3_baseURL": "http://realtime.mbta.com/developer/api/v2/",
+                "MBTAV3_api_key": "Sr7RFBNx5EqgPds6R8eZmA",
                 "speaker_voiceTools": "mespeak",
                 "speaker_triggerTypes": "key socket",
                 "screenshots_takeScreenshots": false,
@@ -346,6 +350,13 @@
             "values": {
                 "MBTA_stops": [{"stop_id": "place-forhl", "locationName": "Forest Hills"}],
                 "MBTA_destinationFilter": "^Forest\\sHills"
+            }
+        },
+        "foresthillsV3": {
+            "base": "mbta_lfd_m",
+            "values": {
+                "MBTAV3_stops": [{"stop_id": "place-forhl", "locationName": "Forest Hills"}],
+                "MBTAV3_destinationFilter": "^Forest\\sHills"
             }
         },
         "harvard": {
