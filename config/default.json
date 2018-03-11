@@ -6,12 +6,20 @@
   "logThreshold": 4,
     "signConfigs": {
         "bases": {
-            "mbta_lfd_m": {
-                "agencies": ["MBTA","MBTAV3"],
+            "mbta_lfd_mRT": {
+                "agencies": ["MBTA"],
                 "MBTA_name": "MBTA",
                 "MBTA_sourceType": "MBTA-realtime",
                 "MBTA_baseURL": "http://realtime.mbta.com/developer/api/v2/",
                 "MBTA_api_key": "Sr7RFBNx5EqgPds6R8eZmA",
+                "speaker_voiceTools": "mespeak",
+                "speaker_triggerTypes": "key socket",
+                "screenshots_takeScreenshots": false,
+                "sign_slideDuration": 12000,
+                "sign_satisfyWatchdog": true
+            },
+            "mbta_lfd_mV3": {
+                "agencies": ["MBTAV3"],
                 "MBTAV3_name": "MBTAV3",
                 "MBTAV3_sourceType": "V3-API",
                 "MBTAV3_baseURL": "http://realtime.mbta.com/developer/api/v2/",
@@ -211,14 +219,14 @@
             }
         },
         "ashmont": {
-            "base": "mbta_lfd_m",
+            "base": "mbta_lfd_mRT",
             "values": {
                 "MBTA_stops": [{"stop_id": "place-asmnl", "locationName": "Ashmont Station"}],
                 "MBTA_destinationFilter": "^Ashmont"
             }
         },
         "ashmont-all": {
-            "base": "mbta_lfd_m",
+            "base": "mbta_lfd_mRT",
             "values": {
                 "MBTA_stops": [{"stop_id": "place-asmnl", "locationName": "Ashmont Station"}],
                 "MBTA_destinationFilter": "^Ashmont"
@@ -263,7 +271,7 @@
             }
         },
         "central": {
-            "base": "mbta_lfd_m",
+            "base": "mbta_lfd_mRT",
             "values": {
                 "MBTA_stops": [
                     {"stop_id": "70069", "locationName": "Board downstairs", "showLocationName": true},
@@ -277,7 +285,7 @@
             }
         },
         "default": {
-            "base": "mbta_lfd_m",
+            "base": "mbta_lfd_mRT",
             "values": {
                 "MBTA_outputDepartures": false
             }
@@ -339,28 +347,35 @@
             }
         },
         "allalerts": {
-            "base": "mbta_lfd_m",
+            "base": "mbta_lfd_mRT",
             "values": {
                 "MBTA_outputAllAlerts": true,
                 "MBTA_outputDepartures": false
             }
         },
+        "allalertsV3": {
+            "base": "mbta_lfd_mV3",
+            "values": {
+                "MBTAV3_outputAllAlerts": true,
+                "MBTAV3_outputDepartures": false
+            }
+        },
         "foresthills": {
-            "base": "mbta_lfd_m",
+            "base": "mbta_lfd_mRT",
             "values": {
                 "MBTA_stops": [{"stop_id": "place-forhl", "locationName": "Forest Hills"}],
                 "MBTA_destinationFilter": "^Forest\\sHills"
             }
         },
         "foresthillsV3": {
-            "base": "mbta_lfd_m",
+            "base": "mbta_lfd_mV3",
             "values": {
                 "MBTAV3_stops": [{"stop_id": "place-forhl", "locationName": "Forest Hills"}],
                 "MBTAV3_destinationFilter": "^Forest\\sHills"
             }
         },
         "harvard": {
-            "base": "mbta_lfd_m",
+            "base": "mbta_lfd_mRT",
             "values": {
                 "MBTA_stops": [
                     {"stop_id": "place-harsq", "locationName": "Harvard Station"},
@@ -370,7 +385,7 @@
             }
         },
         "haymarket": {
-            "base": "mbta_lfd_m",
+            "base": "mbta_lfd_mRT",
             "values": {
                 "MBTA_stops": [
                     {"stop_id": "place-haecl", "locationName": "Haymarket Station"},
@@ -382,14 +397,14 @@
             }
         },
         "maverick": {
-            "base": "mbta_lfd_m",
+            "base": "mbta_lfd_mRT",
             "values": {
                 "MBTA_stops": [{"stop_id": "place-mvbcl", "locationName": "Maverick Station"}],
                 "MBTA_destinationFilter": "^Maverick"
             }
         },
         "ruggles": {
-            "base": "mbta_lfd_m",
+            "base": "mbta_lfd_mRT",
             "values": {
                 "MBTA_stops": [{"stop_id": "place-rugg", "locationName": "Ruggles Station"}],
                 "MBTA_destinationFilter": "^Ruggles",
@@ -397,7 +412,7 @@
             }
         },
         "rugglesfull": {
-            "base": "mbta_lfd_m",
+            "base": "mbta_lfd_mRT",
             "values": {
                 "MBTA_stops": [{"stop_id": "place-rugg", "locationName": "Ruggles Station"}],
                 "MBTA_destinationFilter": "^Ruggles",
@@ -405,21 +420,21 @@
             }
         },
         "southstation": {
-            "base": "mbta_lfd_m",
+            "base": "mbta_lfd_mRT",
             "values": {
                 "MBTA_stops": [{"stop_id": "place-sstat", "locationName": "South Station"}],
                 "MBTA_destinationFilter": "^South Sta"
             }
         },
         "sullivan": {
-            "base": "mbta_lfd_m",
+            "base": "mbta_lfd_mRT",
             "values": {
                 "MBTA_stops": [{"stop_id": "place-sull", "locationName": "Sullivan Station"}],
                 "MBTA_destinationFilter": "^Sullivan"
             }
         },
         "wellington": {
-            "base": "mbta_lfd_m",
+            "base": "mbta_lfd_mRT",
             "values": {
                 "MBTA_stops": [
                     {"stop_id": "place-welln", "locationName": "Wellington Station"},
@@ -429,7 +444,7 @@
             }
         },
         "wollaston": {
-            "base": "mbta_lfd_m",
+            "base": "mbta_lfd_mRT",
             "values": {
                 "MBTA_stops": [{"stop_id": "place-wlsta", "locationName": "Wollaston Station"}],
                 "MBTA_destinationFilter": "^Wollaston",
@@ -437,7 +452,7 @@
             }
         },
         "wonderland": {
-            "base": "mbta_lfd_m",
+            "base": "mbta_lfd_mRT",
             "values": {
                 "MBTA_stops": [{"stop_id": "place-wondl", "locationName": "Wonderland Station"}],
                 "MBTA_destinationFilter": "^Wonderland"

@@ -102,7 +102,7 @@ define([
         });
 
         alerts.each(function (a) {
-            isSevere = a.get('severityPct') >= 75;
+            isSevere = a.get('severityPct') >= 70;
             routes.add(a.get('affecteds').where({
                 modelType: 'Route',
                 isHidden: false

@@ -1,4 +1,4 @@
-/*jslint devel: true nomen: true regexp: true indent: 4 maxlen: 80 node: true */
+/*jslint devel: true nomen: true regexp: true indent: 4 maxlen: 120 node: true */
 /*global XMLHttpRequest, SpeechSynthesisUtterance, define,
 speechSynthesis, document, window */
 'use strict';
@@ -132,6 +132,10 @@ define([
                         });
                     }
 
+                    if (config.include) {
+                        _(params).push('include=' + config.include);
+                    }
+
                     if (params.length > 0) {
                         paramstring = _(params).reduce(function (memo, p) {
                             if (memo === '') {return '?' + p; }
@@ -162,11 +166,11 @@ define([
                 });
             }
             if (agency.get('destOverride')) {
-              destOverride = agency.get('destOverride');
-              _(destOverride).each(function(over) {
-                over.test = new RegExp(over.test);
-              });
-              agency.set('destOverride', destOverride);
+                destOverride = agency.get('destOverride');
+                _(destOverride).each(function(over) {
+                    over.test = new RegExp(over.test);
+                });
+                agency.set('destOverride', destOverride);
             }
             agency.get('destOverride');
 
@@ -188,7 +192,6 @@ define([
                     initializeSourceV3({
                         sourceName: sourceName,
                         command: 'routes',
-                        //nests: ['mode', 'route'],
                         maxAge: agency.get('routesMaxAge'),
                         filters: [{param: 'stop', value: stop.stop_id}]
                     }, agency);
@@ -205,13 +208,12 @@ define([
             if (agency.get('outputLocalAlerts') ||
                     agency.get('outputSubwayAlerts') ||
                     agency.get('outputAllAlerts')) {
-                initializeSourceRT({
+                initializeSourceV3({
                     sourceName: 'src_alerts',
                     command: 'alerts',
-                    nests: ['alerts'],
                     maxAge: agency.get('alertsMaxAge'),
-                    params: _({include_access_alerts: 'true'})
-                        .defaults(defaultParams)
+                    filters: [{param: 'activity', value: 'BOARD,RIDE,EXIT,USING_WHEELCHAIR'}],
+                    include: 'facilities'
                 }, agency);
                 allSources.push('src_alerts');
                 alertSources.push('routes');
@@ -362,10 +364,25 @@ define([
                 isLocal,
                 isSubway,
                 isSystemwide,
+                isElevator,
+                isService,
                 affected,
                 route,
+                mode_names = {
+                    0: 'Subway',
+                    1: 'Subway',
+                    2: 'Commuter Rail',
+                    3: 'Bus',
+                    4: 'Ferry',
+                    5: 'Cable Car',
+                    6: 'Gondola',
+                    7: 'Funicular'
+                },
+                relationship,
+                containsEscalator = /escalator/,
+                getElevatorStation = /\s?elevator unavailable|\s?access issue/,
+                getElevatorStationBackup = /\s?-[\W\w]+$/,
                 getElevatorName = /^[^a-z]+-\s?/,
-                getElevatorStation = /\s?-[\W\w]+$/,
                 getTrainName = /^([^\s]{1,5})\s/,
                 mixedCase = function (str) {
                     return str.charAt(0).toUpperCase() +
@@ -377,157 +394,62 @@ define([
                 return;
             }
 
+            // Iterate for each alert in source data
+
             data.each(function (source) {
+
+                //Create the alert and populate with basics
+
                 newAlert = new Alert({
-                    txid: source.get('alert_id'),
-                    timeframe: source.get('timeframe_text'),
-                    disruptionType: source.get('effect_name'),
-                    summary: source.get('service_effect_text'),
-                    description: source.get('header_text'),
-                    details: source.get('description_text'),
-                    isService:
-                        (source.get('affected_services').services.length > 0),
-                    isNow: (source.get('alert_lifecycle') === 'New'),
+                    txid: source.get('id'),
+                    timeframe: source.get('timeframe'),
+                    disruptionType: source.get('effect'),
+                    summary: source.get('service_effect'),
+                    description: source.get('header'),
+                    details: source.get('description'),
+                    isService: false,
+                    isNow: (source.get('lifecycle') === 'NEW'),
+                    severityPct: source.get('severity') * 10
                 });
-                if (source.get('effect_periods').length > 0) {
+                if (source.get('active_period').length > 0) {
                     newAlert.set({
-                        startTime: _(source.get('effect_periods'))
-                            .first()
-                            .effect_start * 1000,
-                        endTime: _(source.get('effect_periods'))
-                            .last()
-                            .effect_end * 1000
+                        startTime: Date.parse(
+                            _(source.get('active_period'))
+                                .first()
+                                .start
+                        ),
+                        endTime: Date.parse(
+                            _(source.get('active_period'))
+                                .last()
+                                .end
+                        )
                     });
                 }
 
-                if (source.get('banner_text')) {
+                if (source.get('effect') === 'TRACK_CHANGE') {
+                    newAlert.set({severityPct: newAlert.get('severityPct') - 10});
+                }
+
+                if (source.get('banner')) {
                     newAlert.set({
                         isFeatured: true
                     });
                 }
 
-                switch (source.get('severity')) {
-                case 'Informational':
-                case 'Information':
-                case 'None':
-                case 'FYI':
-                    newAlert.set({severityPct: 10});
-                    break;
-                case 'Minor':
-                    newAlert.set({severityPct: 35});
-                    break;
-                case 'Moderate':
-                case 'Significant':
-                    newAlert.set({severityPct: 60});
-                    break;
-                case 'Severe':
-                    if (newAlert.get('isFeatured')) {
-                        newAlert.set({severityPct: 100});
-                    } else {
-                        newAlert.set({severityPct: 85});
-                    }
-                    break;
-                default:
-                    newAlert.set({severityPct: 50});
-                }
-
-                _(source.get('affected_services').elevators).each(function (e) {
-                    affected = new AccessFeature({
-                        txid: e.elev_id,
-                        name: e.elev_name.replace(getElevatorName, ''),
-                        type: e.elev_type,
-                        stationName: _(e.stops).first().parent_station_name
-                                ||  mixedCase(
-                                e.elev_name.replace(getElevatorStation, '')
-                            )
-                    });
-                    newAlert.get('affecteds').add(affected);
-                    if (e.elev_type === 'Elevator') {
-                        newAlert.set({isElevator: true});
-                    }
-                    if (newAlert.get('affectedElevator') === undefined) {
-                        newAlert.set({
-                            affectedElevatorId: affected.get('txid'),
-                            affectedElevatorDescription: affected
-                                .get('name'),
-                            affectedStation: affected.get('stationName')
-                        });
-                    }
-                    _(e.stops).each(function (stop) {
-                        affected = new Stop({
-                            txid: stop.stop_id,
-                            childName: stop.stop_name,
-                            parentName: stop.parent_station_name
-                        });
-                        newAlert.get('affecteds').add(affected);
-                    });
-                });
-
-                if (source.get('alert_lifecycle') === 'Upcoming' &&
-                        ((newAlert.get('severityPct') === 100) ||
-
-                        (newAlert.get('startTime') < Date.now() + 604800000 &&
-                            newAlert.get('severityPct') >= 75) ||
-
-                        (newAlert.get('startTime') < Date.now() + 432000000 &&
-                            newAlert.get('severityPct') >= 50) ||
-
-                        (newAlert.get('startTime') < Date.now() + 432000000 &&
-                            newAlert.get('isElevator')) ||
-
-                        (newAlert.get('startTime') < Date.now() + 259200000 &&
-                            newAlert.get('severityPct') >= 25) ||
-
-                        (newAlert.get('startTime') < Date.now() + 129600000))) {
-                    newAlert.set({isSoon: true});
-                }
-
-                if (newAlert.get('isElevator')
-                        && newAlert.get('startTime') < Date.now()
-                        && newAlert.get('startTime') >
-                        Date.now() - 3628800000) {
-                    newAlert.set({isNow: true});
-                }
-
-                if (newAlert.get('isElevator')
-                        && (newAlert.get('isNow')
-                            || newAlert.get('isSoon'))) {
-                    newAlert.set('isRelevant', true);
-                }
-
-                isSubway = isLocal = isSystemwide = false;
-                _(source.get('affected_services').services).each(function (el) {
+                isSubway = isLocal = isSystemwide = isElevator = isService = false;
+                _(source.get('informed_entity')).each(function (el) {
                     route = false;
-                    if (el.hasOwnProperty('route_id') &&
+                    if (el.hasOwnProperty('route') &&
                             !newAlert.get('affecteds').findWhere(
-                                {txid: el.route_id}
+                                {txid: el.route}
                             )) {
+                        isService = true;
                         if (thisAgency.get('routes').findWhere(
-                                {txid: el.route_id}
+                                {txid: el.route}
                             )) {
                             route = thisAgency.get('routes').findWhere(
-                                {txid: el.route_id}
+                                {txid: el.route}
                             ).clone();
-                        } else {
-                            route = new Route({
-                                txid: el.route_id,
-                                name:   el.route_name,
-                                mode:   el.mode_name,
-                                color: pickRouteColor(
-                                    el.mode_name,
-                                    el.route_name
-                                ),
-                                isHidden: el.route_hide,
-                                sortOrder: 0
-                            });
-                        }
-                        if (el.hasOwnProperty('direction_name')) {
-                            route.set(
-                                {direction: el.direction_name}
-                            );
-                        }
-                        if (!newAlert.get('affecteds')
-                                .findWhere({txid: route.get('txid')})) {
                             newAlert.get('affecteds').add(route);
                             isLocal = isLocal ||
                                 route.get('isLocal');
@@ -536,63 +458,56 @@ define([
                         }
                     }
 
-                    if (el.hasOwnProperty('stop_id') &&
+                    if (el.hasOwnProperty('facility') &&
+                            (newAlert.get('disruptionType') === 'ELEVATOR_CLOSURE' ||
+                             newAlert.get('disruptionType') === 'ACCESS_ISSUE') &&
+                            !containsEscalator.test(newAlert.get('summary')) &&
                             !newAlert.get('affecteds').findWhere(
-                                {txid: el.stop_id}
+                                {txid: el.facility}
                             )) {
-                        affected = new Stop({
-                            txid: el.stop_id,
-                            childName: el.stop_name,
-                            parentName: el.parent_station_name,
-                            color: pickRouteColor(el.mode_name,
-                                el.route_name)
+                        isElevator = true;
+                        affected = new AccessFeature({
+                            txid: el.facility,
+                            name: '',
+                            type: 'Elevator',
+                            stationName: newAlert.get('summary').replace(getElevatorStation, '')
                         });
-                        if (!newAlert.get('affecteds')
-                                .findWhere({txid: affected.get('txid')})) {
-                            newAlert.get('affecteds').add(affected);
+
+                        if (source.get('relationships') && source.get('relationships').facilities) {
+                            relationship = _(source.get('relationships').facilities.data).findWhere({type: 'facility', id: el.facility});
+                            if (relationship &&
+                                relationship.hasOwnProperty('attributes') &&
+                                relationship.attributes.hasOwnProperty('name')) {
+                                affected.set({name: relationship.attributes.name.replace(getElevatorName, '')});
+                                if (affected.get('stationName') === '') {
+                                    affected.set({stationName: mixedCase(
+                                        relationship.attributes.name.replace(getElevatorStationBackup, '')
+                                    )});
+                                }
+                            }
                         }
+                    newAlert.get('affecteds').add(affected);
+                    newAlert.set({affectedElevatorId: affected.get('txid')});
+                    newAlert.set({affectedStation: affected.get('stationName')});
+                    newAlert.set({affectedElevatorDescription: affected.get('name')});
                     }
 
-                    if (el.hasOwnProperty('trip_id') &&
-                            el.hasOwnProperty('trip_name') &&
-                            el.mode_name === 'Commuter Rail' &&
-                            getTrainName.test(el.trip_name)) {
-                        affected = new Train({
-                            txid: el.trip_id,
-                            shortName: getTrainName.exec(el.trip_name)[1],
-                            name: getTrainName.exec(el.trip_name)[1],
-                            longName: el.trip_name
-                        });
-                        if (route) {affected.set({route: route}); }
-                        if (!isNaN(affected.get('shortName'))) {
-                            affected.set({
-                                sortOrder: parseInt(
-                                    affected.get('shortName'),
-                                    10
-                                )
-                            });
-                        }
-                        if (!newAlert.get('affecteds')
-                                .findWhere({txid: affected.get('txid')})) {
-                            newAlert.get('affecteds').add(affected);
-                        }
-                    }
-
-
-                    if (!el.hasOwnProperty('route_id')
-                            && !el.hasOwnProperty('stop_id')) {
+                    if (!el.hasOwnProperty('route')
+                            && !el.hasOwnProperty('stop')
+                            && el.hasOwnProperty('route_type')) {
+                        isService = true;
                         if (thisAgency.get('routes').findWhere(
-                                {txid: 'mode_' + el.mode_name}
+                                {txid: 'mode_' + mode_names[el.route_type]}
                             )) {
                             affected = thisAgency.get('routes').findWhere(
-                                {txid: 'mode_' + el.mode_name}
+                                {txid: 'mode_' + mode_names[el.route_type]}
                             ).clone();
                         } else {
                             affected = new Route({
-                                txid: 'mode_' + el.mode_name,
-                                name:   el.mode_name,
-                                mode:   el.mode_name,
-                                color: pickRouteColor(el.mode_name, ''),
+                                txid: 'mode_' + mode_names[el.route_type],
+                                name:   mode_names[el.route_type],
+                                mode:   mode_names[el.route_type],
+                                color: pickRouteColor(mode_names[el.route_type], ''),
                                 sortOrder: 0
                             });
                         }
@@ -608,12 +523,45 @@ define([
                     }
                 }, this);
 
-                newAlert.set({isRelevant: newAlert.get('isRelevant')
-                    || isLocal || isSubway
-                    || (thisAgency.get('outputAllAlerts')
-                        && newAlert.get('isService'))});
+                newAlert.set({isService: isService});
+                newAlert.set({isElevator: isElevator});
 
-                if (newAlert.get('disruptionType') === 'Delay' &&
+
+                if (source.get('lifecycle') === 'UPCOMING' &&
+                        ((newAlert.get('startTime') < Date.now() + 604800000 &&
+                            newAlert.get('severityPct') >= 70) ||
+
+                        (newAlert.get('startTime') < Date.now() + 432000000 &&
+                            newAlert.get('severityPct') >= 50) ||
+
+                        (newAlert.get('startTime') < Date.now() + 432000000 &&
+                            newAlert.get('isElevator')) ||
+
+                        (newAlert.get('startTime') < Date.now() + 259200000 &&
+                            newAlert.get('severityPct') >= 30) ||
+
+                        (newAlert.get('startTime') < Date.now() + 129600000))) {
+                    newAlert.set({isSoon: true});
+                }
+
+                if (newAlert.get('isElevator')
+                        && newAlert.get('startTime') < Date.now()
+                        && newAlert.get('startTime') >
+                        Date.now() - 3628800000) {
+                    newAlert.set({isNow: true});
+                }
+
+
+
+                if (isElevator ||
+                        ((isLocal || isSubway) && newAlert.get('severityPct') >= 25) ||
+                        ((isLocal && isSubway) && newAlert.get('severityPct') >= 10) ||
+                        (thisAgency.get('outputAllAlerts') && newAlert.get('isService'))) {
+                    newAlert.set({isRelevant: true});
+                }
+
+                if (newAlert.get('disruptionType') === 'DELAY' &&
+                        newAlert.get('isRelevant') &&
                         ((isLocal && !isSubway)
                             || (thisAgency.get('outputAllAlerts') && !isSubway)
                             || (!isLocal && isSubway)) &&
@@ -621,17 +569,17 @@ define([
                     newDelayAlerts.add(newAlert);
                 } else if (newAlert.get('isRelevant')) {
                     newAlerts.push(newAlert);
+                } else {
                 }
 
-                if (source.get('banner_text')) {
+                if (source.get('banner')) {
                     newFeaturedAlert = newAlert.clone();
                     newFeaturedAlert.set({
-                        description: source.get('banner_text'),
+                        description: source.get('banner'),
                         details: '',
                         affecteds: newAlert.get('affecteds').clone()
                     });
                 }
-
 
             }, this);
 
@@ -641,7 +589,6 @@ define([
 
             thisAgency.get('alerts').reset(newAlerts);
             thisAgency.get('featuredAlerts').reset(newFeaturedAlert);
-
         },
         buildAffected: function (thisAgency) {
             return;

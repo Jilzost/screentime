@@ -32,21 +32,24 @@ define([
         nests: [],
         sourceType: 'V3-API',
         parse: function (data) {
-            var items = [], parsed = [];
-            console.log('V3Source');
-            console.log(data);
-            // var parsed = unnest(data, this.nests);
+            var items = [], parsed = [], included;
 
             items = data.data;
+            included = data.included;
 
-            console.log(items);
             parsed = _(items).map(function (item) {
-                return _.defaults(
-                    item.attributes,
-                    _(item).omit('attributes')
-                );
+                var newitem = _.defaults(
+                        item.attributes,
+                        _(item).omit('attributes')
+                    );
+                _(newitem.relationships).each(function (relCategory) {
+                    _(relCategory.data).each(function (relationship) {
+                        var reference = _(included).findWhere(relationship);
+                        if (reference) {relationship.attributes = reference.attributes; }
+                    });
+                });
+                return newitem;
             });
-            console.log(parsed);
 
             if (this.extraProperties) {
               parsed = _(parsed).map(function (target) {
