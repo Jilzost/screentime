@@ -552,9 +552,10 @@ define([
                 }
 
 
-
-                if (isElevator ||
-                        ((isLocal || isSubway) && newAlert.get('severityPct') >= 25) ||
+                if (isElevator && (newAlert.get('isNow') || newAlert.get('isSoon'))) {
+                  newAlert.set({isRelevant: true});
+                }
+                if (((isLocal || isSubway) && newAlert.get('severityPct') >= 25) ||
                         ((isLocal && isSubway) && newAlert.get('severityPct') >= 10) ||
                         (thisAgency.get('outputAllAlerts') && newAlert.get('isService'))) {
                     newAlert.set({isRelevant: true});
@@ -569,7 +570,6 @@ define([
                     newDelayAlerts.add(newAlert);
                 } else if (newAlert.get('isRelevant')) {
                     newAlerts.push(newAlert);
-                } else {
                 }
 
                 if (source.get('banner')) {

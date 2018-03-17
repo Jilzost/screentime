@@ -396,7 +396,7 @@ define([
                             )
                     });
                     newAlert.get('affecteds').add(affected);
-                    if (e.elev_type === 'Elevator') {
+                    if (e.elev_type.toLowerCase() === 'elevator') {
                         newAlert.set({isElevator: true});
                     }
                     if (newAlert.get('affectedElevator') === undefined) {
