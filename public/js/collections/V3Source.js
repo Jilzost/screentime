@@ -42,10 +42,21 @@ define([
                         item.attributes,
                         _(item).omit('attributes')
                     );
+
                 _(newitem.relationships).each(function (relCategory) {
+
+                    if (_.isNull(relCategory.data)) {
+                        relCategory.data = [];
+                    }
+                    if (!_.isArray(relCategory.data)) {
+                        relCategory.data = [relCategory.data];
+                    }
+
                     _(relCategory.data).each(function (relationship) {
                         var reference = _(included).findWhere(relationship);
-                        if (reference) {relationship.attributes = reference.attributes; }
+                        if (reference) {
+                          relationship.attributes = reference.attributes;
+                        }
                     });
                 });
                 return newitem;
