@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+    <title>ScreenTime</title>
+    <link rel='stylesheet' href='css/style.css'></link>
+<!--    <script src="js/libs/require.js" data-main="js/main"></script> -->
+
+<script>
+var regex = new RegExp("[?&]" + 'delay' + "(=([^&#]*)|&|#|$)"),
+    url = window.location.href;
+    delay = regex.exec(url);
+
+    if (!delay || !delay[2]) {delay = 0;}
+    else {
+      delay = decodeURIComponent(delay[2].replace(/\+/g, " "));
+      if (isNaN(delay)) {delay = 0;}
+    }
+
+setTimeout(function () {
+    'use strict';
+    var headID = document.getElementsByTagName("head")[0],
+        newScript = document.createElement('script');
+    newScript.src = 'js/libs/require.js';
+    newScript.setAttribute('data-main', 'js/main');
+    headID.appendChild(newScript);
+    document.getElementById('status').html = 'Loading..';
+}, delay);
+</script>
+
+</head>
+
+<body>
+    <div id="sign">
+    <div id="clock"></div>
+    <div id="featuredAlerts"></div>
+    <div id="psas"></div>
+    <div id="departures"></div>
+    <div id="currentAlerts"></div>
+    <div id="upcomingAlerts"></div>
+    <div id="elevatorAlerts"></div>
+    <div id="status">Loading</div>
+    </div>
+
+</body>
+
+</html>
