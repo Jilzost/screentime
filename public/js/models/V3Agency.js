@@ -28,7 +28,7 @@ define([
     Train, Alerts, Routes, Trains, Departures, Psas, RealtimeSource,
     V3Source, inputLoop, pickRouteColor, combinedDelayAlert) {
 
-    var deriveDestination = function (departure) {
+    var deriveDestination = function (input) {
 
         var dest = {title: '', subtitle: '', train: undefined },
             headsign = '',
@@ -41,43 +41,30 @@ define([
             removeCloseParens = /\)\s?$/,  //Text before )
             getAfterTo = /^[\W\w]+\sto\s/,  //Text after "... to "
             getBeforeSpace = /\s[\W\w]+$/;  //Text before " "
-        if (departure.get('mode_name') !== 'Commuter Rail') {
-            if (departure.get('trip_headsign')) {
-                headsign = departure.get('trip_headsign');
-                if (testVia.test(headsign)) {
-                    //Non-commuter rail, has headsign with "via"
-                    dest.title = headsign.replace(getBeforeVia, '');
-                    dest.subtitle = headsign.replace(getAfterVia, 'via ');
-                    return dest;
-                }
-                if (testParens.test(headsign)) {
-                    //Non-commuter rail, has headsign with "()"
-                    dest.title =
-                        headsign.replace(getBeforeParens, '');
-                    dest.subtitle =
-                        headsign.replace(getAfterParens, '')
-                            .replace(removeCloseParens, '');
-                    return dest;
-                }
-                //Non-commuter rail, one-line destination
-                dest.title = headsign;
+
+        if (input.mode !== 'Commuter Rail') {
+            headsign = input.headsign;
+            if (testVia.test(headsign)) {
+                //Non-commuter rail, has headsign with "via"
+                dest.title = headsign.replace(getBeforeVia, '');
+                dest.subtitle = headsign.replace(getAfterVia, 'via ');
                 return dest;
             }
-            //Non-commuter rail, no headsign text at all
-            dest.title = departure.get('trip_name').replace(getAfterTo, '');
+            if (testParens.test(headsign)) {
+                //Non-commuter rail, has headsign with "()"
+                dest.title =
+                    headsign.replace(getBeforeParens, '');
+                dest.subtitle =
+                    headsign.replace(getAfterParens, '')
+                        .replace(removeCloseParens, '');
+                return dest;
+            }
+            dest.title = headsign;
             return dest;
         }
-        if (departure.get('trip_headsign')) {
-            //commuter rail, with headsign
-            dest.title = departure.get('trip_headsign');
-            //dest.subtitle = departure.get('route_name');
-            dest.train = departure.get('trip_name').replace(getBeforeSpace, '');
-            return dest;
-        }
-        dest.title = departure.get('direction_name');
-        dest.subtitle = departure.get('route_name');
+        dest.title = input.headsign;
+        dest.train = input.train;
         return dest;
-
     };
 
 
@@ -224,14 +211,12 @@ define([
             if (agency.get('outputDepartures')) {
                 _(agency.get('stops')).each(function (stop) {
                     var sourceName = 'src_departures_' + stop.stop_id;
-                    initializeSourceRT({
+                    initializeSourceV3({
                         sourceName: sourceName,
-                        command: 'predictionsbystop',
-                        nests: ['mode', 'route', 'direction', 'trip'],
+                        command: 'predictions',
                         maxAge: agency.get('departuresMaxAge'),
-                        params: _({stop: stop.stop_id,
-                            include_service_alerts: 'false'
-                            }).defaults(defaultParams)
+                        filters: [{param: 'stop', value: stop.stop_id}],
+                        include: 'schedule,trip'
                     }, agency);
                     agency.get(sourceName).extraProperties = {
                         locationName: stop.locationName,
@@ -261,7 +246,7 @@ define([
             });
 
             _(departureSources).each(function (source) {
-                agency.get('alerts').listenTo(agency.get(source),
+                agency.get('departures').listenTo(agency.get(source),
                         'reset sync',
                         function () {agency.buildDepartures(agency); });
             });
@@ -326,6 +311,7 @@ define([
                     color: pickRouteColor(route.get('mode_name'),
                                 route.get('route_name')),
                     isHidden: route.get('route_hide') || false,
+                    directionNames: route.get('direction_names') || ['Outbound', 'Inbound'],
                     sortOrder: i
                 });
                 i += 1;
@@ -594,67 +580,131 @@ define([
             return;
         },
         buildDepartures: function (thisAgency) {
-            var departures = [], destination, route;
+            var departures = [], destination, route, newdep,
+                pullUp = function(targetObj, attributesToPull) {
+                    var match, rels = targetObj.get('relationships');
+                    if (!rels) {return; }
+                    _(attributesToPull).each(function (att) {
+                        if (rels.hasOwnProperty(att) &&
+                                rels[att].hasOwnProperty('data') &&
+                                _.isArray(rels[att].data) &&
+                                rels[att].data.length > 0) {
+                            if (rels[att].data[0].attributes) {
+                                match = _.defaults(
+                                      rels[att].data[0].attributes,
+                                      _(rels[att].data[0]).omit('attributes')
+                                );
+                            } else {
+                                match = rels[att].data[0];
+                            }
+                            targetObj.set(att, match);
+                        }
+                    });
+                };
             _(thisAgency.get('departureSources')).each(function (src) {
-                src = thisAgency.get(src);
+                var src = thisAgency.get(src),
+                    destFilt = thisAgency.get('destinationFilter'),
+                    suppressModes = thisAgency.get('suppressDepartures');
                 src.each(function (dep) {
-                    if (thisAgency.get('destOverride') && dep.get('trip_headsign')) {
+                    var newdep = {}; //pass to departures;
+                    pullUp(dep, ['route', 'trip', 'schedule', 'stop']);
+
+                    if (dep.get('schedule') && dep.get('schedule').pickup_type === 1) {
+                        return;
+                    }
+
+                    if (thisAgency.get('destOverride') &&
+                            dep.get('trip') &&
+                            dep.get('trip').headsign) {
                         _(thisAgency.get('destOverride')).each(function (over) {
-                            if (over.test.test(dep.get('trip_headsign')) && over.replacement) {
-                                dep.set('trip_headsign', over.replacement);
+                            if (over.test.test(dep.get('trip').headsign) && over.replacement) {
+                                dep.get('trip').headsign = over.replacement;
                             }
                         });
                     }
-                    destination = deriveDestination(dep);
-                    if (thisAgency.get('routeOverrideTest') &&
-                            thisAgency.get('routeOverrideTest').test(
-                                destination.title
-                            )
-                            ) {
-                        route = new Route(thisAgency.get('routeOverride'));
-                    } else if (thisAgency.get('routes').findWhere(
+
+                    if (destFilt &&
+                          dep.get('trip') &&
+                          dep.get('trip').headsign &&
+                          destFilt.test(dep.get('trip').headsign)) {
+                        console.log('Filtered prediction');
+                        console.log(dep);
+                        return;
+                    }
+
+                    if (dep.get('route') && thisAgency.get('routes').findWhere({txid: dep.get('route').id})) {
+                        newdep.route = thisAgency.get('routes').findWhere(
                             {
-                                txid: dep.get('route_id')
-                            }
-                        )) {
-                        route = thisAgency.get('routes').findWhere(
-                            {
-                                txid: dep.get('route_id')
+                                txid: dep.get('route').id
                             }
                         ).clone();
-                    } else {
-                        route = new Route(
+                    } else if (dep.get('route') && dep.get('route').id) {
+                        newdep.route = new Route(
                             {
-                                txid: dep.get('route_id'),
-                                name: dep.get('route_name'),
-                                mode: dep.get('mode_name'),
-                                color: pickRouteColor(
-                                    dep.get('mode_name'),
-                                    dep.get('route_name')
-                                )
+                                txid: dep.get('route').id,
+                                name: dep.get('route').id,
+                                mode: 'Bus',
+                                color: pickRouteColor('Bus', dep.get('route').id)
+                            }
+                        );
+                    } else {
+                        newdep.route = new Route(
+                            {
+                                txid: 'none',
+                                name: '',
+                                mode: 'Bus',
+                                color: '#FFFFFF',
+                                directionNames: ['Outbound', 'Inbound']
                             }
                         );
                     }
-                    if ((!(thisAgency.get('destinationFilter')) ||
-                            !(thisAgency.get('destinationFilter').test(
-                                destination.title
-                            ))) &&
-                            (!(thisAgency.get('suppressDepartures')) ||
-                             !(_(thisAgency.get('suppressDepartures'))
-                                .contains(route.get('mode'))))) {
-                        departures.push({
-                            route: route,
-                            direction: dep.get('direction_name'),
-                            tripId: dep.get('trip_id'),
-                            destinationTitle: destination.title,
-                            destinationSubtitle: destination.subtitle,
-                            train: destination.train,
-                            scheduledTime: dep.get('sch_dep_dt') * 1000,
-                            predictedTime: dep.get('pre_dt') * 1000,
-                            locationName: dep.get('locationName'),
-                            showLocationName: dep.get('showLocationName')
-                        });
+
+                    if (suppressModes &&
+                        _(suppressModes).contains(newdep.route.get('mode'))) {
+                        return;
                     }
+
+                    destination = deriveDestination({
+                        mode: newdep.route.get('mode'),
+                        headsign: dep.get('trip').headsign || '',
+                        train: dep.get('trip').name || ''
+                    });
+
+                    newdep.destinationTitle = destination.title;
+                    newdep.destinationSubtitle = destination.subtitle;
+                    newdep.train = destination.train;
+                    if (dep.get('trip')) {
+                        newdep.direction =
+                                newdep.route.get('directionNames')[
+                                      dep.get('trip').direction_id || 0
+                                ];
+                    }
+                    if (dep.get('schedule') && dep.get('schedule').arrival_time) {
+                        newdep.scheduledTime = Date.parse(
+                            dep.get('schedule').arrival_time
+                        );
+                    } else if (dep.get('schedule') && dep.get('schedule').departure_time) {
+                        newdep.scheduledTime = Date.parse(
+                            dep.get('schedule').departure_time
+                        );
+                    }
+                    if (dep.get('arrival_time')) {
+                        newdep.predictedTime = Date.parse(
+                            dep.get('arrival_time')
+                        );
+                    } else {
+                        newdep.predictedTime = Date.parse(
+                            dep.get('departure_time')
+                        );
+                    }
+                    if (dep.get('trip')) {
+                        newdep.tripId = dep.get('trip').id;
+                    }
+                    //TODO: dep.locationName unsupported
+                    //TODO: dep.showLocationName unsupported
+
+                    departures.push(newdep);
+
                 });
             });
             thisAgency.get('departures').reset(departures);
