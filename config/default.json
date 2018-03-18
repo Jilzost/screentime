@@ -500,21 +500,39 @@
             "base": "mbta_lfd_mRT",
             "values": {
                 "MBTA_stops": [{"stop_id": "place-mvbcl", "locationName": "Maverick Station"}],
-                "MBTA_destinationFilter": "^Maverick"
+                "MBTA_destinationFilter": "^Maverick",
+                "MBTA_destOverride": [
+                  {
+                    "test": "Maverick via Jeffries Point",
+                    "replacement": "Jeffries Point"
+                  }
+                ]
             }
         },
         "maverickRT": {
             "base": "mbta_lfd_mRT",
             "values": {
                 "MBTA_stops": [{"stop_id": "place-mvbcl", "locationName": "Maverick Station"}],
-                "MBTA_destinationFilter": "^Maverick"
+                "MBTA_destinationFilter": "^Maverick",
+                "MBTA_destOverride": [
+                  {
+                    "test": "Maverick via Jeffries Point",
+                    "replacement": "Jeffries Point"
+                  }
+                ]
             }
         },
         "maverickV3": {
             "base": "mbta_lfd_mV3",
             "values": {
                 "MBTAV3_stops": [{"stop_id": "place-mvbcl", "locationName": "Maverick Station"}],
-                "MBTAV3_destinationFilter": "^Maverick"
+                "MBTAV3_destinationFilter": "^Maverick",
+                "MBTAV3_destOverride": [
+                  {
+                    "test": "Maverick via Jeffries Point",
+                    "replacement": "Jeffries Point"
+                  }
+                ]
             }
         },
         "ruggles": {
@@ -676,7 +694,7 @@
             }
         },
         "wonderlandV3": {
-            "base": "mbta_lfd_mRT",
+            "base": "mbta_lfd_mV3",
             "values": {
                 "MBTAV3_stops": [{"stop_id": "place-wondl", "locationName": "Wonderland Station"}],
                 "MBTAV3_destinationFilter": "^Wonderland"
