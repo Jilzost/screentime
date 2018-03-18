@@ -27,7 +27,12 @@ define([
                 if (b.get('isPrediction') && !a.get('isPrediction')) {
                     return 1;
                 }
-                return a.get('time') - b.get('time');
+                if (a.get('time') - b.get('time') !== 0) {
+                    return a.get('time') - b.get('time');
+                }
+                if (a.get('direction') > b.get('direction')) { return 1; }
+                if (a.get('direction') < b.get('direction')) { return -1; }
+                return 0;
             case 'presentationOrder':
                 if (a.get('train') || b.get('train')) {
                   if (!a.get('train')) {return 1; }
