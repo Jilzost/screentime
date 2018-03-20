@@ -235,8 +235,7 @@
         "ashmontV3": {
             "base": "mbta_lfd_mV3",
             "values": {
-                "MBTAV3_stops": [{"stop_id": "place-asmnl", "locationName": "Ashmont Station"}],
-                "MBTAV3_destinationFilter": "^Ashmont"
+                "MBTAV3_stops": [{"stop_id": "place-asmnl", "locationName": "Ashmont Station"}]
             }
         },
         "ashmont-all": {
