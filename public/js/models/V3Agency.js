@@ -218,10 +218,6 @@ define([
                         filters: [{param: 'stop', value: stop.id}],
                         include: 'schedule,trip'
                     }, agency);
-                    agency.get(sourceName).extraProperties = {
-                        locationName: stop.locationName,
-                        showLocationName: stop.showLocationName
-                    };
                     allSources.push(sourceName);
                     departureSources.push(sourceName);
                 });

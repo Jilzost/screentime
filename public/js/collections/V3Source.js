@@ -62,11 +62,6 @@ define([
                 return newitem;
             });
 
-            if (this.extraProperties) {
-              parsed = _(parsed).map(function (target) {
-                return _.defaults(target, this.extraProperties);
-              }, this);
-            }
             return parsed;
         }
     });
