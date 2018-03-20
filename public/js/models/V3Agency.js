@@ -175,12 +175,12 @@ define([
             if (agency.get('outputLocalAlerts') &&
                     !agency.get('outputAllAlerts')) {
                 _(agency.get('stops')).each(function (stop) {
-                    var sourceName = 'src_localRoutes_' + stop.stop_id;
+                    var sourceName = 'src_localRoutes_' + stop.id;
                     initializeSourceV3({
                         sourceName: sourceName,
                         command: 'routes',
                         maxAge: agency.get('routesMaxAge'),
-                        filters: [{param: 'stop', value: stop.stop_id}]
+                        filters: [{param: 'stop', value: stop.id}]
                     }, agency);
                     allSources.push(sourceName);
                     routesSources.push(sourceName);
@@ -210,12 +210,12 @@ define([
             agency.set({departures: new Departures()});
             if (agency.get('outputDepartures')) {
                 _(agency.get('stops')).each(function (stop) {
-                    var sourceName = 'src_departures_' + stop.stop_id;
+                    var sourceName = 'src_departures_' + stop.id;
                     initializeSourceV3({
                         sourceName: sourceName,
                         command: 'predictions',
                         maxAge: agency.get('departuresMaxAge'),
-                        filters: [{param: 'stop', value: stop.stop_id}],
+                        filters: [{param: 'stop', value: stop.id}],
                         include: 'schedule,trip'
                     }, agency);
                     agency.get(sourceName).extraProperties = {
