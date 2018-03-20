@@ -623,8 +623,6 @@ define([
                           dep.get('trip') &&
                           dep.get('trip').headsign &&
                           destFilt.test(dep.get('trip').headsign)) {
-                        console.log('Filtered prediction');
-                        console.log(dep);
                         return;
                     }
 
