@@ -325,7 +325,7 @@
                     {"id": "place-harsq", "getPredictions": false},
                     {"id": "place-knncl", "getPredictions": false}
                 ],
-                "MBTAV3_destinationFilter": "^University Park"
+                "MBTAV3_destinationFilter": "^University\\sPark"
             }
         },
         "default": {
@@ -456,8 +456,11 @@
             "base": "mbta_lfd_mV3",
             "values": {
                 "MBTAV3_stops": [
-                    {"id": "place-harsq", "locationName": "Harvard Station"},
-                    {"id": "110", "directionsToStop": "Board outside station across Mass. Ave."}
+                    {"id": "place-harsq"},
+                    {"id": "110", "directionsToStop": "Board outside station across Mass. Ave."},
+                    {"id": "2076", "getPredictions": false, "directionsToStop": "Lower busway"},
+                    {"id": "20761", "getPredictions": false, "directionsToStop": "Upper busway"},
+                    {"id": "place-cntsq", "getPredictions": false}
                 ],
                 "MBTAV3_destinationFilter": "^Harvard"
             }
