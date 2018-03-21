@@ -96,16 +96,6 @@ define([
                 departureSources = [],
                 destOverride,
                 stopString,
-                initializeSourceRT = function (config, agency) {
-                    var source = new RealtimeSource();
-                    source.url = agency.get('baseURL') + config.command +
-                        '?' + $.param(config.params);
-                    source.nests = config.nests;
-                    source.maxAge = config.maxAge;
-                    source.agency = agency;
-                    agency.set(config.sourceName, source);
-                    return config;
-                },
                 initializeSourceV3 = function (config, agency) {
                     var source = new V3Source(),
                         params = [],
