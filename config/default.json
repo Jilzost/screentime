@@ -458,8 +458,8 @@
                 "MBTAV3_stops": [
                     {"id": "place-harsq"},
                     {"id": "110", "directionsToStop": "Board outside station across Mass. Ave."},
-                    {"id": "2076", "getPredictions": false, "directionsToStop": "Lower busway"},
-                    {"id": "20761", "getPredictions": false, "directionsToStop": "Upper busway"},
+                    {"id": "2076", "getPredictions": false, "directionsToStop": "Board at lower-level busway"},
+                    {"id": "20761", "getPredictions": false, "directionsToStop": "Board at upper-level busway"},
                     {"id": "place-cntsq", "getPredictions": false}
                 ],
                 "MBTAV3_destinationFilter": "^Harvard"
