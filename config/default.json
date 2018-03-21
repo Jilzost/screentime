@@ -235,7 +235,7 @@
         "ashmontV3": {
             "base": "mbta_lfd_mV3",
             "values": {
-                "MBTAV3_stops": [{"id": "place-asmnl"}]
+                "MBTAV3_stops": ["place-asmnl"]
             }
         },
         "ashmont-all": {
@@ -315,12 +315,15 @@
             "base": "mbta_lfd_mV3",
             "values": {
                 "MBTAV3_stops": [
-                    {"id": "70069", "directionsToStop": "Board downstairs"},
-                    {"id": "70070", "directionsToStop": "Board across street, downstairs"},
+                    {"id": "place-cntsq"},
                     {"id": "102", "directionsToStop": "Board across street"},
                     {"id": "1060", "directionsToStop": "Board from Magazine Street to your left"},
                     {"id": "1123", "directionsToStop": "Board from Green Street around the corner"},
-                    {"id": "72", "directionsToStop": "Board to the right"}
+                    {"id": "72", "directionsToStop": "Board to the right"},
+                    {"id": "70069", "directionsToStop": "Board downstairs", "getPredictions": false},
+                    {"id": "70070", "directionsToStop": "Board across street, downstairs", "getPredictions": false},
+                    {"id": "place-harsq", "getPredictions": false},
+                    {"id": "place-knncl", "getPredictions": false}
                 ],
                 "MBTAV3_destinationFilter": "^University Park"
             }

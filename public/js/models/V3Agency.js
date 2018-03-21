@@ -97,6 +97,7 @@ define([
                 alertSources = [],
                 departureSources = [],
                 destOverride,
+                stopString,
                 initializeSourceRT = function (config, agency) {
                     var source = new RealtimeSource();
                     source.url = agency.get('baseURL') + config.command +
@@ -161,6 +162,16 @@ define([
             }
             agency.get('destOverride');
 
+            agency.set(
+              'stops',
+              _(agency.get('stops')).map(function (stop) {
+                if (_(stop).isString()) {stop = {id: stop}; }
+                return _(stop).defaults({
+                    getPredictions: true,
+                    makesAlertsLocal: true
+                });
+              })
+            );
 
             initializeSourceV3({
                 sourceName: 'src_routes',
@@ -174,24 +185,29 @@ define([
 
             if (agency.get('outputLocalAlerts') &&
                     !agency.get('outputAllAlerts')) {
-                _(agency.get('stops')).each(function (stop) {
-                    var sourceName = 'src_localRoutes_' + stop.id;
-                    initializeSourceV3({
-                        sourceName: sourceName,
-                        command: 'routes',
-                        maxAge: agency.get('routesMaxAge'),
-                        filters: [{param: 'stop', value: stop.id}]
-                    }, agency);
-                    allSources.push(sourceName);
-                    routesSources.push(sourceName);
-                    localRoutesSources.push(sourceName);
-                });
+                stopString = _(agency.get('stops')).reduce(function (memo, stop) {
+                    if (stop.makesAlertsLocal) {
+                        if (memo === '') { return stop.id; }
+                        return memo + ',' + stop.id;
+                    }
+                    return memo;
+                }, '');
+                initializeSourceV3({
+                    sourceName: 'src_localRoutes',
+                    command: 'routes',
+                    maxAge: agency.get('routesMaxAge'),
+                    filters: [{param: 'stop', value: stopString}]
+                }, agency);
+                allSources.push('src_localRoutes');
+                routesSources.push('src_localRoutes');
+                localRoutesSources.push('src_localRoutes');
             }
             agency.set({localRoutesSources: localRoutesSources});
 
             agency.set({psas: new Psas()});
             agency.set({alerts: new Alerts()});
             agency.set({featuredAlerts: new Alerts()});
+
             if (agency.get('outputLocalAlerts') ||
                     agency.get('outputSubwayAlerts') ||
                     agency.get('outputAllAlerts')) {
@@ -209,18 +225,23 @@ define([
 
             agency.set({departures: new Departures()});
             if (agency.get('outputDepartures')) {
-                _(agency.get('stops')).each(function (stop) {
-                    var sourceName = 'src_departures_' + stop.id;
-                    initializeSourceV3({
-                        sourceName: sourceName,
-                        command: 'predictions',
-                        maxAge: agency.get('departuresMaxAge'),
-                        filters: [{param: 'stop', value: stop.id}],
-                        include: 'schedule,trip'
-                    }, agency);
-                    allSources.push(sourceName);
-                    departureSources.push(sourceName);
-                });
+                stopString = _(agency.get('stops')).reduce(function (memo, stop) {
+                    if (stop.getPredictions) {
+                        if (memo === '') { return stop.id; }
+                        return memo + ',' + stop.id;
+                    }
+                    return memo;
+                }, '');
+
+                initializeSourceV3({
+                    sourceName: 'src_departures',
+                    command: 'predictions',
+                    maxAge: agency.get('departuresMaxAge'),
+                    filters: [{param: 'stop', value: stopString}],
+                    include: 'schedule,trip'
+                }, agency);
+                allSources.push('src_departures');
+                departureSources.push('src_departures');
             }
             agency.set({departureSources: departureSources});
 
