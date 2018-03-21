@@ -38,9 +38,7 @@ define([
             testParens = /\(/,   //Does destination sign contain a "("?
             getBeforeParens = /\([\W\w]+$/, //Text before (
             getAfterParens = /^[\W\w]+\(/,  //Text after (
-            removeCloseParens = /\)\s?$/,  //Text before )
-            getAfterTo = /^[\W\w]+\sto\s/,  //Text after "... to "
-            getBeforeSpace = /\s[\W\w]+$/;  //Text before " "
+            removeCloseParens = /\)\s?$/;  //Text before )
 
         if (input.mode !== 'Commuter Rail') {
             headsign = input.headsign;
@@ -155,7 +153,7 @@ define([
             }
             if (agency.get('destOverride')) {
                 destOverride = agency.get('destOverride');
-                _(destOverride).each(function(over) {
+                _(destOverride).each(function (over) {
                     over.test = new RegExp(over.test);
                 });
                 agency.set('destOverride', destOverride);
@@ -163,15 +161,27 @@ define([
             agency.get('destOverride');
 
             agency.set(
-              'stops',
-              _(agency.get('stops')).map(function (stop) {
-                if (_(stop).isString()) {stop = {id: stop}; }
-                return _(stop).defaults({
-                    getPredictions: true,
-                    makesAlertsLocal: true
-                });
-              })
+                'stops',
+                _(agency.get('stops')).map(function (stop) {
+                    if (_(stop).isString()) {stop = {id: stop}; }
+                    return _(stop).defaults({
+                        getPredictions: true,
+                        makesAlertsLocal: true
+                    });
+                })
             );
+
+            agency.set(
+                'stopDirectionsIndex',
+                _(agency.get('stops')).reduce(function (memo, stop) {
+                    if (stop.hasOwnProperty('directionsToStop')) {
+                        memo[stop.id] = stop.directionsToStop;
+                    }
+                    return memo;
+                }, {})
+            );
+
+            console.log(agency.get('stopDirectionsIndex'));
 
             initializeSourceV3({
                 sourceName: 'src_routes',
@@ -479,8 +489,8 @@ define([
                         if (source.get('relationships') && source.get('relationships').facilities) {
                             relationship = _(source.get('relationships').facilities.data).findWhere({type: 'facility', id: el.facility});
                             if (relationship &&
-                                relationship.hasOwnProperty('attributes') &&
-                                relationship.attributes.hasOwnProperty('name')) {
+                                    relationship.hasOwnProperty('attributes') &&
+                                    relationship.attributes.hasOwnProperty('name')) {
                                 affected.set({name: relationship.attributes.name.replace(getElevatorName, '')});
                                 if (affected.get('stationName') === '') {
                                     affected.set({stationName: mixedCase(
@@ -489,10 +499,10 @@ define([
                                 }
                             }
                         }
-                    newAlert.get('affecteds').add(affected);
-                    newAlert.set({affectedElevatorId: affected.get('txid')});
-                    newAlert.set({affectedStation: affected.get('stationName')});
-                    newAlert.set({affectedElevatorDescription: affected.get('name')});
+                        newAlert.get('affecteds').add(affected);
+                        newAlert.set({affectedElevatorId: affected.get('txid')});
+                        newAlert.set({affectedStation: affected.get('stationName')});
+                        newAlert.set({affectedElevatorDescription: affected.get('name')});
                     }
 
                     if (!el.hasOwnProperty('route')
@@ -556,7 +566,7 @@ define([
 
 
                 if (isElevator && (newAlert.get('isNow') || newAlert.get('isSoon'))) {
-                  newAlert.set({isRelevant: true});
+                    newAlert.set({isRelevant: true});
                 }
                 if (((isLocal || isSubway) && newAlert.get('severityPct') >= 25) ||
                         ((isLocal && isSubway) && newAlert.get('severityPct') >= 10) ||
@@ -598,7 +608,8 @@ define([
         },
         buildDepartures: function (thisAgency) {
             var departures = [], destination, route, newdep,
-                pullUp = function(targetObj, attributesToPull) {
+                dirIndex = thisAgency.get('stopDirectionsIndex'),
+                pullUp = function (targetObj, attributesToPull) {
                     var match, rels = targetObj.get('relationships');
                     if (!rels) {return; }
                     _(attributesToPull).each(function (att) {
@@ -608,8 +619,8 @@ define([
                                 rels[att].data.length > 0) {
                             if (rels[att].data[0].attributes) {
                                 match = _.defaults(
-                                      rels[att].data[0].attributes,
-                                      _(rels[att].data[0]).omit('attributes')
+                                    rels[att].data[0].attributes,
+                                    _(rels[att].data[0]).omit('attributes')
                                 );
                             } else {
                                 match = rels[att].data[0];
@@ -619,11 +630,11 @@ define([
                     });
                 };
             _(thisAgency.get('departureSources')).each(function (src) {
-                var src = thisAgency.get(src),
-                    destFilt = thisAgency.get('destinationFilter'),
+                var destFilt = thisAgency.get('destinationFilter'),
                     suppressModes = thisAgency.get('suppressDepartures');
+                src = thisAgency.get(src);
                 src.each(function (dep) {
-                    var newdep = {}; //pass to departures;
+                    newdep = {}; //pass to departures;
                     pullUp(dep, ['route', 'trip', 'schedule', 'stop']);
 
                     if (dep.get('schedule') && dep.get('schedule').pickup_type === 1) {
@@ -641,9 +652,9 @@ define([
                     }
 
                     if (destFilt &&
-                          dep.get('trip') &&
-                          dep.get('trip').headsign &&
-                          destFilt.test(dep.get('trip').headsign)) {
+                            dep.get('trip') &&
+                            dep.get('trip').headsign &&
+                            destFilt.test(dep.get('trip').headsign)) {
                         return;
                     }
 
@@ -675,7 +686,7 @@ define([
                     }
 
                     if (suppressModes &&
-                        _(suppressModes).contains(newdep.route.get('mode'))) {
+                            _(suppressModes).contains(newdep.route.get('mode'))) {
                         return;
                     }
 
@@ -685,14 +696,21 @@ define([
                         train: dep.get('trip').name || ''
                     });
 
+                    if (dep.get('stop') &&
+                            dep.get('stop').id &&
+                            dirIndex[dep.get('stop').id]) {
+                        newdep.showLocationName = true;
+                        newdep.locationName = dirIndex[dep.get('stop').id];
+                    }
+
                     newdep.destinationTitle = destination.title;
                     newdep.destinationSubtitle = destination.subtitle;
                     newdep.train = destination.train;
                     if (dep.get('trip')) {
                         newdep.direction =
                                 newdep.route.get('directionNames')[
-                                      dep.get('trip').direction_id || 0
-                                ];
+                                dep.get('trip').direction_id || 0
+                            ];
                     }
                     if (dep.get('schedule') && dep.get('schedule').arrival_time) {
                         newdep.scheduledTime = Date.parse(
@@ -715,8 +733,6 @@ define([
                     if (dep.get('trip')) {
                         newdep.tripId = dep.get('trip').id;
                     }
-                    //TODO: dep.locationName unsupported
-                    //TODO: dep.showLocationName unsupported
 
                     departures.push(newdep);
 
