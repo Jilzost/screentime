@@ -86,8 +86,7 @@ define([
         initialize: function () {
             var agency = this,
                 defaultParams = {
-                    api_key: agency.get('api_key'),
-                    format: 'json'
+                    api_key: agency.get('api_key')
                 },
                 allSources = [],
                 routesSources = [],
@@ -112,6 +111,10 @@ define([
                         _(params).push('include=' + config.include);
                     }
 
+                    if (config.params && config.params.api_key) {
+                        _(params).push('api_key=' + config.params.api_key);
+                    }
+
                     if (params.length > 0) {
                         paramstring = _(params).reduce(function (memo, p) {
                             if (memo === '') {return '?' + p; }
@@ -119,7 +122,7 @@ define([
                         }, '');
                     }
 
-                    source.url = 'https://api-v3.mbta.com' + '/' + config.command + paramstring;
+                    source.url = agency.get('baseURL') + config.command + paramstring;
                     // source.nests = config.nests;
                     source.maxAge = config.maxAge;
                     source.agency = agency;
@@ -171,8 +174,6 @@ define([
                 }, {})
             );
 
-            console.log(agency.get('stopDirectionsIndex'));
-
             initializeSourceV3({
                 sourceName: 'src_routes',
                 command: 'routes',
@@ -196,7 +197,8 @@ define([
                     sourceName: 'src_localRoutes',
                     command: 'routes',
                     maxAge: agency.get('routesMaxAge'),
-                    filters: [{param: 'stop', value: stopString}]
+                    filters: [{param: 'stop', value: stopString}],
+                    params: defaultParams
                 }, agency);
                 allSources.push('src_localRoutes');
                 routesSources.push('src_localRoutes');
@@ -216,7 +218,8 @@ define([
                     command: 'alerts',
                     maxAge: agency.get('alertsMaxAge'),
                     filters: [{param: 'activity', value: 'BOARD,RIDE,EXIT,USING_WHEELCHAIR'}],
-                    include: 'facilities'
+                    include: 'facilities',
+                    params: defaultParams
                 }, agency);
                 allSources.push('src_alerts');
                 alertSources.push('routes');
@@ -238,7 +241,8 @@ define([
                     command: 'predictions',
                     maxAge: agency.get('departuresMaxAge'),
                     filters: [{param: 'stop', value: stopString}],
-                    include: 'schedule,trip'
+                    include: 'schedule,trip',
+                    params: defaultParams
                 }, agency);
                 allSources.push('src_departures');
                 departureSources.push('src_departures');
