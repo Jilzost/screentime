@@ -194,11 +194,10 @@
             }
         },
         "ashmont": {
-            "base": "mbta_lfd_mRT",
-            "values": {
-                "MBTA_stops": [{"stop_id": "place-asmnl", "locationName": "Ashmont Station"}],
-                "MBTA_destinationFilter": "^Ashmont"
-            }
+          "base": "mbta_lfd_mV3",
+          "values": {
+              "MBTAV3_stops": ["place-asmnl"]
+          }
         },
         "ashmontRT": {
             "base": "mbta_lfd_mRT",
@@ -207,13 +206,7 @@
                 "MBTA_destinationFilter": "^Ashmont"
             }
         },
-        "ashmontV3": {
-            "base": "mbta_lfd_mV3",
-            "values": {
-                "MBTAV3_stops": ["place-asmnl"]
-            }
-        },
-        "ashmont-bat": {
+        "ashmont-batRT": {
             "base": "mbta_lfd_mbat",
             "values": {
                 "MBTA_stops": [{"stop_id": "place-asmnl", "locationName": "Ashmont Station"}],
@@ -224,7 +217,7 @@
                 }
             }
         },
-        "ashmont-batV3": {
+        "ashmont-bat": {
             "base": "mbta_lfd_mbatV3",
             "values": {
                 "MBTA_stops": ["place-asmnl"],
@@ -232,20 +225,6 @@
                     "agency": "brockton",
                     "stop": "738"
                 }
-            }
-        },
-        "central": {
-            "base": "mbta_lfd_mRT",
-            "values": {
-                "MBTA_stops": [
-                    {"stop_id": "70069", "locationName": "Board downstairs", "showLocationName": true},
-                    {"stop_id": "70070", "locationName": "Board across street, downstairs", "showLocationName": true},
-                    {"stop_id": "102", "locationName": "Board across street", "showLocationName": true},
-                    {"stop_id": "1060", "locationName": "Board from Magazine Street to your left", "showLocationName": true},
-                    {"stop_id": "1123", "locationName": "Board from Green Street around the corner", "showLocationName": true},
-                    {"stop_id": "72", "locationName": "Board to the right", "showLocationName": true}
-                ],
-                "MBTA_destinationFilter": "^Central"
             }
         },
         "centralRT": {
@@ -262,7 +241,7 @@
                 "MBTA_destinationFilter": "^Central"
             }
         },
-        "centralV3": {
+        "central": {
             "base": "mbta_lfd_mV3",
             "values": {
                 "MBTAV3_stops": [
@@ -285,7 +264,7 @@
                 "MBTAV3_outputDepartures": false
             }
         },
-        "dudley-a": {
+        "dudley-aRT": {
             "base": "mbta_lfd_lRT",
             "values": {
                 "MBTA_stops": [
@@ -303,7 +282,7 @@
               }
             }
         },
-        "dudley-aV3": {
+        "dudley-a": {
             "base": "mbta_lfd_lV3",
             "values": {
                 "MBTAV3_stops": ["64", "64000"],
@@ -318,7 +297,7 @@
               }
             }
         },
-        "dudley-c": {
+        "dudley-cRT": {
             "base": "mbta_lfd_lRT",
             "values": {
                 "MBTA_stops": [
@@ -336,7 +315,7 @@
               }
             }
         },
-        "dudley-cV3": {
+        "dudley-c": {
             "base": "mbta_lfd_lV3",
             "values": {
                 "MBTAV3_stops": ["64", "64000"],
@@ -365,20 +344,6 @@
                 "MBTA_outputDepartures": false
             }
         },
-        "allalertsV3": {
-            "base": "mbta_lfd_mV3",
-            "values": {
-                "MBTAV3_outputAllAlerts": true,
-                "MBTAV3_outputDepartures": false
-            }
-        },
-        "foresthills": {
-            "base": "mbta_lfd_mRT",
-            "values": {
-                "MBTA_stops": [{"stop_id": "place-forhl", "locationName": "Forest Hills"}],
-                "MBTA_destinationFilter": "^Forest\\sHills"
-            }
-        },
         "foresthillsRT": {
             "base": "mbta_lfd_mRT",
             "values": {
@@ -386,21 +351,11 @@
                 "MBTA_destinationFilter": "^Forest\\sHills"
             }
         },
-        "foresthillsV3": {
+        "foresthills": {
             "base": "mbta_lfd_mV3",
             "values": {
                 "MBTAV3_stops": [{"id": "place-forhl"}],
                 "MBTAV3_destinationFilter": "^Forest\\sHills"
-            }
-        },
-        "harvard": {
-            "base": "mbta_lfd_mRT",
-            "values": {
-                "MBTA_stops": [
-                    {"stop_id": "place-harsq", "locationName": "Harvard Station"},
-                    {"stop_id": "110", "locationName": "Board outside station across Mass. Ave.", "showLocationName": true}
-                ],
-                "MBTA_destinationFilter": "^Harvard"
             }
         },
         "harvardRT": {
@@ -413,7 +368,7 @@
                 "MBTA_destinationFilter": "^Harvard"
             }
         },
-        "harvardV3": {
+        "harvard": {
             "base": "mbta_lfd_mV3",
             "values": {
                 "MBTAV3_stops": [
@@ -424,18 +379,6 @@
                     {"id": "place-cntsq", "getPredictions": false}
                 ],
                 "MBTAV3_destinationFilter": "^Harvard"
-            }
-        },
-        "haymarket": {
-            "base": "mbta_lfd_mRT",
-            "values": {
-                "MBTA_stops": [
-                    {"stop_id": "place-haecl", "locationName": "Haymarket Station"},
-                    {"stop_id": "4511", "locationName": "Board from New Sudbury Street", "showLocationName": true},
-                    {"stop_id": "117", "locationName": "Board from Congress Street", "showLocationName": true}
-                ],
-                "MBTA_destinationFilter": "^Haymarket",
-                "MBTA_suppressDepartures": ["Subway"]
             }
         },
         "haymarketRT": {
@@ -450,7 +393,7 @@
                 "MBTA_suppressDepartures": ["Subway"]
             }
         },
-        "haymarketV3": {
+        "haymarket": {
             "base": "mbta_lfd_mV3",
             "values": {
                 "MBTAV3_stops": [
@@ -460,19 +403,6 @@
                 ],
                 "MBTAV3_destinationFilter": "^Haymarket",
                 "MBTAV3_suppressDepartures": ["Subway"]
-            }
-        },
-        "maverick": {
-            "base": "mbta_lfd_mRT",
-            "values": {
-                "MBTA_stops": [{"stop_id": "place-mvbcl", "locationName": "Maverick Station"}],
-                "MBTA_destinationFilter": "^Maverick",
-                "MBTA_destOverride": [
-                  {
-                    "test": "Maverick via Jeffries Point",
-                    "replacement": "Jeffries Point"
-                  }
-                ]
             }
         },
         "maverickRT": {
@@ -488,7 +418,7 @@
                 ]
             }
         },
-        "maverickV3": {
+        "maverick": {
             "base": "mbta_lfd_mV3",
             "values": {
                 "MBTAV3_stops": [{"id": "place-mvbcl"}],
@@ -501,14 +431,6 @@
                 ]
             }
         },
-        "ruggles": {
-            "base": "mbta_lfd_mRT",
-            "values": {
-                "MBTA_stops": [{"stop_id": "place-rugg", "locationName": "Ruggles Station"}],
-                "MBTA_destinationFilter": "^Ruggles",
-                "MBTA_suppressDepartures": ["Commuter Rail", "Subway"]
-            }
-        },
         "rugglesRT": {
             "base": "mbta_lfd_mRT",
             "values": {
@@ -517,20 +439,12 @@
                 "MBTA_suppressDepartures": ["Commuter Rail", "Subway"]
             }
         },
-        "rugglesV3": {
+        "ruggles": {
             "base": "mbta_lfd_mV3",
             "values": {
                 "MBTAV3_stops": [{"id": "place-rugg"}],
                 "MBTAV3_destinationFilter": "^Ruggles",
                 "MBTAV3_suppressDepartures": ["Commuter Rail", "Subway"]
-            }
-        },
-        "rugglesfull": {
-            "base": "mbta_lfd_mRT",
-            "values": {
-                "MBTA_stops": [{"stop_id": "place-rugg", "locationName": "Ruggles Station"}],
-                "MBTA_destinationFilter": "^Ruggles",
-                "MBTA_suppressDepartures": ["Subway"]
             }
         },
         "rugglesfullRT": {
@@ -541,19 +455,12 @@
                 "MBTA_suppressDepartures": ["Subway"]
             }
         },
-        "rugglesfullV3": {
+        "rugglesfull": {
             "base": "mbta_lfd_mV3",
             "values": {
                 "MBTAV3_stops": [{"id": "place-rugg"}],
                 "MBTAV3_destinationFilter": "^Ruggles",
                 "MBTAV3_suppressDepartures": ["Subway"]
-            }
-        },
-        "southstation": {
-            "base": "mbta_lfd_mRT",
-            "values": {
-                "MBTA_stops": [{"stop_id": "place-sstat", "locationName": "South Station"}],
-                "MBTA_destinationFilter": "^South Sta"
             }
         },
         "southstationRT": {
@@ -563,18 +470,11 @@
                 "MBTA_destinationFilter": "^South Sta"
             }
         },
-        "southstationV3": {
+        "southstation": {
             "base": "mbta_lfd_mV3",
             "values": {
                 "MBTAV3_stops": [{"id": "place-sstat"}],
                 "MBTAV3_destinationFilter": "^South Sta"
-            }
-        },
-        "sullivan": {
-            "base": "mbta_lfd_mRT",
-            "values": {
-                "MBTA_stops": [{"stop_id": "place-sull", "locationName": "Sullivan Station"}],
-                "MBTA_destinationFilter": "^Sullivan"
             }
         },
         "sullivanRT": {
@@ -584,21 +484,11 @@
                 "MBTA_destinationFilter": "^Sullivan"
             }
         },
-        "sullivanV3": {
+        "sullivan": {
             "base": "mbta_lfd_mV3",
             "values": {
                 "MBTAV3_stops": [{"id": "place-sull"}],
                 "MBTAV3_destinationFilter": "^Sullivan"
-            }
-        },
-        "wellington": {
-            "base": "mbta_lfd_mRT",
-            "values": {
-                "MBTA_stops": [
-                    {"stop_id": "place-welln", "locationName": "Wellington Station"},
-                    {"stop_id": "5271", "locationName": "Busway"}
-                ],
-                "MBTA_destinationFilter": "^Wellington"
             }
         },
         "wellingtonRT": {
@@ -611,7 +501,7 @@
                 "MBTA_destinationFilter": "^Wellington"
             }
         },
-        "wellingtonV3": {
+        "wellington": {
             "base": "mbta_lfd_mV3",
             "values": {
                 "MBTAV3_stops": [
@@ -619,14 +509,6 @@
                     {"id": "5271"}
                 ],
                 "MBTAV3_destinationFilter": "^Wellington"
-            }
-        },
-        "wollaston": {
-            "base": "mbta_lfd_mRT",
-            "values": {
-                "MBTA_stops": [{"stop_id": "place-wlsta", "locationName": "Wollaston Station"}],
-                "MBTA_destinationFilter": "^Wollaston",
-                "MBTA_outputDepartures": false
             }
         },
         "wollastonRT": {
@@ -637,19 +519,12 @@
                 "MBTA_outputDepartures": false
             }
         },
-        "wollastonV3": {
+        "wollaston": {
             "base": "mbta_lfd_mV3",
             "values": {
                 "MBTAV3_stops": [{"id": "place-wlsta"}],
                 "MBTAV3_destinationFilter": "^Wollaston",
                 "MBTAV3_outputDepartures": false
-            }
-        },
-        "wonderland": {
-            "base": "mbta_lfd_mRT",
-            "values": {
-                "MBTA_stops": [{"stop_id": "place-wondl", "locationName": "Wonderland Station"}],
-                "MBTA_destinationFilter": "^Wonderland"
             }
         },
         "wonderlandRT": {
@@ -659,7 +534,7 @@
                 "MBTA_destinationFilter": "^Wonderland"
             }
         },
-        "wonderlandV3": {
+        "wonderland": {
             "base": "mbta_lfd_mV3",
             "values": {
                 "MBTAV3_stops": [{"id": "place-wondl"}],
