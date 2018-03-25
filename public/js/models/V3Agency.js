@@ -57,9 +57,11 @@ define([
                         .replace(removeCloseParens, '');
                 return dest;
             }
+            //Non-commuter rail
             dest.title = headsign;
             return dest;
         }
+        //Commuter rail
         dest.title = input.headsign;
         dest.train = input.train;
         return dest;
