@@ -220,7 +220,7 @@
         "ashmont-bat": {
             "base": "mbta_lfd_mbatV3",
             "values": {
-                "MBTA_stops": ["place-asmnl"],
+                "MBTAV3_stops": ["place-asmnl"],
                 "BAT_sourceParams": {
                     "agency": "brockton",
                     "stop": "738"
