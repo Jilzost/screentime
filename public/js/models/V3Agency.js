@@ -673,8 +673,7 @@ define([
                                 txid: 'none',
                                 name: '',
                                 mode: 'Bus',
-                                color: '#FFFFFF',
-                                directionNames: ['Outbound', 'Inbound']
+                                color: '#FFFFFF'
                             }
                         );
                     }
@@ -689,6 +688,14 @@ define([
                         headsign: dep.get('trip').headsign || '',
                         train: dep.get('trip').name || ''
                     });
+
+                    if (thisAgency.get('routeOverrideTest') &&
+                            thisAgency.get('routeOverrideTest').test(
+                                destination.title
+                            )
+                            ) {
+                        newdep.route = new Route(thisAgency.get('routeOverride'));
+                    }
 
                     if (dep.get('stop') &&
                             dep.get('stop').id &&
