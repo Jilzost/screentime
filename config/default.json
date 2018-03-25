@@ -242,6 +242,20 @@
             }
         },
         "central": {
+            "base": "mbta_lfd_mRT",
+            "values": {
+                "MBTA_stops": [
+                    {"stop_id": "70069", "locationName": "Board downstairs", "showLocationName": true},
+                    {"stop_id": "70070", "locationName": "Board across street, downstairs", "showLocationName": true},
+                    {"stop_id": "102", "locationName": "Board across street", "showLocationName": true},
+                    {"stop_id": "1060", "locationName": "Board from Magazine Street to your left", "showLocationName": true},
+                    {"stop_id": "1123", "locationName": "Board from Green Street around the corner", "showLocationName": true},
+                    {"stop_id": "72", "locationName": "Board to the right", "showLocationName": true}
+                ],
+                "MBTA_destinationFilter": "^Central"
+            }
+        },
+        "centralV3": {
             "base": "mbta_lfd_mV3",
             "values": {
                 "MBTAV3_stops": [
@@ -369,6 +383,16 @@
             }
         },
         "harvard": {
+            "base": "mbta_lfd_mRT",
+            "values": {
+                "MBTA_stops": [
+                    {"stop_id": "place-harsq", "locationName": "Harvard Station"},
+                    {"stop_id": "110", "locationName": "Board outside station across Mass. Ave.", "showLocationName": true}
+                ],
+                "MBTA_destinationFilter": "^Harvard"
+            }
+        },
+        "harvardV3": {
             "base": "mbta_lfd_mV3",
             "values": {
                 "MBTAV3_stops": [
