@@ -25,6 +25,7 @@ define([
             isLocal: false,
             isHidden: false,
             sortOrder: 0,
+            directionNames: ['Outbound', 'Inbound']
         },
         initialize: function () {
             if (this.get('longName') === '') {
