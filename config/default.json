@@ -242,18 +242,21 @@
             }
         },
         "central": {
-            "base": "mbta_lfd_mRT",
-            "values": {
-                "MBTA_stops": [
-                    {"stop_id": "70069", "locationName": "Board downstairs", "showLocationName": true},
-                    {"stop_id": "70070", "locationName": "Board across street, downstairs", "showLocationName": true},
-                    {"stop_id": "102", "locationName": "Board across street", "showLocationName": true},
-                    {"stop_id": "1060", "locationName": "Board from Magazine Street to your left", "showLocationName": true},
-                    {"stop_id": "1123", "locationName": "Board from Green Street around the corner", "showLocationName": true},
-                    {"stop_id": "72", "locationName": "Board to the right", "showLocationName": true}
-                ],
-                "MBTA_destinationFilter": "^Central"
-            }
+          "base": "mbta_lfd_mV3",
+          "values": {
+              "MBTAV3_stops": [
+                  {"id": "place-cntsq"},
+                  {"id": "102", "directionsToStop": "Board across street"},
+                  {"id": "1060", "directionsToStop": "Board from Magazine Street to your left"},
+                  {"id": "1123", "directionsToStop": "Board from Green Street around the corner"},
+                  {"id": "72", "directionsToStop": "Board to the right"},
+                  {"id": "70069", "directionsToStop": "Board downstairs", "getPredictions": false},
+                  {"id": "70070", "directionsToStop": "Board across street, downstairs", "getPredictions": false},
+                  {"id": "place-harsq", "getPredictions": false},
+                  {"id": "place-knncl", "getPredictions": false}
+              ],
+              "MBTAV3_destinationFilter": "^University\\sPark"
+          }
         },
         "centralV3": {
             "base": "mbta_lfd_mV3",
@@ -383,14 +386,17 @@
             }
         },
         "harvard": {
-            "base": "mbta_lfd_mRT",
-            "values": {
-                "MBTA_stops": [
-                    {"stop_id": "place-harsq", "locationName": "Harvard Station"},
-                    {"stop_id": "110", "locationName": "Board outside station across Mass. Ave.", "showLocationName": true}
-                ],
-                "MBTA_destinationFilter": "^Harvard"
-            }
+          "base": "mbta_lfd_mV3",
+          "values": {
+              "MBTAV3_stops": [
+                  {"id": "place-harsq"},
+                  {"id": "110", "directionsToStop": "Board outside station across Mass. Ave."},
+                  {"id": "2076", "getPredictions": false, "directionsToStop": "Board at lower busway"},
+                  {"id": "20761", "getPredictions": false, "directionsToStop": "Board at upper busway"},
+                  {"id": "place-cntsq", "getPredictions": false}
+              ],
+              "MBTAV3_destinationFilter": "^Harvard"
+          }
         },
         "harvardV3": {
             "base": "mbta_lfd_mV3",
@@ -398,8 +404,8 @@
                 "MBTAV3_stops": [
                     {"id": "place-harsq"},
                     {"id": "110", "directionsToStop": "Board outside station across Mass. Ave."},
-                    {"id": "2076", "getPredictions": false, "directionsToStop": "Board at lower-level busway"},
-                    {"id": "20761", "getPredictions": false, "directionsToStop": "Board at upper-level busway"},
+                    {"id": "2076", "getPredictions": false, "directionsToStop": "Board at lower busway"},
+                    {"id": "20761", "getPredictions": false, "directionsToStop": "Board at upper busway"},
                     {"id": "place-cntsq", "getPredictions": false}
                 ],
                 "MBTAV3_destinationFilter": "^Harvard"
