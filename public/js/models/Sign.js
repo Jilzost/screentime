@@ -635,7 +635,7 @@ define([
                 {
                     sign: this.get('signId'),
                     uptime: Date.now() - this.get('startTime'),
-                    heartbeatRate: this.get('heartbeatRate') * 3.1
+                    heartbeatRate: this.get('heartbeatRate') * 4.1
                 }
             );
             $.post('postheartbeat', JSON.stringify(heartbeat));
