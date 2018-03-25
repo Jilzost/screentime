@@ -44,12 +44,52 @@
                 "sign_slideDuration": 12000,
                 "sign_satisfyWatchdog": true
             },
-            "mbta_lfd_l": {
+            "mbta_lfd_mbatV3": {
+                "agencies": ["MBTAV3","BAT"],
+                "MBTAV3_name": "MBTAV3",
+                "MBTAV3_sourceType": "V3-API",
+                "MBTAV3_baseURL": "https://api-v3.mbta.com/",
+                "MBTAV3_api_key": "5a56fde9a64d4dad8b161fbfa74a78f4",
+                "BAT_name": "BAT",
+                "BAT_sourceType": "nextbus",
+                "speaker_voiceTools": "mespeak",
+                "speaker_triggerTypes": "key socket",
+                "screenshots_takeScreenshots": false,
+                "sign_slideDuration": 12000,
+                "sign_satisfyWatchdog": true
+            },
+            "mbta_lfd_lRT": {
                 "agencies": ["MBTA"],
                 "MBTA_name": "MBTA",
                 "MBTA_sourceType": "MBTA-realtime",
                 "MBTA_baseURL": "http://realtime.mbta.com/developer/api/v2/",
                 "MBTA_api_key": "Sr7RFBNx5EqgPds6R8eZmA",
+                "speaker_voiceTools": "mespeak",
+                "speaker_triggerTypes": "key socket",
+                "screenshots_takeScreenshots": false,
+                "sign_slideDuration": 12000,
+                "sign_type": "sign_l",
+                "sign_satisfyWatchdog": true
+            },
+            "mbta_lfd_lV3": {
+                "agencies": ["MBTAV3"],
+                "MBTAV3_name": "MBTAV3",
+                "MBTAV3_sourceType": "V3-API",
+                "MBTAV3_baseURL": "https://api-v3.mbta.com/",
+                "MBTAV3_api_key": "5a56fde9a64d4dad8b161fbfa74a78f4",
+                "speaker_voiceTools": "mespeak",
+                "speaker_triggerTypes": "key socket",
+                "screenshots_takeScreenshots": false,
+                "sign_slideDuration": 12000,
+                "sign_type": "sign_l",
+                "sign_satisfyWatchdog": true
+            },
+            "mbta_lfd_lV3": {
+                "agencies": ["MBTAV3"],
+                "MBTAV3_name": "MBTAV3",
+                "MBTAV3_sourceType": "V3-API",
+                "MBTAV3_baseURL": "https://api-v3.mbta.com/",
+                "MBTAV3_api_key": "5a56fde9a64d4dad8b161fbfa74a78f4",
                 "speaker_voiceTools": "mespeak",
                 "speaker_triggerTypes": "key socket",
                 "screenshots_takeScreenshots": false,
@@ -70,70 +110,61 @@
                 "sign_satisfyWatchdog": true,
                 "sign_innerHeight": 1920
             },
-            "mbta_10pp": {
-                "agencies": ["MBTA","MassDOT"],
-                "MassDOT_name": "MassDOT",
-                "MassDOT_sourceType": "psa-only",
-                "MBTA_name": "MBTA",
-                "MBTA_sourceType": "MBTA-realtime",
-                "MBTA_baseURL": "http://realtime.mbta.com/developer/api/v2/",
-                "MBTA_api_key": "tY0IKrIxSkeFLI3BckvuVQ",
+            "mbta_10ppV3": {
+                "agencies": ["MBTAV3"],
+                "MBTAV3_name": "MBTAV3",
+                "MBTAV3_sourceType": "V3-API",
+                "MBTAV3_baseURL": "https://api-v3.mbta.com/",
+                "MBTAV3_api_key": "5a56fde9a64d4dad8b161fbfa74a78f4",
                 "speaker_voiceTools": "mespeak",
                 "speaker_triggerTypes": "key",
                 "screenshots_takeScreenshots": false,
                 "sign_slideDuration": 12000,
                 "sign_satisfyWatchdog": true,
                 "sign_innerHeight": 1920
-            },
-            "psa_test": {
-                "agencies": ["MassDOT"],
-                "MassDOT_name": "MassDOT",
-                "MassDOT_sourceType": "psa-only",
-                "speaker_voiceTools": "mespeak",
-                "speaker_triggerTypes": "key",
-                "screenshots_takeScreenshots": false,
-                "sign_slideDuration": 12000,
-                "sign_satisfyWatchdog": true
-            },
-            "agg_test": {
-                "agencies": ["MassDOT","MBTA"],
-                "MassDOT_name": "MassDOT",
-                "MassDOT_sourceType": "psa-only",
-                "MBTA_name": "MBTA",
-                "MBTA_sourceType": "MBTA-realtime",
-                "MBTA_baseURL": "http://realtime.mbta.com/developer/api/v2/",
-                "MBTA_api_key": "tY0IKrIxSkeFLI3BckvuVQ",
-                "speaker_voiceTools": "mespeak",
-                "speaker_triggerTypes": "key",
-                "screenshots_takeScreenshots": false,
-                "sign_slideDuration": 12000,
-                "sign_satisfyWatchdog": true
-            },
-            "nextbus_base": {
-                "agencies": ["BAT"],
-                "BAT_name": "BAT",
-                "BAT_sourceType": "nextbus",
-                "speaker_voiceTools": "mespeak",
-                "speaker_triggerTypes": "key socket",
-                "screenshots_takeScreenshots": false,
-                "sign_slideDuration": 12000,
-                "sign_satisfyWatchdog": true
-            }
-        },
-        "agg": {
-            "base": "agg_test",
-            "values": {
-                "MassDOT_psas": "/data/massdot-psas-1.json",
-                "MBTA_stops": [{"stop_id": "place-asmnl", "locationName": "Ashmont Station"}],
-                "MBTA_destinationFilter": "^Ashmont"            }
-        },
-        "psa": {
-            "base": "psa_test",
-            "values": {
-                "MassDOT_psas": "/data/massdot-psas-1.json"
             }
         },
         "10pp-charles-v1": {
+            "base": "mbta_10ppV3",
+            "values": {
+                "MBTAV3_stops": [
+                  {"id": "Back Bay", "directionsToStop": "Board at Back Bay Station"},
+                  {"id": "145", "directionsToStop": "Board at Arlington / St James bus stop"},
+                  {"id": "1241", "directionsToStop": "Board at Park Plaza bus stop (to the right)"}
+                ],
+                "MBTAV3_destinationFilter": "^South\\sStation"
+            }
+        },
+        "10pp-stuart-v1": {
+            "base": "mbta_10ppV3",
+            "values": {
+                "MBTAV3_stops": [
+                  {"id": "6542", "directionsToStop": "Board at Kneeland St bus stop (to the left)"},
+                  {"id": "9983", "directionsToStop": "Board at Charles St bus stop (to the right)"},
+                  {"id": "49002", "directionsToStop": "Board at Tufts Medical Center"},
+                  {"id": "70016", "directionsToStop": "Board at Tufts Medical Center"},
+                  {"id": "70017", "directionsToStop": "Board at Tufts Medical Center"},
+                  {"id": "South Station", "directionsToStop": "Board at South Station"}
+                ],
+                "MBTAV3_destOverride": [
+                  {
+                    "test": "Middleborough\/Lakeville",
+                    "replacement": "Middle/Lake"
+                  }
+                ],
+                "MBTAV3_routeOverrideTest": "^Dudley",
+                "MBTAV3_routeOverride": {
+                  "txid": -1,
+                  "name": "Silver Line",
+                  "shortName": "Silver",
+                  "longName": "Silver Line",
+                  "mode": "Bus",
+                  "color": "#D0D0FF",
+                  "sortOrder": 9999
+              }
+            }
+        },
+        "10pp-charles-RT": {
             "base": "mbta_10pp_v1",
             "values": {
                 "MBTA_stops": [
@@ -144,7 +175,7 @@
                 "MBTA_destinationFilter": "^South\\sStation"
             }
         },
-        "10pp-stuart-v1": {
+        "10pp-stuart-RT": {
             "base": "mbta_10pp_v1",
             "values": {
                 "MBTA_stops": [
@@ -160,62 +191,6 @@
                     "replacement": "Middle/Lake"
                   }
                 ]
-            }
-        },
-        "10pp-charles": {
-            "base": "mbta_10pp",
-            "values": {
-                "MassDOT_psas": "/data/massdot-psas-1.json",
-                "MBTA_stops": [
-                    {"stop_id": "Back Bay", "locationName": "Board at Back Bay Station", "showLocationName": true},
-                    {"stop_id": "145", "locationName": "Board at Arlington / St James bus stop", "showLocationName": true},
-                    {"stop_id": "1241", "locationName": "Board at Park Plaza bus stop (to the right)", "showLocationName": true}
-                ],
-                "MBTA_destinationFilter": "^South\\sStation"
-            }
-        },
-        "10pp-stuart": {
-            "base": "mbta_10pp",
-            "values": {
-                "MassDOT_psas": "/data/massdot-psas-1.json",
-                "MBTA_stops": [
-                    {"stop_id": "6542", "locationName": "Board at Kneeland St bus stop (to the left)", "showLocationName": true},
-                    {"stop_id": "9983", "locationName": "Board at Charles St bus stop (to the right)", "showLocationName": true},
-                    {"stop_id": "place-tumnl", "locationName": "Board at Tufts Medical Center", "showLocationName": true},
-                    {"stop_id": "South Station", "locationName": "Board at South Station", "showLocationName": true}
-                ],
-                "MBTA_destinationFilter": "^South\\sStation",
-                "MBTA_destOverride": [
-                  {
-                    "test": "Middleborough\/Lakeville",
-                    "replacement": "Middle/Lake"
-                  }
-                ]
-            }
-        },
-        "10pp-charles-v2": {
-            "base": "mbta_10pp",
-            "values": {
-                "MassDOT_psas": "/data/massdot-psas-1.json",
-                "MBTA_stops": [
-                    {"stop_id": "Back Bay", "locationName": "Board at Back Bay Station", "showLocationName": true},
-                    {"stop_id": "145", "locationName": "Board at Arlington / St James bus stop", "showLocationName": true},
-                    {"stop_id": "1241", "locationName": "Board at Park Plaza bus stop (to the right)", "showLocationName": true}
-                ],
-                "MBTA_destinationFilter": "^South\\sStation"
-            }
-        },
-        "10pp-stuart-v2": {
-            "base": "mbta_10pp",
-            "values": {
-                "MassDOT_psas": "/data/massdot-psas-1.json",
-                "MBTA_stops": [
-                    {"stop_id": "6542", "locationName": "Board at Kneeland Street bus stop (to the left)", "showLocationName": true},
-                    {"stop_id": "9983", "locationName": "Board at Charles Street bus stop (to the right)", "showLocationName": true},
-                    {"stop_id": "place-tumnl", "locationName": "Board at Tufts Medical Center", "showLocationName": true},
-                    {"stop_id": "South Station", "locationName": "Board at South Station", "showLocationName": true}
-                ],
-                "MBTA_destinationFilter": "^South\\sStation"
             }
         },
         "ashmont": {
@@ -238,13 +213,6 @@
                 "MBTAV3_stops": ["place-asmnl"]
             }
         },
-        "ashmont-all": {
-            "base": "mbta_lfd_mRT",
-            "values": {
-                "MBTA_stops": [{"stop_id": "place-asmnl", "locationName": "Ashmont Station"}],
-                "MBTA_destinationFilter": "^Ashmont"
-            }
-        },
         "ashmont-bat": {
             "base": "mbta_lfd_mbat",
             "values": {
@@ -256,30 +224,13 @@
                 }
             }
         },
-        "nextbus": {
-            "base": "nextbus_base",
+        "ashmont-batV3": {
+            "base": "mbta_lfd_mbatV3",
             "values": {
-                "BAT_sourceParams": {
-                    "agency": "mbta",
-                    "stop": "64"
-                }
-            }
-        },
-        "testbat": {
-            "base": "nextbus_base",
-            "values": {
+                "MBTA_stops": ["place-asmnl"],
                 "BAT_sourceParams": {
                     "agency": "brockton",
-                    "stop": "001"
-                }
-            }
-        },
-        "testart": {
-            "base": "nextbus_base",
-            "values": {
-                "BAT_sourceParams": {
-                    "agency": "art",
-                    "stop": "200"
+                    "stop": "738"
                 }
             }
         },
@@ -329,13 +280,13 @@
             }
         },
         "default": {
-            "base": "mbta_lfd_mRT",
+            "base": "mbta_lfd_mV3",
             "values": {
-                "MBTA_outputDepartures": false
+                "MBTAV3_outputDepartures": false
             }
         },
-        "dudley": {
-            "base": "mbta_lfd_l",
+        "dudley-a": {
+            "base": "mbta_lfd_lRT",
             "values": {
                 "MBTA_stops": [
                     {"stop_id": "64", "locationName": "Dudley Square"},
@@ -346,24 +297,19 @@
                 "MBTA_routeOverride": {
                   "txid": -1,
                   "name": "",
-                  "shortName": "",
-                  "longName": "Next bus to",
                   "mode": "Bus",
                   "color": "#FFFF7C",
                   "sortOrder": 9999
               }
             }
         },
-        "dudley-a": {
-            "base": "mbta_lfd_l",
+        "dudley-aV3": {
+            "base": "mbta_lfd_lV3",
             "values": {
-                "MBTA_stops": [
-                    {"stop_id": "64", "locationName": "Dudley Square"},
-                    {"stop_id": "64000", "locationName": "Dudley Square"}
-                ],
-                "MBTA_destinationFilter": "^Dudley",
-                "MBTA_routeOverrideTest": "^Ruggles",
-                "MBTA_routeOverride": {
+                "MBTAV3_stops": ["64", "64000"],
+                "MBTAV3_destinationFilter": "^Dudley",
+                "MBTAV3_routeOverrideTest": "^Ruggles",
+                "MBTAV3_routeOverride": {
                   "txid": -1,
                   "name": "",
                   "mode": "Bus",
@@ -373,7 +319,7 @@
             }
         },
         "dudley-c": {
-            "base": "mbta_lfd_l",
+            "base": "mbta_lfd_lRT",
             "values": {
                 "MBTA_stops": [
                     {"stop_id": "64", "locationName": "Dudley Square"},
@@ -382,6 +328,21 @@
                 "MBTA_destinationFilter": "^Dudley",
                 "MBTA_routeOverrideTest": "^Ruggles",
                 "MBTA_routeOverride": {
+                  "txid": -1,
+                  "name": "",
+                  "mode": "Bus",
+                  "color": "#FFFF7C",
+                  "sortOrder": 9999
+              }
+            }
+        },
+        "dudley-cV3": {
+            "base": "mbta_lfd_lV3",
+            "values": {
+                "MBTAV3_stops": ["64", "64000"],
+                "MBTAV3_destinationFilter": "^Dudley",
+                "MBTAV3_routeOverrideTest": "^Ruggles",
+                "MBTAV3_routeOverride": {
                   "txid": -1,
                   "name": "",
                   "mode": "Bus",
