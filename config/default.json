@@ -157,7 +157,7 @@
                 "MBTAV3_routeOverride": {
                   "txid": -1,
                   "name": "Silver Line",
-                  "shortName": "Silver",
+                  "shortName": "SL",
                   "longName": "Silver Line",
                   "mode": "Bus",
                   "color": "#D0D0FF",
