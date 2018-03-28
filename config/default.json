@@ -146,6 +146,7 @@
                   {"id": "70017", "directionsToStop": "Board at Tufts Medical Center"},
                   {"id": "South Station", "directionsToStop": "Board at South Station"}
                 ],
+                "MBTAV3_destinationFilter": "^Downtown",
                 "MBTAV3_destOverride": [
                   {
                     "test": "Middleborough\/Lakeville",
