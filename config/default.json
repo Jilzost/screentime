@@ -140,11 +140,11 @@
             "values": {
                 "MBTAV3_stops": [
                   {"id": "6542", "directionsToStop": "Board at Kneeland St bus stop (to the left)"},
-                  {"id": "9983", "directionsToStop": "Board at Charles St bus stop (to the right)"},
+                  {"id": "9983", "directionsToStop": "Board at Charles St stop (to the right)"},
                   {"id": "49002", "directionsToStop": "Board at Tufts Medical Center"},
                   {"id": "70016", "directionsToStop": "Board at Tufts Medical Center"},
                   {"id": "70017", "directionsToStop": "Board at Tufts Medical Center"},
-                  {"id": "South Station", "directionsToStop": "Board at South Station"}
+                  {"id": "South Station"}
                 ],
                 "MBTAV3_destinationFilter": "^Downtown",
                 "MBTAV3_destOverride": [
