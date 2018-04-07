@@ -388,11 +388,12 @@ define([
                     7: 'Funicular'
                 },
                 relationship,
+                name,
                 containsEscalator = /escalator/,
-                getElevatorStation = /\s?elevator unavailable|\s?access issue/,
-                getElevatorStationBackup = /\s?-[\W\w]+$/,
-                getElevatorName = /^[^a-z]+-\s?/,
-                getTrainName = /^([^\s]{1,5})\s/,
+                getElevatorStationFromHeader = /\sElevator unavailable|\s?access issue/i,
+                getElevatorStationFromFacility = /\selevator[\W\w]*/i,
+                getElevatorDescriptionFromFacility1 = /[\W\w]+\(/,
+                getElevatorDescriptionFromFacility2 = /\)[\W\w]*/,
                 mixedCase = function (str) {
                     return str.charAt(0).toUpperCase() +
                         str.substring(1).toLowerCase();
@@ -479,7 +480,7 @@ define([
                             txid: el.facility,
                             name: '',
                             type: 'Elevator',
-                            stationName: newAlert.get('summary').replace(getElevatorStation, '')
+                            stationName: newAlert.get('summary').replace(getElevatorStationFromHeader, '')
                         });
 
                         if (source.get('relationships') && source.get('relationships').facilities) {
@@ -487,12 +488,9 @@ define([
                             if (relationship &&
                                     relationship.hasOwnProperty('attributes') &&
                                     relationship.attributes.hasOwnProperty('name')) {
-                                affected.set({name: relationship.attributes.name.replace(getElevatorName, '')});
-                                if (affected.get('stationName') === '') {
-                                    affected.set({stationName: mixedCase(
-                                        relationship.attributes.name.replace(getElevatorStationBackup, '')
-                                    )});
-                                }
+                                name = relationship.attributes.name;
+                                affected.set({stationName: name.replace(getElevatorStationFromFacility, '')});
+                                affected.set({name: relationship.attributes.name.replace(getElevatorDescriptionFromFacility1, '').replace(getElevatorDescriptionFromFacility2, '')});
                             }
                         }
                         newAlert.get('affecteds').add(affected);
@@ -559,7 +557,6 @@ define([
                         Date.now() - 3628800000) {
                     newAlert.set({isNow: true});
                 }
-
 
                 if (isElevator && (newAlert.get('isNow') || newAlert.get('isSoon'))) {
                     newAlert.set({isRelevant: true});
