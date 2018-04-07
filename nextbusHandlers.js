@@ -57,11 +57,7 @@ function parseOneRoute(options, theirBody) {
         }
 
         routes = theirBody.body.route;
-        logger.log('server', 'server', 2,
-              'nextbusHandlers.parseOneRoute', 'options pre-loop: ' + options);
         _und(routes).each(function (route) {
-            logger.log('server', 'server', 2,
-                  'nextbusHandlers.parseOneRoute', 'options  in-loop: ' + options);
             r = {
                 txid: route.$.tag,
                 name: route.$.shortTitle || route.$.title.length > 12 ? route.$.tag : route.$.title,
@@ -188,7 +184,18 @@ function routes(path, options, ourResponse) {
 
 function cacheOneRoute(options) {
     var params = '&a=' + options.agency + '&r=' + options.route;
-    cache.routes[options.agency][options.route].fromRouteConfig = true;
+    if (!cache.routes[options.agency]) {
+      cache.routes[options.agency] = {};
+    }
+    if (cache.routes[options.agency][options.route]) {
+      cache.routes[options.agency][options.route].fromRouteConfig = true;
+    } else {
+      cache.routes[options.agency][options.route] =
+        {
+            fromRouteConfig: true
+        };
+    }
+
     return http.get({
         host: 'webservices.nextbus.com',
         path: '/service/publicXMLFeed?command=routeConfig' + params
@@ -205,6 +212,9 @@ function cacheOneRoute(options) {
                         function (err, result) {
                             parseOneRoute(options, result);
                         });
+                } else {
+                  logger.log('server', 'server', 2,
+                          'nextbusHandlers.cacheOneRoute', 'Short body: ' + body);
                 }
             } catch (err) {
                 logger.log('server', 'server', 2,
@@ -223,7 +233,7 @@ function parseDepartures(path, options, ourResponse, theirBody) {
     try {
         if (!theirBody.body) {
           logger.log('server', 'server', 2,
-                'nextbusHandlers.parseDepartures', 'Incomplete NextBus response: ' + theirBody);          
+                'nextbusHandlers.parseDepartures', 'Incomplete NextBus response: ' + theirBody);
         }
         if (theirBody.body.Error) {
             logger.log('server', 'server', 2,
