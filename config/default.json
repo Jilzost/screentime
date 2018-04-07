@@ -122,6 +122,16 @@
                 "sign_slideDuration": 12000,
                 "sign_satisfyWatchdog": true,
                 "sign_innerHeight": 1920
+            },
+            "nextbus_base": {
+                "agencies": ["BAT"],
+                "BAT_name": "BAT",
+                "BAT_sourceType": "nextbus",
+                "speaker_voiceTools": "mespeak",
+                "speaker_triggerTypes": "key socket",
+                "screenshots_takeScreenshots": false,
+                "sign_slideDuration": 12000,
+                "sign_satisfyWatchdog": true
             }
         },
         "10pp-charles-v1": {
@@ -570,6 +580,33 @@
             "values": {
                 "MBTAV3_stops": [{"id": "place-wondl"}],
                 "MBTAV3_destinationFilter": "^Wonderland"
+            }
+        },
+        "nextbus-mbta": {
+            "base": "nextbus_base",
+            "values": {
+                "BAT_sourceParams": {
+                    "agency": "mbta",
+                    "stop": "64"
+                }
+            }
+        },
+        "nextbus-bat": {
+            "base": "nextbus_base",
+            "values": {
+                "BAT_sourceParams": {
+                    "agency": "brockton",
+                    "stop": "001"
+                }
+            }
+        },
+        "nextbus-art": {
+            "base": "nextbus_base",
+            "values": {
+                "BAT_sourceParams": {
+                    "agency": "art",
+                    "stop": "200"
+                }
             }
         }
     }
