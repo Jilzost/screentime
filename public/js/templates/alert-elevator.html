@@ -8,10 +8,9 @@
 <tr>
 <td>
 <span  class="elevatorStation"><%- this.model.get('affectedStation') %></span>
+<span  class="elevatorNumber"><%- this.model.get('affectedElevatorId') %></span>
 <% if (this.model.get('isSoon')){ %>
 <%- this.model.get('timeframe') %>
-<% } else { %>
-<span  class="elevatorNumber"><%- this.model.get('affectedElevatorId') %></span>
 <% } %>            
 </td>
 </tr>
