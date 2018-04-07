@@ -370,7 +370,9 @@ define([
                 newDelayAlerts = new Alerts(),
                 newAlert,
                 newFeaturedAlert,
-                isLocal,
+                isLocalRoute,
+                isLocalStop,
+                isSpecificStops,
                 isSubway,
                 isSystemwide,
                 isElevator,
@@ -436,17 +438,15 @@ define([
                     });
                 }
 
-                if (source.get('effect') === 'TRACK_CHANGE') {
-                    newAlert.set({severityPct: newAlert.get('severityPct') - 10});
-                }
-
                 if (source.get('banner')) {
                     newAlert.set({
                         isFeatured: true
                     });
                 }
 
-                isSubway = isLocal = isSystemwide = isElevator = isService = false;
+                isSubway = isLocalRoute = isSystemwide = isElevator = false;
+                isService = isSpecificStops = isLocalStop = false;
+
                 _(source.get('informed_entity')).each(function (el) {
                     route = false;
                     if (el.hasOwnProperty('route') &&
@@ -461,10 +461,22 @@ define([
                                 {txid: el.route}
                             ).clone();
                             newAlert.get('affecteds').add(route);
-                            isLocal = isLocal ||
+                            isLocalRoute = isLocalRoute ||
                                 route.get('isLocal');
                             isSubway = isSubway ||
                                 (route.get('mode') === 'Subway');
+                        }
+                    }
+
+                    if (el.hasOwnProperty('stop')) {
+                        isSpecificStops = true;
+                        if (_(thisAgency.get('stops')).findWhere(
+                                {id: el.stop}
+                            )) {
+                            isLocalStop = isLocalStop || _(thisAgency.get('stops')).findWhere(
+                                {id: el.stop,
+                                makesAlertsLocal: true}
+                            ).makesAlertsLocal;
                         }
                     }
 
@@ -521,7 +533,7 @@ define([
                         if (!newAlert.get('affecteds')
                                 .findWhere({txid: affected.get('txid')})) {
                             newAlert.get('affecteds').add(affected);
-                            isLocal = isLocal ||
+                            isLocalRoute = isLocalRoute ||
                                 affected.get('isLocal');
                             isSubway = isSubway ||
                                 (affected.get('mode') === 'Subway');
@@ -529,6 +541,26 @@ define([
                         }
                     }
                 }, this);
+
+
+                if (source.get('effect') === 'TRACK_CHANGE') {
+                    newAlert.set({severityPct: newAlert.get('severityPct') - 15});
+                }
+
+                if (source.get('effect') === 'STATION_ISSUE') {
+                    newAlert.set({severityPct: newAlert.get('severityPct') - 15});
+                }
+
+                if (source.get('effect') === 'SERVICE_CHANGE') {
+                    newAlert.set({severityPct: newAlert.get('severityPct') - 10});
+                }
+
+                if (isLocalStop) {
+                    newAlert.set({severityPct: newAlert.get('severityPct') + 30});
+                } else if (isLocalRoute && isSpecificStops) {
+                  newAlert.set({severityPct: newAlert.get('severityPct') - 10});
+                }
+
 
                 newAlert.set({isService: isService});
                 newAlert.set({isElevator: isElevator});
@@ -561,17 +593,17 @@ define([
                 if (isElevator && (newAlert.get('isNow') || newAlert.get('isSoon'))) {
                     newAlert.set({isRelevant: true});
                 }
-                if (((isLocal || isSubway) && newAlert.get('severityPct') >= 25) ||
-                        ((isLocal && isSubway) && newAlert.get('severityPct') >= 10) ||
+                if (((isLocalRoute || isSubway) && newAlert.get('severityPct') >= 25) ||
+                        ((isLocalRoute && isSubway) && newAlert.get('severityPct') > 10) ||
                         (thisAgency.get('outputAllAlerts') && newAlert.get('isService'))) {
                     newAlert.set({isRelevant: true});
                 }
 
                 if (newAlert.get('disruptionType') === 'DELAY' &&
                         newAlert.get('isRelevant') &&
-                        ((isLocal && !isSubway)
+                        ((isLocalRoute && !isSubway)
                             || (thisAgency.get('outputAllAlerts') && !isSubway)
-                            || (!isLocal && isSubway)) &&
+                            || (!isLocalRoute && isSubway)) &&
                         !isSystemwide) {
                     newDelayAlerts.add(newAlert);
                 } else if (newAlert.get('isRelevant')) {
