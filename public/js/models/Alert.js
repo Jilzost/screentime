@@ -39,7 +39,7 @@ define([
         },
         getFormatted: function (propName) {
             //have an array: Route, Stop, AccessFeature.
-            //Use that to try routes; if there are no changes try stops; etc. 
+            //Use that to try routes; if there are no changes try stops; etc.
             //Should each Route, Stop etc be able to produce its own list of
             //regular expressions? Should they have their own "highlight" fxn?
             var input = this.escape(propName),
@@ -53,7 +53,7 @@ define([
                 success = false,
                 affecteds = this.get('affecteds');
 
-            input = input.replace(/http:\/\//gi, '');
+            input = input.replace(/https?:\/\//gi, '');
             input = input.replace(/\r/g, '<br>');
 
             allRegexes = _(tests).reduce(function (memo, test) {
