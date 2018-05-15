@@ -11,15 +11,14 @@
 <span  class="elevatorNumber"><%- this.model.get('affectedElevatorId') %></span>
 <% if (this.model.get('isSoon')){ %>
 <%- this.model.get('timeframe') %>
-<% } %>            
+<% } %>
 </td>
 </tr>
 <tr>
 <td class="elevatorDescription">
 <%- this.model.get('affectedElevatorDescription') %>
-<% if (!this.model.get('isSoon') && this.model.get('timeframe') !== 'ongoing' && this.model.get('timeframe') !== ''){ %>
-<br>
-<span><%- this.model.get('timeframe') %></span>
+<% if (!this.model.get('isSoon') && this.model.get('timeframe') && this.model.get('timeframe') !== 'ongoing' && this.model.get('timeframe') !== ''){ %>
+(<%- this.model.get('timeframe') %>)
 <% } %>
 </td>
 </tr>
