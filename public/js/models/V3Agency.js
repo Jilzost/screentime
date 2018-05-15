@@ -370,6 +370,7 @@ define([
                 newDelayAlerts = new Alerts(),
                 newAlert,
                 newFeaturedAlert,
+                facility,
                 isLocalRoute,
                 isLocalStop,
                 isSpecificStops,
@@ -448,7 +449,7 @@ define([
                 isService = isSpecificStops = isLocalStop = false;
 
                 _(source.get('informed_entity')).each(function (el) {
-                    route = false;
+                    route = facility = false;
                     if (el.hasOwnProperty('route') &&
                             !newAlert.get('affecteds').findWhere(
                                 {txid: el.route}
@@ -480,9 +481,21 @@ define([
                         }
                     }
 
-                    if (el.hasOwnProperty('facility') &&
+                    if (el.hasOwnProperty('facility')) {
+                        facility = {id: '', type: 'facility', attributes: {name: '', type: ''} };
+                        if (source.attributes.hasOwnProperty('relationships') &&
+                                source.attributes.relationships.hasOwnProperty('facilities') &&
+                                source.attributes.relationships.facilities.hasOwnProperty('data')) {
+                            facility =
+                                _(source.attributes.relationships.facilities.data).findWhere({type: 'facility', id: el.facility})
+                                      || facility;
+                        }
+                    }
+
+                    if (facility &&
                             (newAlert.get('disruptionType') === 'ELEVATOR_CLOSURE' ||
-                             newAlert.get('disruptionType') === 'ACCESS_ISSUE') &&
+                             (newAlert.get('disruptionType') === 'ACCESS_ISSUE' &&
+                                   facility.attributes.type === 'ELEVATOR')) &&
                             !containsEscalator.test(newAlert.get('summary')) &&
                             !newAlert.get('affecteds').findWhere(
                                 {txid: el.facility}
@@ -490,21 +503,15 @@ define([
                         isElevator = true;
                         affected = new AccessFeature({
                             txid: el.facility,
-                            name: '',
+                            name: facility.attributes.name,
                             type: 'Elevator',
                             stationName: newAlert.get('summary').replace(getElevatorStationFromHeader, '')
                         });
 
-                        if (source.get('relationships') && source.get('relationships').facilities) {
-                            relationship = _(source.get('relationships').facilities.data).findWhere({type: 'facility', id: el.facility});
-                            if (relationship &&
-                                    relationship.hasOwnProperty('attributes') &&
-                                    relationship.attributes.hasOwnProperty('name')) {
-                                name = relationship.attributes.name;
-                                affected.set({stationName: name.replace(getElevatorStationFromFacility, '')});
-                                affected.set({name: relationship.attributes.name.replace(getElevatorDescriptionFromFacility1, '').replace(getElevatorDescriptionFromFacility2, '')});
-                            }
-                        }
+                        name = affected.get('name');
+                        affected.set({stationName: name.replace(getElevatorStationFromFacility, '')});
+                        affected.set({name: name.replace(getElevatorDescriptionFromFacility1, '').replace(getElevatorDescriptionFromFacility2, '')});
+
                         newAlert.get('affecteds').add(affected);
                         newAlert.set({affectedElevatorId: affected.get('txid')});
                         newAlert.set({affectedStation: affected.get('stationName')});
