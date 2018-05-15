@@ -394,7 +394,7 @@ define([
                 name,
                 containsEscalator = /escalator/,
                 getElevatorStationFromHeader = /\sElevator unavailable|\s?access issue/i,
-                getElevatorStationFromFacility = /\selevator[\W\w]*/i,
+                getElevatorStationFromFacility = /\se?E?levator[\W\w]*/i,
                 getElevatorDescriptionFromFacility1 = /[\W\w]+\(/,
                 getElevatorDescriptionFromFacility2 = /\)[\W\w]*/,
                 mixedCase = function (str) {
