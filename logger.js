@@ -10,6 +10,14 @@ var findRemoveSync = require('find-remove');
 
 var csvheader = '"serverTime","source","sign","sourceTime","logLevel","process","message"\r\n';
 var tabheader = 'sign\tsourceTime\tprocess\tmessage\r\n';
+var logLevelString = {
+    0: '!!!!! ',
+    1: '!!!!  ',
+    2: '!!!   ',
+    3: '!!    ',
+    4: '!     ',
+    5: '...   '
+};
 
 var serverStartTime;
 
@@ -27,7 +35,7 @@ var logAgeSec = 60 * 60 * 24 * 31;
 var baseEmailFrequency = 60000;
 var currentEmailFrequency = baseEmailFrequency;
 var emailContent = '';
-var lastEmailSentAt = new Date(0);
+var lastEmailSentAt = 0;
 
 var Entry = function (source, sign, logLevel, process, message, sourceTime) {
     this.logTime = new Date();
@@ -35,6 +43,7 @@ var Entry = function (source, sign, logLevel, process, message, sourceTime) {
     this.sign = sign;
     this.sourceTime = sourceTime || new Date();
     this.logLevel = logLevel;
+    this.logLevelString = logLevelString[logLevel] || '?     ';
     this.process = process;
     this.message = message;
 };
@@ -58,6 +67,7 @@ Entry.prototype = {
             (this.sourceTime.getSeconds() < 10 ? ':0' : ':') +
             this.sourceTime.getSeconds() + '\t' +
             this.process + '\t' +
+            this.logLevelString +
             this.message + '\r\n';
     }
 };
@@ -104,6 +114,7 @@ function sendLogEntryEmail(includedSpan) {
     if (!email) { return false; }
 
     transporter = nodemailer.createTransport(email.transport);
+
     mailOptions = {
         from: email.from, // sender address
         to: email.to, // list of receivers
@@ -157,7 +168,7 @@ function logUptimes() {
             log('server', times[i].sign, 5, 'logUptimes',
                 'Up ' + formatDuration(times[i].time), true);
         } else {
-            log('server', times[i].sign, 5, 'logUptimes',
+            log('server', times[i].sign, 4, 'logUptimes',
                 'DOWN ' + formatDuration(times[i].time), true);
         }
     }

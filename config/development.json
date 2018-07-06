@@ -1,6 +1,18 @@
 {
 	"configFilename": "development",
 	"emailIsOn": false,
+	"emailSettings": {
+		"from": "MBTA G ScreenTime <mbta.screentime@gmail.com>",
+		"to": "dpb@alum.mit.edu",
+		"subject": "Screentime events - test",
+		"transport": {
+	        "service": "Gmail",
+	        "auth": {
+	            "user": "mbta.screentime@gmail.com",
+	            "pass": "Xv84Z2DdqRGbm59g"
+	        }
+		}
+	},
 	"emailThreshold": 5,
 	"logThreshold": 5,
     "signConfigs": {

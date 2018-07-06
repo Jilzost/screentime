@@ -5,7 +5,7 @@
 	"logThreshold": 4,
 	"emailSettings": {
 		"from": "MBTA G ScreenTime <mbta.screentime@gmail.com>",
-		"to": "dpb@alum.mit.edu",
+		"to": "dbarker@mbta.com",
 		"subject": "Screentime events - AWS-stage",
 		"transport": {
 	        "service": "Gmail",
