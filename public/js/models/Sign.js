@@ -21,6 +21,7 @@ define([
     'models/Speaker',
     'views/DeparturesView',
     'views/AlertsView',
+    'views/AlertsViewElevator',
     'views/AlertViewElevator',
     'views/AlertViewSimple',
     'views/AlertViewTimeframe',
@@ -30,8 +31,9 @@ define([
 
 ], function ($, _, Backbone, logger, filterProperties, agencyModelIndex,
     Clock, Heartbeat, LampMonitor, ScreenData, ScreenModel,
-    ScreenshotManager, Speaker, DeparturesView, AlertsView, AlertViewElevator,
-    AlertViewSimple, AlertViewTimeframe, AlertViewFeatured, PsasView, PsaView) {
+    ScreenshotManager, Speaker, DeparturesView, AlertsView, AlertsViewElevator,
+    AlertViewElevator, AlertViewSimple, AlertViewTimeframe, AlertViewFeatured,
+    PsasView, PsaView) {
     var Sign = Backbone.Model.extend({
         defaults: {
             clock: {},
@@ -264,7 +266,7 @@ define([
                             AlertView: AlertViewTimeframe,
                             innerHeight: self.get('innerHeight')
                         }),
-                        elevatorAlerts: new AlertsView({
+                        elevatorAlerts: new AlertsViewElevator({
                             el: '#elevatorAlerts',
                             model: self.get('screenModels').elevatorAlerts,
                             AlertView: AlertViewElevator,

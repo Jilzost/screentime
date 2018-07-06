@@ -10,8 +10,9 @@ define([
     'backbone',
     'helper/format/capitalize',
     'helper/format/mixCase',
+    'views/ElevatorView',
     'text!templates/alert-elevator.html'
-], function ($, _, Backbone, capitalize, mixCase, alertTemplate) {
+], function ($, _, Backbone, capitalize, mixCase, ElevatorView, alertTemplate) {
     var AlertViewElevator = Backbone.View.extend({
 
         tagName: 'div',
@@ -25,6 +26,24 @@ define([
             var html;
             html = this.template();
             this.$el.html(html);
+
+            this.model.get('affecteds').each(function (x) {
+                var item;
+
+                if (x.get('modelType') !== 'AccessFeature') {
+                    return this;
+                }
+
+                item = new ElevatorView(
+                    {model: x}
+                );
+                this.$('.elevatorCurrent').append(item.render().$el);
+                // TODO revisit speech
+                // if (renderRefreshAll) {
+                //     this.speechScript.push(x.get('description'));
+                // }
+            }, this);
+
             return this;
         }
     });

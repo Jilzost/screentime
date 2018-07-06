@@ -23,10 +23,12 @@ define([
     'collections/V3Source',
     'helper/input/inputLoop',
     'helper/mbta/pickRouteColor',//Future work: tie to agency generically
-    'helper/process/combinedDelayAlert'
+    'helper/process/combinedDelayAlert',
+    'helper/process/combinedElevAlerts'
 ], function ($, _, Backbone, logger, Alert, AccessFeature, Stop, Route,
     Train, Alerts, Routes, Trains, Departures, Psas, RealtimeSource,
-    V3Source, inputLoop, pickRouteColor, combinedDelayAlert) {
+    V3Source, inputLoop, pickRouteColor, combinedDelayAlert,
+    combinedElevAlerts) {
 
     var deriveDestination = function (input) {
 
@@ -368,6 +370,7 @@ define([
             var data = thisAgency.get('src_alerts'),
                 newAlerts = [], //Coll. of new alerts built here & applied
                 newDelayAlerts = new Alerts(),
+                newElevAlerts = new Alerts(),
                 newAlert,
                 newFeaturedAlert,
                 facility,
@@ -503,6 +506,7 @@ define([
                         isElevator = true;
                         affected = new AccessFeature({
                             txid: el.facility,
+                            elevId: el.facility,
                             name: facility.attributes.name,
                             type: 'Elevator',
                             stationName: newAlert.get('summary').replace(getElevatorStationFromHeader, '')
@@ -613,6 +617,8 @@ define([
                             || (!isLocalRoute && isSubway)) &&
                         !isSystemwide) {
                     newDelayAlerts.add(newAlert);
+                } else if (isElevator) {
+                    newElevAlerts.add(newAlert);
                 } else if (newAlert.get('isRelevant')) {
                     newAlerts.push(newAlert);
                 }
@@ -630,6 +636,10 @@ define([
 
             if (newDelayAlerts.length > 0) {
                 newAlerts.push(combinedDelayAlert(newDelayAlerts));
+            }
+
+            if (newElevAlerts.length > 0) {
+                newAlerts = newAlerts.concat(combinedElevAlerts(newElevAlerts));
             }
 
             thisAgency.get('alerts').reset(newAlerts);

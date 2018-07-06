@@ -302,6 +302,17 @@ td.minutes_away {
     margin-bottom: 30px;
 }
 
+.elevatorNumberContainer {
+  vertical-align: middle;
+  padding-left: 5px;
+  padding-right: 15px;
+}
+
+.upcomingElevatorTimeframe {
+  color: lightskyblue;
+  font-size: 80%;
+}
+
 .elevatorNumber {
     color: black;
     border-style: solid;

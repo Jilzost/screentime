@@ -1,0 +1,20 @@
+<!-- filename: alert-elevator -->
+  <tr>
+  <td class = "elevatorNumberContainer">
+    <span class="elevatorNumber"><%- this.model.get('elevId') %></span>
+  </td>
+  <td>
+
+    <% if (this.model.get('isSoon') && this.model.get('timeframe')){ %>
+    <span class="upcomingElevatorTimeframe">
+    <%- this.model.get('timeframe').charAt(0).toUpperCase() + this.model.get('timeframe').substring(1) %>:
+    </span>
+    <% } %>
+    <span class="elevatorDescription">
+    <%- this.model.get('name') %>
+    <% if (!this.model.get('isSoon') && this.model.get('timeframe') && this.model.get('timeframe') !== 'ongoing' && this.model.get('timeframe') !== ''){ %>
+    (<%- this.model.get('timeframe') %>)
+    <% } %>
+
+</td>
+</tr>
