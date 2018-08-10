@@ -309,7 +309,7 @@ define([
 
             routes.each(function (route) {
                 route.set({mode_name: mode_names[route.get('type')]});
-                route.set({route_name: route.get('long_name') === "" ? route.get('short_name') : route.get('long_name')});
+                route.set({route_name: route.get('short_name') === "" ? route.get('long_name') : route.get('short_name')});
             });
 
             modes = _.uniq(routes.map(function (route) {
