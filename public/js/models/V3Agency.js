@@ -506,7 +506,7 @@ define([
                         isElevator = true;
                         affected = new AccessFeature({
                             txid: el.facility,
-                            elevId: el.facility,
+                            elevId: el.facility.length <= 4 ? el.facility : '000',
                             name: facility.attributes.name,
                             type: 'Elevator',
                             stationName: newAlert.get('summary').replace(getElevatorStationFromHeader, '')
