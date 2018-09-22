@@ -16,6 +16,10 @@ var cache   = {
     departures: {}, //not implemented
     alerts: {} //not implemented
 };
+
+var failureCount = 0;
+var maxFailures = 3;
+
 //var configs;
 
 /**
@@ -185,15 +189,15 @@ function routes(path, options, ourResponse) {
 function cacheOneRoute(options) {
     var params = '&a=' + options.agency + '&r=' + options.route;
     if (!cache.routes[options.agency]) {
-      cache.routes[options.agency] = {};
+        cache.routes[options.agency] = {};
     }
     if (cache.routes[options.agency][options.route]) {
-      cache.routes[options.agency][options.route].fromRouteConfig = true;
+        cache.routes[options.agency][options.route].fromRouteConfig = true;
     } else {
-      cache.routes[options.agency][options.route] =
-        {
-            fromRouteConfig: true
-        };
+        cache.routes[options.agency][options.route] =
+            {
+                fromRouteConfig: true
+            };
     }
 
     return http.get({
@@ -213,7 +217,7 @@ function cacheOneRoute(options) {
                             parseOneRoute(options, result);
                         });
                 } else {
-                  logger.log('server', 'server', 2,
+                    logger.log('server', 'server', 2,
                           'nextbusHandlers.cacheOneRoute', 'Short body: ' + body);
                 }
             } catch (err) {
@@ -229,16 +233,25 @@ function cacheOneRoute(options) {
 }
 
 function parseDepartures(path, options, ourResponse, theirBody) {
-    var ourBody = [], routes, cachedRoutes = {}, cachedRoute;
+    var ourBody = [], routes, cachedRoutes = {}, cachedRoute, errValue;
     try {
-        if (!theirBody.body) {
-          logger.log('server', 'server', 2,
+        if (!theirBody || !theirBody.body) {
+            failureCount += 1;
+            if (failureCount > maxFailures) { errValue = 2; } else { errValue = 4; }
+            logger.log('server', 'server', errValue,
                 'nextbusHandlers.parseDepartures', 'Incomplete NextBus response: ' + theirBody);
+            send500(ourResponse);
+            return true;
         }
         if (theirBody.body.Error) {
-            logger.log('server', 'server', 2,
+            failureCount += 1;
+            if (failureCount > maxFailures) { errValue = 2; } else { errValue = 4; }
+            logger.log('server', 'server', errValue,
                   'nextbusHandlers.parseDepartures', 'Failed, NextBus error: ' + theirBody.body.Error[0]._);
+            send500(ourResponse);
+            return true;
         }
+        failureCount = 0;
         if (cache.routes[options.agency]) {
             cachedRoutes = cache.routes[options.agency];
         }
@@ -288,6 +301,7 @@ function departures(path, options, ourResponse) {
 
     fullPath = cmdPath + '&a=' + agency +
         '&stopId=' + stop + '&useShortTitles=' + useShortTitles;
+
 
     return http.get({
         host: 'webservices.nextbus.com',
