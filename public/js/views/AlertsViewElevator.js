@@ -122,7 +122,6 @@ define([
             //shrink as needed to fit
 
             height = this.$el.height();
-            console.log(height);
             while (this.fontSize > 1 && height > innerHeight) {
                 this.fontSize -= 1;
                 this.$('.alerts-list').css('fontSize', this.fontSize + '%');

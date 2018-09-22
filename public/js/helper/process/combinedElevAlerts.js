@@ -16,7 +16,6 @@ define([
       var consolidated = new Alerts();
       consolidated = alerts.reduce(function (memo, newAlert) {
         var existingAlert, newElevator;
-        console.log(memo);
         newElevator = newAlert.get('affecteds').findWhere({modelType: 'AccessFeature'});
         newElevator.set(
           {
@@ -32,7 +31,6 @@ define([
           }
         );
         if (existingAlert) {
-          console.log('Adding to existing station alert');
           newElevator = newAlert.get('affecteds').findWhere({modelType: 'AccessFeature'});
           existingAlert.get('affecteds').add(newElevator);
           if (newAlert.get('isRelevant')) {
@@ -44,11 +42,8 @@ define([
           if (newAlert.get('isNow')) {
             existingAlert.set({isNow: true, isSoon: false});
           }
-          console.log(existingAlert);
         } else {
-          console.log('New station');
           newAlert.get('affecteds').comparator = 'elevId';
-          console.log(newAlert);
           memo.push(newAlert);
         }
         return memo;
